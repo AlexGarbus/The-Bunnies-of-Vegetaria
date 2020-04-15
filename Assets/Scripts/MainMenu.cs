@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private AudioMixer mixer;
+    [SerializeField] private TMP_Text versionText;
 
     [Header("Settings")]
     [SerializeField] private Slider musicSlider;
@@ -17,13 +18,11 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Toggle fullscreenToggle;
     [SerializeField] private TMP_Dropdown resolutionDropdown;
 
-    [Header("Stats")]
-    [SerializeField] private TMP_Text timeText;
-
     private Resolution[] resolutions;
     
     void Start()
     {
+        versionText.text = $"Version {Application.version}";
         resolutions = Screen.resolutions.Select(resolution => new Resolution { width = resolution.width, height = resolution.height }).Distinct().ToArray();
         UpdateSettings();
     }
@@ -31,16 +30,6 @@ public class MainMenu : MonoBehaviour
     public void Quit()
     {
         Application.Quit();
-    }
-
-    // Show the current stats
-    public void ShowStats()
-    {
-        SaveData save = SaveData.current;
-        string hours = string.Format("{0:00}", save.hours);
-        string minutes = string.Format("{0:00}", save.minutes);
-        string seconds = string.Format("{0:00}", save.seconds);
-        timeText.text = "Playtime: " + hours + ":" + minutes + ":" + seconds;
     }
 
     #region Settings
