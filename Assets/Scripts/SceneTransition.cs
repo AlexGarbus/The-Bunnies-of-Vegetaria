@@ -12,25 +12,22 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private float fadeTime;
     [SerializeField] private bool fadeInOnStart = true;
 
-    private void Start()
+    public bool IsFading { get; private set; } = false;
+
+    private GameObject fadeImageObject;
+
+    private void Awake()
     {
+        fadeImageObject = fadeImage.gameObject;
+
         if (fadeInOnStart)
             StartCoroutine(FadeIn());
     }
 
-    /// <summary>
-    /// Fade the screen to black and then load a scene.
-    /// </summary>
-    /// <param name="sceneIndex">The build index of the scene to load.</param>
-    public void LoadScene(int sceneIndex)
+    public IEnumerator FadeIn()
     {
-        if (!gameObject.activeSelf)
-            gameObject.SetActive(true);
-        StartCoroutine(FadeOut(sceneIndex));
-    }
-
-    private IEnumerator FadeIn()
-    {
+        IsFading = true;
+        fadeImageObject.SetActive(true);
         SetFadeAlpha(1);
 
         int alphaChanges = 0;
@@ -43,11 +40,39 @@ public class SceneTransition : MonoBehaviour
             yield return new WaitForSeconds(waitTime);
         }
 
-        gameObject.SetActive(false);
+        fadeImageObject.SetActive(false);
+        IsFading = false;
     }
 
-    private IEnumerator FadeOut(int sceneIndex)
+    public IEnumerator FadeOut()
     {
+        IsFading = true;
+        fadeImageObject.SetActive(true);
+        SetFadeAlpha(0);
+
+        int alphaChanges = 0;
+        float waitTime = fadeTime / (alphaChangeCount);
+
+        while (alphaChanges < alphaChangeCount)
+        {
+            alphaChanges++;
+            SetFadeAlpha((float)alphaChanges / alphaChangeCount);
+            yield return new WaitForSeconds(fadeTime / (alphaChangeCount));
+        }
+
+        fadeImageObject.SetActive(false);
+        IsFading = false;
+    }
+
+    public void LoadScene(int sceneIndex)
+    {
+        StartCoroutine(FadeOutToScene(sceneIndex));
+    }
+
+    public IEnumerator FadeOutToScene(int sceneIndex)
+    {
+        IsFading = true;
+        fadeImageObject.SetActive(true);
         SetFadeAlpha(0);
 
         int alphaChanges = 0;
