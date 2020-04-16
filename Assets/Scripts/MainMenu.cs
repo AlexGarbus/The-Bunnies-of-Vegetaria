@@ -27,11 +27,6 @@ public class MainMenu : MonoBehaviour
         UpdateSettings();
     }
 
-    public void Quit()
-    {
-        Application.Quit();
-    }
-
     #region Settings
     
     // Save the current PlayerPrefs

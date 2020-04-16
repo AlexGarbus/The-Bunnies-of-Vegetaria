@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Atlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 0
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 0
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 98f076f146d6c644eafbd6b408dfef24, type: 3}
+    totalSpriteSurfaceArea: 98304
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 13517b318895e8a43a4bbb5daeceda27, type: 3}
+  - {fileID: 21300000, guid: aa3c8a137c6150a46977f0c57d776661, type: 3}
+  - {fileID: 21300000, guid: 19823493fd0f028479c7b8b18a3020ce, type: 3}
+  - {fileID: 21300000, guid: 17a9b814c2cb38f4c8834ba74dafa87e, type: 3}
+  - {fileID: 21300000, guid: d0b75ef4d213d314f828f65e2aaf9b7d, type: 3}
+  - {fileID: 21300000, guid: 47145b9556d6f0d4a877c4c2d3822592, type: 3}
+  - {fileID: 21300000, guid: 2af3c8a5f836e2f4b90e9ab50f6d70b8, type: 3}
+  - {fileID: 21300000, guid: b17f0346d91bb2b48936cbe51b500519, type: 3}
+  - {fileID: 21300000, guid: 652d5aa6f096d0845817e4dcd98c8298, type: 3}
+  - {fileID: 21300000, guid: 337f1039451bcd748b051f1a2098aab0, type: 3}
+  - {fileID: 21300000, guid: 96cb9c99df66ed7448fd5a18299e34c9, type: 3}
+  - {fileID: 21300000, guid: 1379f65a6f073af4e81dedb51f9e8056, type: 3}
+  - {fileID: 21300000, guid: 9d28bc7a8333c2341911630ff2a0c221, type: 3}
+  - {fileID: 21300000, guid: 96c42e8b513a0484bb43a21770c7b631, type: 3}
+  - {fileID: 21300000, guid: 860c7cddf2414ad49a715aefee66aaba, type: 3}
+  - {fileID: 21300000, guid: 8768d2be22ad45e41b6163584d3b6a9a, type: 3}
+  - {fileID: 21300000, guid: 068cdddec7181264abbeb66ad65fa6f1, type: 3}
+  - {fileID: 21300000, guid: af1a072f5cd5f3749bd6e86e444af3e5, type: 3}
+  - {fileID: 21300000, guid: e39c497f30d1d0c44ab401ede8c4b926, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - iceberg lettuce
+  - salad bowl
+  - celeryhead shark
+  - stalker
+  - redleaf lettuce
+  - player_bunnurse
+  - cel wall
+  - celereye
+  - area_lettuce fiels
+  - romaine soldier
+  - clawery
+  - ui_window
+  - player_bunnight
+  - ui_map
+  - player_bunnecromancer
+  - player_bunneerdowell
+  - area_celery woods
+  - baby lettuce
+  - logo
+  m_Tag: Atlas
+  m_IsVariant: 0

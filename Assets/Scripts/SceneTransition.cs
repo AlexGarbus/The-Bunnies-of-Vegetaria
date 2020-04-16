@@ -13,6 +13,7 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private bool fadeInOnStart = true;
 
     public bool IsFading { get; private set; } = false;
+    public float GetFadeTime() => fadeTime;
 
     private GameObject fadeImageObject;
 
@@ -24,6 +25,9 @@ public class SceneTransition : MonoBehaviour
             StartCoroutine(FadeIn());
     }
 
+    /// <summary>
+    /// Fade in from a solid color.
+    /// </summary>
     public IEnumerator FadeIn()
     {
         IsFading = true;
@@ -44,6 +48,10 @@ public class SceneTransition : MonoBehaviour
         IsFading = false;
     }
 
+    // TODO: Combine the various FadeOut methods for conciseness.
+    /// <summary>
+    /// Fade out to a solid color.
+    /// </summary>
     public IEnumerator FadeOut()
     {
         IsFading = true;
@@ -64,11 +72,19 @@ public class SceneTransition : MonoBehaviour
         IsFading = false;
     }
 
+    /// <summary>
+    /// Start the FadeOutToScene coroutine.
+    /// </summary>
+    /// <param name="sceneIndex">The build index of the scene to load.</param>
     public void LoadScene(int sceneIndex)
     {
         StartCoroutine(FadeOutToScene(sceneIndex));
     }
 
+    /// <summary>
+    /// Fade out to a solid color, then load a new scene.
+    /// </summary>
+    /// <param name="sceneIndex">The build index of the scene to load.</param>
     public IEnumerator FadeOutToScene(int sceneIndex)
     {
         IsFading = true;
@@ -86,6 +102,36 @@ public class SceneTransition : MonoBehaviour
         }
 
         SceneManager.LoadScene(sceneIndex);
+    }
+
+    /// <summary>
+    /// Start the FadeOutQuit coroutine.
+    /// </summary>
+    public void Quit()
+    {
+        StartCoroutine(FadeOutQuit());
+    }
+
+    /// <summary>
+    /// Fade out to a solid color, then quit the application.
+    /// </summary>
+    public IEnumerator FadeOutQuit()
+    {
+        IsFading = true;
+        fadeImageObject.SetActive(true);
+        SetFadeAlpha(0);
+
+        int alphaChanges = 0;
+        float waitTime = fadeTime / (alphaChangeCount);
+
+        while (alphaChanges < alphaChangeCount)
+        {
+            alphaChanges++;
+            SetFadeAlpha((float)alphaChanges / alphaChangeCount);
+            yield return new WaitForSeconds(fadeTime / (alphaChangeCount));
+        }
+
+        Application.Quit();
     }
 
     private void SetFadeAlpha(float alpha)
