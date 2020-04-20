@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -41,11 +42,14 @@ public class GameManager : MonoBehaviour
     
     void Update()
     {
-        Playtime();
+        if(SceneManager.GetActiveScene().buildIndex > 0)
+            AddPlaytime();
     }
 
-    // Update the playtime in the save data
-    private void Playtime()
+    /// <summary>
+    /// Add to the play time in the save data.
+    /// </summary>
+    private void AddPlaytime()
     {
         SaveData save = SaveData.current;
         save.seconds += Time.deltaTime;
@@ -60,11 +64,5 @@ public class GameManager : MonoBehaviour
             save.hours++;
         }
         SaveData.current = save;
-    }
-
-    // Save data if the game closes
-    private void OnApplicationQuit()
-    {
-        SaveLoad.Save();
     }
 }

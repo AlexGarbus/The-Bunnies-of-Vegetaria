@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private AudioMixer mixer;
+    [SerializeField] private SceneTransition sceneTransition;
     [SerializeField] private TMP_Text versionText;
 
     [Header("Settings")]
@@ -25,6 +26,21 @@ public class MainMenu : MonoBehaviour
         versionText.text = $"Version {Application.version}";
         resolutions = Screen.resolutions.Select(resolution => new Resolution { width = resolution.width, height = resolution.height }).Distinct().ToArray();
         UpdateSettings();
+    }
+
+    /// <summary>
+    /// Start playing the game, either from the save data or from the beginning if no data exists.
+    /// </summary>
+    public void Play()
+    {
+        if(SaveLoad.SaveExists())
+        {
+            sceneTransition.LoadScene(3);
+        }
+        else
+        {
+            sceneTransition.LoadScene(1);
+        }
     }
 
     #region Settings

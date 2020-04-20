@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-// TODO: Maybe just save experience and hard code base stats into a MonoBehaviour?
+// TODO: Convert to MonoBehaviour
 [System.Serializable]
 public class Bunny
 {

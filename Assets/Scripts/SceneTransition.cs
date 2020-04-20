@@ -30,6 +30,9 @@ public class SceneTransition : MonoBehaviour
     /// </summary>
     public IEnumerator FadeIn()
     {
+        if (IsFading)
+            yield break;
+
         IsFading = true;
         fadeImageObject.SetActive(true);
         SetFadeAlpha(1);
@@ -54,6 +57,9 @@ public class SceneTransition : MonoBehaviour
     /// </summary>
     public IEnumerator FadeOut()
     {
+        if (IsFading)
+            yield break;
+
         IsFading = true;
         fadeImageObject.SetActive(true);
         SetFadeAlpha(0);
@@ -87,6 +93,9 @@ public class SceneTransition : MonoBehaviour
     /// <param name="sceneIndex">The build index of the scene to load.</param>
     public IEnumerator FadeOutToScene(int sceneIndex)
     {
+        if (IsFading)
+            yield break;
+
         IsFading = true;
         fadeImageObject.SetActive(true);
         SetFadeAlpha(0);
@@ -117,6 +126,9 @@ public class SceneTransition : MonoBehaviour
     /// </summary>
     public IEnumerator FadeOutQuit()
     {
+        if (IsFading)
+            yield break;
+
         IsFading = true;
         fadeImageObject.SetActive(true);
         SetFadeAlpha(0);

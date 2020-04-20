@@ -4,7 +4,8 @@ public class SaveData
     public static SaveData current;
 
     // Party
-    public Bunny bunnight, bunnecromancer, bunnurse, bunneerdowell;
+    public int bunnightExp, bunnecromancerExp, bunnurseExp, bunneerdowellExp;
+    public string bunnightName, bunnecromancerName, bunnurseName, bunneerdowellName;
 
     // Progression
     public int areasUnlocked;
@@ -17,13 +18,10 @@ public class SaveData
 
     public SaveData()
     {
-        bunnight = new Bunny(3, 4, 1, "Bunnight");
-        bunnecromancer = new Bunny(3, 3, 3, "Bunnecromancer");
-        bunnurse = new Bunny(1, 5, 2, "Bunnurse");
-        bunneerdowell = new Bunny(4, 1, 3, "Bunneerdowell");
+        bunnightName = "Bunnight";
+        bunnecromancerName = "Bunnecromancer";
+        bunnurseName = "Bunnurse";
+        bunneerdowellName = "Bune'er-do-well";
         areasUnlocked = 1;
-        hours = 0;
-        minutes = 0;
-        seconds = 0;
     }
 }
