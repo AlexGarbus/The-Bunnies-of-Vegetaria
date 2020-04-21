@@ -12,6 +12,7 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private float fadeTime;
     [SerializeField] private bool fadeInOnStart = true;
 
+    // TODO: Make IsFading private for better encapsulation.
     public bool IsFading { get; private set; } = false;
     public float GetFadeTime() => fadeTime;
 
@@ -74,6 +75,7 @@ public class SceneTransition : MonoBehaviour
             yield return new WaitForSeconds(fadeTime / (alphaChangeCount));
         }
 
+        // FIXME: This causes issues when fading out and in again.
         fadeImageObject.SetActive(false);
         IsFading = false;
     }

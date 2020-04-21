@@ -17,13 +17,13 @@ public class GameManager : MonoBehaviour
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
+
         DontDestroyOnLoad(gameObject);
+        SaveLoad.Load();
     }
     
     void Start()
     {
-        SaveLoad.Load();
-
         // Load settings
         if (PlayerPrefs.HasKey("MusicVolume"))
             mixer.SetFloat("musicVolume", PlayerPrefs.GetFloat("MusicVolume"));
