@@ -12,8 +12,7 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private float fadeTime;
     [SerializeField] private bool fadeInOnStart = true;
 
-    // TODO: Make IsFading private for better encapsulation.
-    public bool IsFading { get; private set; } = false;
+    public bool IsFading = false;
     public float GetFadeTime() => fadeTime;
 
     private GameObject fadeImageObject;
@@ -21,7 +20,10 @@ public class SceneTransition : MonoBehaviour
     private void Awake()
     {
         fadeImageObject = fadeImage.gameObject;
+    }
 
+    private void Start()
+    {
         if (fadeInOnStart)
             StartCoroutine(FadeIn());
     }
@@ -35,7 +37,8 @@ public class SceneTransition : MonoBehaviour
             yield break;
 
         IsFading = true;
-        fadeImageObject.SetActive(true);
+        if (!fadeImageObject.activeSelf)
+            fadeImageObject.SetActive(true);
         SetFadeAlpha(1);
 
         int alphaChanges = 0;
@@ -52,7 +55,6 @@ public class SceneTransition : MonoBehaviour
         IsFading = false;
     }
 
-    // TODO: Combine the various FadeOut methods for conciseness.
     /// <summary>
     /// Fade out to a solid color.
     /// </summary>
@@ -62,7 +64,8 @@ public class SceneTransition : MonoBehaviour
             yield break;
 
         IsFading = true;
-        fadeImageObject.SetActive(true);
+        if (!fadeImageObject.activeSelf)
+            fadeImageObject.SetActive(true);
         SetFadeAlpha(0);
 
         int alphaChanges = 0;
@@ -75,8 +78,6 @@ public class SceneTransition : MonoBehaviour
             yield return new WaitForSeconds(fadeTime / (alphaChangeCount));
         }
 
-        // FIXME: This causes issues when fading out and in again.
-        fadeImageObject.SetActive(false);
         IsFading = false;
     }
 
@@ -93,24 +94,11 @@ public class SceneTransition : MonoBehaviour
     /// Fade out to a solid color, then load a new scene.
     /// </summary>
     /// <param name="sceneIndex">The build index of the scene to load.</param>
-    public IEnumerator FadeOutToScene(int sceneIndex)
+    private IEnumerator FadeOutToScene(int sceneIndex)
     {
-        if (IsFading)
-            yield break;
-
-        IsFading = true;
-        fadeImageObject.SetActive(true);
-        SetFadeAlpha(0);
-
-        int alphaChanges = 0;
-        float waitTime = fadeTime / (alphaChangeCount);
-
-        while (alphaChanges < alphaChangeCount)
-        {
-            alphaChanges++;
-            SetFadeAlpha((float)alphaChanges / alphaChangeCount);
-            yield return new WaitForSeconds(fadeTime / (alphaChangeCount));
-        }
+        StartCoroutine(FadeOut());
+        while (IsFading)
+            yield return null;
 
         SceneManager.LoadScene(sceneIndex);
     }
@@ -126,24 +114,11 @@ public class SceneTransition : MonoBehaviour
     /// <summary>
     /// Fade out to a solid color, then quit the application.
     /// </summary>
-    public IEnumerator FadeOutQuit()
+    private IEnumerator FadeOutQuit()
     {
-        if (IsFading)
-            yield break;
-
-        IsFading = true;
-        fadeImageObject.SetActive(true);
-        SetFadeAlpha(0);
-
-        int alphaChanges = 0;
-        float waitTime = fadeTime / (alphaChangeCount);
-
-        while (alphaChanges < alphaChangeCount)
-        {
-            alphaChanges++;
-            SetFadeAlpha((float)alphaChanges / alphaChangeCount);
-            yield return new WaitForSeconds(fadeTime / (alphaChangeCount));
-        }
+        StartCoroutine(FadeOut());
+        while (IsFading)
+            yield return null;
 
         Application.Quit();
     }

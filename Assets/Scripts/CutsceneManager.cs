@@ -58,6 +58,6 @@ public class CutsceneManager : MonoBehaviour
             textIndex++;
         }
 
-        StartCoroutine(sceneTransition.FadeOutToScene(cutscene.sceneToLoad));
+        sceneTransition.LoadScene(cutscene.sceneToLoad);
     }
 }
