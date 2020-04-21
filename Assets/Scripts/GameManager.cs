@@ -6,16 +6,16 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
+    public static GameManager Instance;
 
     [SerializeField] private AudioMixer mixer;
 
     private void Awake()
     {
         // Set singleton
-        if (instance == null)
-            instance = this;
-        else if (instance != this)
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != this)
             Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
