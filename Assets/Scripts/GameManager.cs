@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private AudioMixer mixer;
 
+    private EnemyRepository enemyRepository;
+
     private void Awake()
     {
         // Set singleton
@@ -24,6 +26,8 @@ public class GameManager : MonoBehaviour
     
     void Start()
     {
+        enemyRepository = EnemyRepository.LoadFromJSON();
+
         // Load settings
         if (PlayerPrefs.HasKey("MusicVolume"))
             mixer.SetFloat("musicVolume", PlayerPrefs.GetFloat("MusicVolume"));
