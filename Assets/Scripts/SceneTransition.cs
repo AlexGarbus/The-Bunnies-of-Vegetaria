@@ -123,6 +123,32 @@ public class SceneTransition : MonoBehaviour
         Application.Quit();
     }
 
+    /// <summary>
+    /// Start the Fade Game Object coroutine.
+    /// </summary>
+    /// <param name="objectToFade"></param>
+    public void StartFadeGameObject(GameObject objectToFade)
+    {
+        StartCoroutine(FadeGameObject(objectToFade));
+    }
+
+    /// <summary>
+    /// Fade out to a solid color, toggle a game object's active state, and then fade back in.
+    /// </summary>
+    /// <param name="objToFade">The game object to fade.</param>
+    private IEnumerator FadeGameObject(GameObject objectToFade)
+    {
+        StartCoroutine(FadeOut());
+        while (IsFading)
+            yield return null;
+
+        objectToFade.SetActive(!objectToFade.activeSelf);
+
+        StartCoroutine(FadeIn());
+        while (IsFading)
+            yield return null;
+    }
+
     private void SetFadeAlpha(float alpha)
     {
         Color c = fadeImage.color;
