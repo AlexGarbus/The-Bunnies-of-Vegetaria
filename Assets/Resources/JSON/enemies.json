@@ -13,7 +13,13 @@
 		{"name":"Caulifaker", "spriteFileName":"caulifaker", "area":"BroccoliForest", "attack":1, "defense":2, "speed":1, "singleAttack":true, "multiAttack":false, "singleHeal":true, "multiHeal":true},
 		{"name":"Broccoflower", "spriteFileName":"broccarmy", "area":"BroccoliForest", "attack":1, "defense":3, "speed":3, "singleAttack":false, "multiAttack":false, "singleHeal":true, "multiHeal":true},
 		{"name":"Big Chokus", "spriteFileName":"big chokus", "area":"BokChoyBluff", "attack":2, "defense":4, "speed":1, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},
-		{"name":"Bok Chew", "spriteFileName":"bok chew", "area":"BokChoyBluff", "attack":1, "defense":4, "speed":3, "singleAttack":true, "multiAttack":false, "singleHeal":true, "multiHeal":false}
+		{"name":"Bok Chew", "spriteFileName":"bok chew", "area":"BokChoyBluff", "attack":1, "defense":4, "speed":3, "singleAttack":true, "multiAttack":false, "singleHeal":true, "multiHeal":false},
+		{"name":"Bok O' Clock", "spriteFileName":"bok o clock", "area":"BokChoyBluff", "attack":2, "defense":2, "speed":5, "singleAttack":false, "multiAttack":true, "singleHeal":false, "multiHeal":true},
+		{"name":"Armored Choy", "spriteFileName":"armored choy", "area":"BokChoyBluff", "attack":3, "defense":3, "speed":1, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},
+		{"name":"Sweet Carrot", "spriteFileName":"sweet carrot", "area":"CarrotTop", "attack":1, "defense":5, "speed":2, "singleAttack":false, "multiAttack":false, "singleHeal":false, "multiHeal":true},
+		{"name":"Baby Carrot", "spriteFileName":"baby carrot", "area":"CarrotTop", "attack":4, "defense":2, "speed":3, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},
+		{"name":"Carrot Dragon", "spriteFileName":"carrot dragon", "area":"CarrotTop", "attack":3, "defense":3, "speed":3, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":false},
+		{"name":"Carrot Cake", "spriteFileName":"carrot cake", "area":"CarrotTop", "attack":2, "defense":4, "speed":1, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":true}
 	],
 	"bosses":[
 		{"name":"Salad Bowl", "spriteFileName":"salad bowl", "area":"LettuceFields", "attack":2, "defense":2, "speed":2, "singleAttack":true, "multiAttack":false, "singleHeal":true, "multiHeal":false},
