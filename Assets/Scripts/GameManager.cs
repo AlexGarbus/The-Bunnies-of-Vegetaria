@@ -10,7 +10,11 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private AudioMixer mixer;
 
-    private EnemyRepository enemyRepository;
+    public int AreaIndex { get; set; } = 0;
+    public Bunny Bunnight { get; private set; }
+    public Bunny Bunnecromancer { get; private set; }
+    public Bunny Bunnurse { get; private set; }
+    public Bunny Bunneerdowell { get; private set; }
 
     private void Awake()
     {
@@ -26,9 +30,21 @@ public class GameManager : MonoBehaviour
     
     void Start()
     {
-        enemyRepository = EnemyRepository.LoadFromJSON();
+        LoadSettings();
+        CreateBunnies();
+    }
+    
+    void Update()
+    {
+        if(SceneManager.GetActiveScene().buildIndex > 0)
+            AddPlaytime();
+    }
 
-        // Load settings
+    /// <summary>
+    /// Load settings from PlayerPrefs
+    /// </summary>
+    private void LoadSettings()
+    {
         if (PlayerPrefs.HasKey("MusicVolume"))
             mixer.SetFloat("musicVolume", PlayerPrefs.GetFloat("MusicVolume"));
         if (PlayerPrefs.HasKey("FxVolume"))
@@ -43,11 +59,17 @@ public class GameManager : MonoBehaviour
             Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
         }
     }
-    
-    void Update()
+
+    /// <summary>
+    /// Create bunny objects using save data.
+    /// </summary>
+    private void CreateBunnies()
     {
-        if(SceneManager.GetActiveScene().buildIndex > 0)
-            AddPlaytime();
+        SaveData save = SaveData.current;
+        Bunnight = new Bunny(BunnyType.Bunnight, save.bunnightName, save.bunnightExp);
+        Bunnecromancer = new Bunny(BunnyType.Bunnecromancer, save.bunnecromancerName, save.bunnecromancerExp);
+        Bunnurse = new Bunny(BunnyType.Bunnurse, save.bunnurseName, save.bunnurseExp);
+        Bunneerdowell = new Bunny(BunnyType.Bunneerdowell, save.bunneerdowellName, save.bunneerdowellExp);
     }
 
     /// <summary>

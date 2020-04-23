@@ -1,5 +1,4 @@
-﻿// TODO: Move functionality to Area Menu
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;

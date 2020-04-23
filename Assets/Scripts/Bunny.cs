@@ -3,24 +3,19 @@
 // TODO: Move BunnyType to separate file/class/namespace
 public enum BunnyType { Bunnight, Bunnecromancer, Bunnurse, Bunneerdowell };
 
-public class Bunny
+public class Bunny : Fighter
 {
-    public int Attack { get; private set; }
-    public int Defense { get; private set; }
-    public int Speed { get; private set; }
-    public int MaxHealth { get; private set; }
-    public int MaxSkill { get; private set; }
-    public int Experience { get; private set; }
-    public int Level { get; private set; }
-    public string Name { get; private set; }
-    public BunnyType Type { get; private set; }
+    public int maxSkill;
+    public int experience;
+    public int level;
+    public BunnyType type;
 
     public int CalculateMaxHealth() => Mathf.FloorToInt(10 + 0.9f * CalculateLevel());
 
     public int CalculateLevel()
     {
         int n = 0;
-        while (10 * (n * (n + 1) / 2) <= Experience)
+        while (10 * (n * (n + 1) / 2) <= experience)
             n++;
         return n;
     }
@@ -33,34 +28,34 @@ public class Bunny
 
     public Bunny(BunnyType t, string n, int exp)
     {
-        Name = n;
-        Type = t;
-        Experience = exp;
-        Level = CalculateLevel();
-        MaxHealth = CalculateMaxHealth();
+        name = n;
+        type = t;
+        experience = exp;
+        level = CalculateLevel();
+        maxHealth = CalculateMaxHealth();
 
         // TODO: Maybe load from JSON instead?
-        switch(Type)
+        switch(type)
         {
             case BunnyType.Bunnight:
-                Attack = 3;
-                Defense = 4;
-                Speed = 1;
+                attack = 3;
+                defense = 4;
+                speed = 1;
                 break;
             case BunnyType.Bunnecromancer:
-                Attack = 3;
-                Defense = 3;
-                Speed = 3;
+                attack = 3;
+                defense = 3;
+                speed = 3;
                 break;
             case BunnyType.Bunnurse:
-                Attack = 1;
-                Defense = 5;
-                Speed = 2;
+                attack = 1;
+                defense = 5;
+                speed = 2;
                 break;
             case BunnyType.Bunneerdowell:
-                Attack = 4;
-                Defense = 1;
-                Speed = 3;
+                attack = 4;
+                defense = 1;
+                speed = 3;
                 break;
         }
     }

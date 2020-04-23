@@ -2856,6 +2856,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de67a3a32eab9f94d997a916292e67e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneTransition: {fileID: 780990154}
   areaButtons:
   - {fileID: 73049552}
   - {fileID: 1119774145}
