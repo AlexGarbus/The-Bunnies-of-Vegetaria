@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
-    [SerializeField] private int maxWaves = 5;
     [SerializeField] private AudioClip bossMusic;
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private BattleMenu battleMenu;
@@ -14,8 +13,12 @@ public class BattleManager : MonoBehaviour
     [Tooltip("The backgrounds for each area. These should be in ascending order by area.")]
     [SerializeField] private Sprite[] backgrounds;
 
+    [Header("Battle Flow")]
+    [SerializeField] private int maxWaves = 5;
+    [SerializeField] private float turnTime = 1f;
+
     [Header("Actors")]
-    [SerializeField] private BunnyActor bunnyActors;
+    [SerializeField] private BunnyActor[] bunnyActors;
     [SerializeField] private EnemyActor[] enemyActors;
 
     private enum BattleState { WaitingForInput, HandlingTurns }
@@ -26,7 +29,7 @@ public class BattleManager : MonoBehaviour
     private GameManager gameManager;
     private Enemy[] enemies;
     private Enemy boss;
-    private TurnList turns = new TurnList(8);
+    private TurnList turnList = new TurnList(8);
 
     private void Start()
     {
@@ -46,17 +49,33 @@ public class BattleManager : MonoBehaviour
 
         // TODO: Set background
 
+        // Set up bunny actors
+        bunnyActors[(int)BunnyType.Bunnight].FighterInfo = gameManager.Bunnight;
+        bunnyActors[(int)BunnyType.Bunnecromancer].FighterInfo = gameManager.Bunnecromancer;
+        bunnyActors[(int)BunnyType.Bunnurse].FighterInfo = gameManager.Bunnurse;
+        bunnyActors[(int)BunnyType.Bunneerdowell].FighterInfo = gameManager.Bunneerdowell;
+
+        // Set up enemy actors
+        foreach (EnemyActor actor in enemyActors)
+        {
+            if (actor.gameObject.activeSelf)
+                actor.gameObject.SetActive(false);
+        }
         SetWave();
 
-        battleMenu.ShowPlayerInputPanel(true);
+        PromptInput();
     }
 
     /// <summary>
-    /// Insert an attack turn into the turn list.
+    /// Insert a standard attack turn into the turn list.
     /// </summary>
-    public void InsertAttackTurn()
+    public void InsertAttackTurn(GameObject targetObject)
     {
-
+        IActor user = bunnyActors[inputsReceived];
+        IActor target = targetObject.GetComponent<IActor>();
+        Turn turn = new Turn(user, target, $"{user.FighterName} attacks {target.FighterName}!", () => user.DoDamage(target));
+        turnList.Insert(turn);
+        NextInput();
     }
 
     /// <summary>
@@ -76,11 +95,41 @@ public class BattleManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Count the input for the current bunny as received and move to the next.
+    /// Count the input for the current bunny as received and prepare to either receive the next input or begin handling turns.
     /// </summary>
-    public void ReceiveInput()
+    private void NextInput()
     {
+        do
+        {
+            inputsReceived++;
+        }
+        while (inputsReceived < bunnyActors.Length && bunnyActors[inputsReceived].CurrentHealth != 0);
 
+        if(inputsReceived >= bunnyActors.Length)
+        {
+            // Input received for all bunnies
+            inputsReceived = 0;
+            battleState = BattleState.HandlingTurns;
+            battleMenu.ShowPlayerInputPanel(false);
+            battleMenu.ShowTurnPanel(true);
+            StartCoroutine(HandleTurns());
+        }
+        else
+        {
+            PromptInput();
+        }
+    }
+
+    /// <summary>
+    /// Prompt the user to input their turn for the current bunny.
+    /// </summary>
+    private void PromptInput()
+    {
+        battleMenu.ShowPlayerInputPanel(true);
+        battleMenu.ShowOptionPanel(true);
+        battleMenu.ShowTurnPanel(false);
+        battleMenu.SetEnemyButtons(enemyActors);
+        battleMenu.SetInputPromptText($"What will {bunnyActors[inputsReceived].FighterName} do?");
     }
 
     /// <summary>
@@ -90,6 +139,7 @@ public class BattleManager : MonoBehaviour
     {
         if(wave == maxWaves)
         {
+            enemyActors[0].gameObject.SetActive(true);
             enemyActors[0].FighterInfo = boss;
             musicSource.clip = bossMusic;
             musicSource.Play();
@@ -99,8 +149,25 @@ public class BattleManager : MonoBehaviour
             for(int i = 0; i < wave && i < enemyActors.Length; i++)
             {
                 int enemyIndex = Random.Range(0, enemies.Length);
+                enemyActors[i].gameObject.SetActive(true);
                 enemyActors[i].FighterInfo = enemies[enemyIndex];
             }
         }
+    }
+
+    private IEnumerator HandleTurns()
+    {
+        while(!turnList.IsEmpty)
+        {
+            Turn turn = turnList.Pop();
+
+            battleMenu.SetTurnText(turn.Message);
+            turn.TurnAction();
+
+            yield return new WaitForSeconds(turnTime);
+        }
+
+        battleState = BattleState.WaitingForInput;
+        PromptInput();
     }
 }

@@ -6,6 +6,8 @@ public class TurnList
 {
     private List<Turn> turns;
 
+    public bool IsEmpty => turns.Count == 0;
+
     public TurnList()
     {
         turns = new List<Turn>();
@@ -17,12 +19,12 @@ public class TurnList
     }
 
     /// <summary>
-    /// Insert a new turn into the list. The turn's order will e determined based on its user speed.
+    /// Insert a new turn into the list. The turn's order will be determined based on its user speed.
     /// </summary>
     /// <param name="turn">The turn to insert into the list.</param>
     public void Insert(Turn turn)
     {
-        if (turns.Count == 0)
+        if (IsEmpty)
         {
             turns.Add(turn);
         }
@@ -30,8 +32,11 @@ public class TurnList
         {
             for (int i = 0; i < turns.Count; i++)
             {
-                if (turn.user.Speed >= turns[i].user.Speed)
+                if (turn.User.Speed >= turns[i].User.Speed)
+                {
                     turns.Insert(i, turn);
+                    return;
+                }
             }
         }
     }
@@ -51,6 +56,9 @@ public class TurnList
     /// <returns>The turn with the fastest user in the list.</returns>
     public Turn Pop()
     {
+        if (IsEmpty)
+            return null;
+
         Turn turn = turns[0];
         turns.RemoveAt(0);
         return turn;

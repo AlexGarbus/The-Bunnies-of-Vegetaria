@@ -8,12 +8,11 @@
 
     int Speed { get; }
     
-    //int AttackDamage { get; }
-
     string FighterName { get; }
 
     Fighter FighterInfo { set; }
 
+    void DoDamage(IActor target);
 
     void TakeDamage(int damage);
 

@@ -19,6 +19,7 @@ public class EnemyActor : MonoBehaviour, IActor
             {
                 fighter = value as Enemy;
                 spriteRenderer.sprite = Resources.Load<Sprite>($"Sprites/Enemies/{fighter.spriteFileName}");
+                currentHealth = 100;
             }
         }
     }
@@ -32,18 +33,25 @@ public class EnemyActor : MonoBehaviour, IActor
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void AttackDamage()
+    public void DoDamage(IActor target)
     {
-        throw new System.NotImplementedException();
-    }
-
-    public void Die()
-    {
-        throw new System.NotImplementedException();
+        int damage = Mathf.FloorToInt(10 * Attack * (1 - (target.Defense - 1) * 0.2f));
+        target.TakeDamage(damage);
     }
 
     public void TakeDamage(int damage)
     {
-        throw new System.NotImplementedException();
+        currentHealth -= damage;
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        // TODO: Insert death turn
+        Debug.Log("dead");
     }
 }

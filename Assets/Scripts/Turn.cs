@@ -7,14 +7,16 @@ public class Turn
 {
     public delegate void Delegate();
 
-    public IActor user;
-    public IActor target;
-    public Action turnAction;
+    public IActor User { get; private set; }
+    public IActor Target { get; private set; }
+    public string Message { get; private set; }
+    public Action TurnAction { get; private set; }
 
-    public Turn(IActor u, IActor t, Action action)
+    public Turn(IActor u, IActor t, string m, Action action)
     {
-        user = u;
-        target = t;
-        turnAction = action;
+        User = u;
+        Target = t;
+        Message = m;
+        TurnAction = action;
     }
 }

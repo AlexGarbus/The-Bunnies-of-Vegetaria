@@ -1,24 +1,24 @@
 ﻿{
 	"enemies":[
-		{"name":"Baby Lettuce", "spriteFileName":"baby lettuce", "area":"LettuceFields", "attack":1, "defense":1, "speed":1, "singleAttack":true, "multiAttack":false, "singeHeal":false, "multiHeal":false},
-		{"name":"Iceberg Lettuce", "spriteFileName":"iceberg lettuce", "area":"LettuceFields", "attack":1, "defense":2, "speed":1, "singleAttack":true, "multiAttack":false, "singeHeal":false, "multiHeal":false},
-		{"name":"Romaine Soldier", "spriteFileName":"romaine soldier", "area":"LettuceFields", "attack":2, "defense":2, "speed":1, "singleAttack":true, "multiAttack":true, "singeHeal":false, "multiHeal":false},
-		{"name":"Redleaf Lettuce", "spriteFileName":"iceberg lettuce", "area":"LettuceFields", "attack":1, "defense":1, "speed":2, "singleAttack":true, "multiAttack":true, "singeHeal":false, "multiHeal":false},
-		{"name":"Cel Wall", "spriteFileName":"cel wall", "area":"CeleryWoods", "attack":1, "defense":3, "speed":1, "singleAttack":false, "multiAttack":false, "singeHeal":true, "multiHeal":false},
-		{"name":"Celeryhead Shark", "spriteFileName":"celeryhead shark", "area":"CeleryWoods", "attack":2, "defense":2, "speed":2, "singleAttack":true, "multiAttack":true, "singeHeal":false, "multiHeal":false},
-		{"name":"Clawery", "spriteFileName":"clawery", "area":"CeleryWoods", "attack":3, "defense":1, "speed":2, "singleAttack":true, "multiAttack":true, "singeHeal":false, "multiHeal":false},
-		{"name":"Stalker", "spriteFileName":"cel wall", "area":"CeleryWoods", "attack":1, "defense":2, "speed":3, "singleAttack":true, "multiAttack":false, "singeHeal":false, "multiHeal":true},
-		{"name":"Broccarmy", "spriteFileName":"broccarmy", "area":"BroccoliForest", "attack":2, "defense":2, "speed":2, "singleAttack":true, "multiAttack":true, "singeHeal":true, "multiHeal":false},
-		{"name":"Brockey", "spriteFileName":"brockey", "area":"BroccoliForest", "attack":2, "defense":1, "speed":3, "singleAttack":true, "multiAttack":true, "singeHeal":true, "multiHeal":false},
-		{"name":"Caulifaker", "spriteFileName":"caulifaker", "area":"BroccoliForest", "attack":1, "defense":2, "speed":1, "singleAttack":true, "multiAttack":false, "singeHeal":true, "multiHeal":true},
-		{"name":"Broccoflower", "spriteFileName":"broccarmy", "area":"BroccoliForest", "attack":1, "defense":3, "speed":3, "singleAttack":false, "multiAttack":false, "singeHeal":true, "multiHeal":true},
-		{"name":"Big Chokus", "spriteFileName":"big chokus", "area":"BokChoyBluff", "attack":2, "defense":4, "speed":1, "singleAttack":true, "multiAttack":true, "singeHeal":false, "multiHeal":false},
-		{"name":"Bok Chew", "spriteFileName":"bok chew", "area":"BokChoyBluff", "attack":1, "defense":4, "speed":3, "singleAttack":true, "multiAttack":false, "singeHeal":true, "multiHeal":false}
+		{"name":"Baby Lettuce", "spriteFileName":"baby lettuce", "area":"LettuceFields", "attack":1, "defense":1, "speed":1, "singleAttack":true, "multiAttack":false, "singleHeal":false, "multiHeal":false},
+		{"name":"Iceberg Lettuce", "spriteFileName":"iceberg lettuce", "area":"LettuceFields", "attack":1, "defense":2, "speed":1, "singleAttack":true, "multiAttack":false, "singleHeal":false, "multiHeal":false},
+		{"name":"Romaine Soldier", "spriteFileName":"romaine soldier", "area":"LettuceFields", "attack":2, "defense":2, "speed":1, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},
+		{"name":"Redleaf Lettuce", "spriteFileName":"redleaf lettuce", "area":"LettuceFields", "attack":1, "defense":1, "speed":2, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},
+		{"name":"Cel Wall", "spriteFileName":"cel wall", "area":"CeleryWoods", "attack":1, "defense":3, "speed":1, "singleAttack":false, "multiAttack":false, "singleHeal":true, "multiHeal":false},
+		{"name":"Celeryhead Shark", "spriteFileName":"celeryhead shark", "area":"CeleryWoods", "attack":2, "defense":2, "speed":2, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},
+		{"name":"Clawery", "spriteFileName":"clawery", "area":"CeleryWoods", "attack":3, "defense":1, "speed":2, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},
+		{"name":"Stalker", "spriteFileName":"cel wall", "area":"CeleryWoods", "attack":1, "defense":2, "speed":3, "singleAttack":true, "multiAttack":false, "singleHeal":false, "multiHeal":true},
+		{"name":"Broccarmy", "spriteFileName":"broccarmy", "area":"BroccoliForest", "attack":2, "defense":2, "speed":2, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":false},
+		{"name":"Brockey", "spriteFileName":"brockey", "area":"BroccoliForest", "attack":2, "defense":1, "speed":3, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":false},
+		{"name":"Caulifaker", "spriteFileName":"caulifaker", "area":"BroccoliForest", "attack":1, "defense":2, "speed":1, "singleAttack":true, "multiAttack":false, "singleHeal":true, "multiHeal":true},
+		{"name":"Broccoflower", "spriteFileName":"broccarmy", "area":"BroccoliForest", "attack":1, "defense":3, "speed":3, "singleAttack":false, "multiAttack":false, "singleHeal":true, "multiHeal":true},
+		{"name":"Big Chokus", "spriteFileName":"big chokus", "area":"BokChoyBluff", "attack":2, "defense":4, "speed":1, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},
+		{"name":"Bok Chew", "spriteFileName":"bok chew", "area":"BokChoyBluff", "attack":1, "defense":4, "speed":3, "singleAttack":true, "multiAttack":false, "singleHeal":true, "multiHeal":false}
 	],
 	"bosses":[
-		{"name":"Salad Bowl", "spriteFileName":"salad bowl", "area":"LettuceFields", "attack":2, "defense":2, "speed":2, "singleAttack":true, "multiAttack":false, "singeHeal":true, "multiHeal":false},
-		{"name":"Celereye", "spriteFileName":"celereye", "area":"CeleryWoods", "attack":3, "defense":2, "speed":2, "singleAttack":true, "multiAttack":true, "singeHeal":true, "multiHeal":false},
-		{"name":"Broccoltree", "spriteFileName":"broccoltree", "area":"BroccoliForest", "attack":2, "defense":4, "speed":1, "singleAttack":true, "multiAttack":false, "singeHeal":true, "multiHeal":false},
-		{"name":"Soul Choy", "spriteFileName":"soul choy", "area":"BokChoyBluff", "attack":3, "defense":3, "speed":3, "singleAttack":true, "multiAttack":true, "singeHeal":true, "multiHeal":false}
+		{"name":"Salad Bowl", "spriteFileName":"salad bowl", "area":"LettuceFields", "attack":2, "defense":2, "speed":2, "singleAttack":true, "multiAttack":false, "singleHeal":true, "multiHeal":false},
+		{"name":"Celereye", "spriteFileName":"celereye", "area":"CeleryWoods", "attack":3, "defense":2, "speed":2, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":false},
+		{"name":"Broccoltree", "spriteFileName":"broccoltree", "area":"BroccoliForest", "attack":2, "defense":4, "speed":1, "singleAttack":true, "multiAttack":false, "singleHeal":true, "multiHeal":false},
+		{"name":"Soul Choy", "spriteFileName":"soul choy", "area":"BokChoyBluff", "attack":3, "defense":3, "speed":3, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":false}
 	]
 }
