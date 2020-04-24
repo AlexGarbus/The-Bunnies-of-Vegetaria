@@ -155,6 +155,9 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Perform each turn in the turn list.
+    /// </summary>
     private IEnumerator HandleTurns()
     {
         while(!turnList.IsEmpty)
