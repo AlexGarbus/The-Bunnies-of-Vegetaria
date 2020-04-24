@@ -21,11 +21,11 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private BunnyActor[] bunnyActors;
     [SerializeField] private EnemyActor[] enemyActors;
 
-    private enum BattleState { WaitingForInput, HandlingTurns }
+    private enum BattleState { SettingUpInput, HandlingInput, SettingUpTurns, HandlingTurns }
 
     private int inputsReceived = 0;
     private int wave = 1;
-    private BattleState battleState = BattleState.WaitingForInput;
+    private BattleState battleState = BattleState.SettingUpInput;
     private GameManager gameManager;
     private Enemy[] enemies;
     private Enemy boss;
@@ -61,9 +61,65 @@ public class BattleManager : MonoBehaviour
             if (actor.gameObject.activeSelf)
                 actor.gameObject.SetActive(false);
         }
-        SetWave();
 
-        PromptInput();
+        SetWave();
+    }
+
+    private void Update()
+    {
+        switch(battleState)
+        {
+            case BattleState.SettingUpInput:
+                PromptInput();
+                battleState = BattleState.HandlingInput;
+                break;
+            case BattleState.HandlingInput:
+                if(inputsReceived >= bunnyActors.Length)
+                {
+                    inputsReceived = 0;
+                    battleState = BattleState.SettingUpTurns;
+                }
+                break;
+            case BattleState.SettingUpTurns:
+                battleMenu.ShowPlayerInputPanel(false);
+                battleMenu.ShowTurnPanel(true);
+                InsertEnemyTurns();
+                StartCoroutine(HandleTurns());
+                battleState = BattleState.HandlingTurns;
+                break;
+            case BattleState.HandlingTurns:
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Get all bunny actors with health greater than 0.
+    /// </summary>
+    /// <returns>An array with all alive bunny actors.</returns>
+    public BunnyActor[] GetAliveBunnies()
+    {
+        List<BunnyActor> aliveActors = new List<BunnyActor>();
+        foreach(BunnyActor actor in bunnyActors)
+        {
+            if (actor.CurrentHealth > 0)
+                aliveActors.Add(actor);
+        }
+        return aliveActors.ToArray();
+    }
+
+    /// <summary>
+    /// Get all enemy actors with health greater than 0.
+    /// </summary>
+    /// <returns>An array with all alive enemy actors.</returns>
+    public EnemyActor[] GetAliveEnemies()
+    {
+        List<EnemyActor> aliveActors = new List<EnemyActor>();
+        foreach (EnemyActor actor in enemyActors)
+        {
+            if (actor.CurrentHealth > 0)
+                aliveActors.Add(actor);
+        }
+        return aliveActors.ToArray();
     }
 
     /// <summary>
@@ -95,6 +151,21 @@ public class BattleManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Insert turns for each enemy into the turn list.
+    /// </summary>
+    private void InsertEnemyTurns()
+    {
+        BunnyActor[] aliveBunnies = GetAliveBunnies();
+        EnemyActor[] aliveEnemies = GetAliveEnemies();
+        foreach (EnemyActor enemyActor in aliveEnemies)
+        {
+            Turn turn = enemyActor.GetTurn(aliveBunnies, aliveEnemies);
+            if (turn != null)
+                turnList.Insert(turn);
+        }
+    }
+
+    /// <summary>
     /// Count the input for the current bunny as received and prepare to either receive the next input or begin handling turns.
     /// </summary>
     private void NextInput()
@@ -103,21 +174,10 @@ public class BattleManager : MonoBehaviour
         {
             inputsReceived++;
         }
-        while (inputsReceived < bunnyActors.Length && bunnyActors[inputsReceived].CurrentHealth != 0);
+        while (inputsReceived < bunnyActors.Length && bunnyActors[inputsReceived].CurrentHealth == 0);
 
-        if(inputsReceived >= bunnyActors.Length)
-        {
-            // Input received for all bunnies
-            inputsReceived = 0;
-            battleState = BattleState.HandlingTurns;
-            battleMenu.ShowPlayerInputPanel(false);
-            battleMenu.ShowTurnPanel(true);
-            StartCoroutine(HandleTurns());
-        }
-        else
-        {
+        if(inputsReceived < bunnyActors.Length)
             PromptInput();
-        }
     }
 
     /// <summary>
@@ -139,6 +199,7 @@ public class BattleManager : MonoBehaviour
     {
         if(wave == maxWaves)
         {
+            // Boss wave
             enemyActors[0].gameObject.SetActive(true);
             enemyActors[0].FighterInfo = boss;
             musicSource.clip = bossMusic;
@@ -146,11 +207,19 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            for(int i = 0; i < wave && i < enemyActors.Length; i++)
+            // Regular enemy wave
+            int i;
+            for(i = 0; i < wave && i < enemyActors.Length; i++)
             {
                 int enemyIndex = Random.Range(0, enemies.Length);
                 enemyActors[i].gameObject.SetActive(true);
                 enemyActors[i].FighterInfo = enemies[enemyIndex];
+            }
+            
+            for(int j = i; j < enemyActors.Length; j++)
+            {
+                if (enemyActors[j].gameObject.activeSelf)
+                    enemyActors[j].gameObject.SetActive(false);
             }
         }
     }
@@ -170,7 +239,6 @@ public class BattleManager : MonoBehaviour
             yield return new WaitForSeconds(turnTime);
         }
 
-        battleState = BattleState.WaitingForInput;
-        PromptInput();
+        battleState = BattleState.SettingUpInput;
     }
 }

@@ -20,7 +20,10 @@ public class BunnyActor : MonoBehaviour, IActor
         set
         {
             if (value is Bunny)
+            {
                 fighter = value as Bunny;
+                currentHealth = fighter.maxHealth;
+            }
         }
     }
 
@@ -46,14 +49,31 @@ public class BunnyActor : MonoBehaviour, IActor
         StartCoroutine(TakeStep());
     }
 
+    public void DoDamage(IActor[] targets)
+    {
+        foreach(IActor target in targets)
+        {
+            int damage = Mathf.FloorToInt((Attack + Attack * (fighter.level / 100f)) * (1 - (target.Defense - 1) * 0.2f));
+            target.TakeDamage(damage / 2);
+        }
+        StartCoroutine(TakeStep());
+    }
+
     public void TakeDamage(int damage)
     {
-        throw new System.NotImplementedException();
+        effect.PlaySlash();
+        currentHealth -= damage;
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            Die();
+        }
     }
 
     public void Die()
     {
-        throw new System.NotImplementedException();
+        // TODO: Insert death turn
+        Debug.Log("enemy dead");
     }
 
     public IEnumerator TakeStep()

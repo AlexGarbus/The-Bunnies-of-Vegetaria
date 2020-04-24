@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class BattleMenu : MonoBehaviour
 {
+    [SerializeField] private TMP_Text playerStatText;
+
     [Header("Player Input")]
     [SerializeField] private GameObject playerInputPanel;
     [SerializeField] private TMP_Text inputPromptText;
@@ -27,6 +29,12 @@ public class BattleMenu : MonoBehaviour
             enemyPanel.SetActive(false);
         if (turnPanel.activeSelf)
             turnPanel.SetActive(false);
+    }
+
+    public void SetPlayerStatText()
+    {
+        // TODO: Implement SetPlayerStatText
+        throw new System.NotImplementedException();
     }
 
     public void ShowPlayerInputPanel(bool isActive)

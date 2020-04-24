@@ -29,6 +29,8 @@ public class EnemyActor : MonoBehaviour, IActor
         }
     }
 
+    private enum TurnType { SingleAttack, MultiAttack, SingleHeal, MultiHeal }
+
     private int currentHealth;
     private Vector2 startPosition;
     private Enemy fighter;
@@ -53,6 +55,16 @@ public class EnemyActor : MonoBehaviour, IActor
         StartCoroutine(TakeStep());
     }
 
+    public void DoDamage(IActor[] targets)
+    {
+        foreach (IActor target in targets)
+        {
+            int damage = Mathf.FloorToInt(10 * Attack * (1 - (target.Defense - 1) * 0.2f));
+            target.TakeDamage(damage / 2);
+        }
+        StartCoroutine(TakeStep());
+    }
+
     public void TakeDamage(int damage)
     {
         effect.PlaySlash();
@@ -67,7 +79,7 @@ public class EnemyActor : MonoBehaviour, IActor
     public void Die()
     {
         // TODO: Insert death turn
-        Debug.Log("dead");
+        Debug.Log("enemy dead");
     }
 
     public IEnumerator TakeStep()
@@ -88,6 +100,48 @@ public class EnemyActor : MonoBehaviour, IActor
         {
             transform.position = Vector2.MoveTowards(transform.position, startPosition, maxDistanceDelta);
             yield return null;
+        }
+    }
+
+    /// <summary>
+    /// Get a randomly selected turn from the enemy.
+    /// </summary>
+    /// <param name="bunnyActors">All bunny actors that the enemy can attack.</param>
+    /// <param name="enemyActors">All enemy actors that the enemy can heal.</param>
+    public Turn GetTurn(BunnyActor[] bunnyActors, EnemyActor[] enemyActors)
+    {
+        List<TurnType> availableTurns = new List<TurnType>(4);
+        if (fighter.singleAttack)
+            availableTurns.Add(TurnType.SingleAttack);
+        if (fighter.multiAttack)
+            availableTurns.Add(TurnType.MultiAttack);
+        if (fighter.singleHeal)
+            availableTurns.Add(TurnType.SingleHeal);
+        if (fighter.multiAttack)
+            availableTurns.Add(TurnType.MultiHeal);
+
+        if (availableTurns.Count == 0)
+        {
+            Debug.LogError("Enemy has no available turns!");
+            return null;
+        }
+
+        TurnType selectedTurn = (TurnType)Random.Range(0, availableTurns.Count);
+
+        switch(selectedTurn)
+        {
+            // TODO: Implement heals
+            case TurnType.SingleAttack:
+                BunnyActor bunnyActor = bunnyActors[Random.Range(0, bunnyActors.Length)];
+                return new Turn(this, bunnyActor, $"{FighterName} attacks {bunnyActor.FighterName}!", () => DoDamage(bunnyActor));
+            case TurnType.MultiAttack:
+                return new Turn(this, bunnyActors, $"{FighterName} attacks the whole party!", () => DoDamage(bunnyActors));
+            case TurnType.SingleHeal:
+                return null;
+            case TurnType.MultiHeal:
+                return null;
+            default:
+                return null;
         }
     }
 }

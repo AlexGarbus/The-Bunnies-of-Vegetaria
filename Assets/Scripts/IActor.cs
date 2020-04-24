@@ -21,6 +21,8 @@ public interface IActor
 
     void DoDamage(IActor target);
 
+    void DoDamage(IActor[] targets);
+
     void TakeDamage(int damage);
 
     void Die();
