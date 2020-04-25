@@ -32,6 +32,7 @@ public class EnemyActor : MonoBehaviour, IActor
     private enum TurnType { SingleAttack, MultiAttack, SingleHeal, MultiHeal }
 
     private int currentHealth;
+    private const int normalHealAmount = 5;
     private Vector2 startPosition;
     private Enemy fighter;
     private BattleEffect effect;
@@ -82,6 +83,14 @@ public class EnemyActor : MonoBehaviour, IActor
         Debug.Log("enemy dead");
     }
 
+    public void Heal(int healAmount)
+    {
+        currentHealth += healAmount;
+        if (currentHealth > fighter.maxHealth)
+            currentHealth = fighter.maxHealth;
+        effect.PlayHeal();
+    }
+
     public IEnumerator TakeStep()
     {
         Vector2 startPosition = transform.position;
@@ -107,7 +116,7 @@ public class EnemyActor : MonoBehaviour, IActor
     /// Get a randomly selected turn from the enemy.
     /// </summary>
     /// <param name="bunnyActors">All bunny actors that the enemy can attack.</param>
-    /// <param name="enemyActors">All enemy actors that the enemy can heal.</param>
+    /// <param name="enemyActors">All enemy actors that the enemy can heal, including itself.</param>
     public Turn GetTurn(BunnyActor[] bunnyActors, EnemyActor[] enemyActors)
     {
         List<TurnType> availableTurns = new List<TurnType>(4);
@@ -130,16 +139,20 @@ public class EnemyActor : MonoBehaviour, IActor
 
         switch(selectedTurn)
         {
-            // TODO: Implement heals
             case TurnType.SingleAttack:
                 BunnyActor bunnyActor = bunnyActors[Random.Range(0, bunnyActors.Length)];
                 return new Turn(this, bunnyActor, $"{FighterName} attacks {bunnyActor.FighterName}!", () => DoDamage(bunnyActor));
             case TurnType.MultiAttack:
                 return new Turn(this, bunnyActors, $"{FighterName} attacks the whole party!", () => DoDamage(bunnyActors));
             case TurnType.SingleHeal:
-                return null;
+                return new Turn(this, $"{FighterName} healed itself!", () => Heal(normalHealAmount * 2));
             case TurnType.MultiHeal:
-                return null;
+                return new Turn(this, $"{FighterName} healed all enemies!", () =>
+                    {
+                        foreach (EnemyActor enemyActor in enemyActors)
+                            enemyActor.Heal(normalHealAmount);
+                    }
+                );
             default:
                 return null;
         }

@@ -73,7 +73,12 @@ public class BunnyActor : MonoBehaviour, IActor
     public void Die()
     {
         // TODO: Insert death turn
-        Debug.Log("enemy dead");
+        Debug.Log("player dead");
+    }
+
+    public void Heal(int healAmount)
+    {
+        throw new System.NotImplementedException();
     }
 
     public IEnumerator TakeStep()

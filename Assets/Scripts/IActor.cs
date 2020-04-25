@@ -27,5 +27,7 @@ public interface IActor
 
     void Die();
 
+    void Heal(int healAmount);
+
     IEnumerator TakeStep();
 }
