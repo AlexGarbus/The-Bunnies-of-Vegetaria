@@ -19,7 +19,7 @@ public class Turn
     public Turn(IActor user, string message, Action turnAction)
     {
         User = user;
-        Targets = null;
+        Targets = new IActor[0];
         Message = message;
         TurnAction = turnAction;
     }

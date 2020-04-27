@@ -6,9 +6,13 @@ public enum BunnyType { Bunnight, Bunnecromancer, Bunnurse, Bunneerdowell };
 public class Bunny : Fighter
 {
     public int maxSkill;
-    public int experience;
-    public int level;
     public BunnyType type;
+
+    public int Level => level;
+    public int Experience => experience;
+    
+    private int level;
+    private int experience;
 
     public Bunny(BunnyType t, string n, int exp)
     {
@@ -43,6 +47,16 @@ public class Bunny : Fighter
                 speed = 3;
                 break;
         }
+    }
+
+    public void AddExperience(int value)
+    {
+        experience += value;
+        if (experience > 1000)
+            experience = 1000;
+        level = CalculateLevel();
+        maxHealth = CalculateMaxHealth();
+        maxSkill = CalculateMaxSkill();
     }
 
     private int CalculateMaxHealth() => Mathf.FloorToInt(10 + 0.9f * CalculateLevel());

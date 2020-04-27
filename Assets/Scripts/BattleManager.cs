@@ -1,14 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
     [SerializeField] private AudioClip bossMusic;
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private BattleMenu battleMenu;
+    [SerializeField] private SceneTransition sceneTransition;
 
+    [Header("Background")]
+    [SerializeField] private BattleBackground battleBackground;
     // TODO: Maybe load from JSON instead?
     [Tooltip("The backgrounds for each area. These should be in ascending order by area.")]
     [SerializeField] private Sprite[] backgrounds;
@@ -16,12 +21,13 @@ public class BattleManager : MonoBehaviour
     [Header("Battle Flow")]
     [SerializeField] private int maxWaves = 5;
     [SerializeField] private float turnTime = 1f;
+    [SerializeField] private float travelSpeed = 1f;
 
     [Header("Actors")]
     [SerializeField] private BunnyActor[] bunnyActors;
     [SerializeField] private EnemyActor[] enemyActors;
 
-    private enum BattleState { SettingUpInput, HandlingInput, SettingUpTurns, HandlingTurns }
+    private enum BattleState { Waiting, SettingUpInput, HandlingInput, SettingUpTurns, HandlingTurns }
 
     private int inputsReceived = -1;
     private int wave = 1;
@@ -125,7 +131,7 @@ public class BattleManager : MonoBehaviour
     /// Add experience to all living bunnies.
     /// </summary>
     /// <param name="experience">The amount of experience to give.</param>
-    public void GainExperience(int experience)
+    private void GainExperience(int experience)
     {
         BunnyActor[] aliveBunnies = GetAliveBunnies();
         foreach(BunnyActor bunnyActor in aliveBunnies)
@@ -178,7 +184,7 @@ public class BattleManager : MonoBehaviour
             int i;
             for(i = 0; i < wave && i < enemyActors.Length; i++)
             {
-                int enemyIndex = Random.Range(0, enemies.Length);
+                int enemyIndex = UnityEngine.Random.Range(0, enemies.Length);
                 enemyActors[i].gameObject.SetActive(true);
                 enemyActors[i].FighterInfo = enemies[enemyIndex];
             }
@@ -200,19 +206,30 @@ public class BattleManager : MonoBehaviour
         {
             Turn turn = turnList.Pop();
 
-            turn.TurnAction();
+            // Perform turn
+            Debug.Log(turn.Message);
+            turn.TurnAction?.Invoke();
             battleMenu.SetTurnText(turn.Message);
             battleMenu.SetPlayerStatText(bunnyActors);
 
             yield return new WaitForSeconds(turnTime);
-
-            if (!turn.User.IsAlive)
-                turnList.RemoveUserTurns(turn.User);
-
-            // TODO: Check if one side has been defeated
+            
+            if(GetAliveEnemies().Length == 0)
+            {
+                // Bunnies have won
+                if(turnList.IsEmpty)
+                {
+                    wave++;
+                    SetWave();
+                    StartCoroutine(battleBackground.ScrollBackground(1, travelSpeed));
+                }
+            }
         }
 
-        battleState = BattleState.SettingUpInput;
+        if(GetAliveBunnies().Length == 0)
+            battleState = BattleState.Waiting;
+        else
+            battleState = BattleState.SettingUpInput;
     }
     
     #region Turn Insertion
@@ -255,6 +272,42 @@ public class BattleManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Insert a death turn for a bunny actor and lose the battle if all bunnies are dead.
+    /// </summary>
+    /// <param name="bunnyActor">The bunny that has died.</param>
+    /// <param name="deathAction">The action that the bunny should perform upon death.</param>
+    public void InsertDeathTurn(BunnyActor bunnyActor, Action deathAction)
+    {
+        turnList.RemoveUserTurns(bunnyActor);
+        turnList.RemoveTargetTurns(bunnyActor);
+        turnList.Push(new Turn(bunnyActor, $"{bunnyActor.FighterName} was defeated!", deathAction));
+
+        if(GetAliveBunnies().Length == 0)
+        {
+            turnList.RemoveEnemyTurns();
+            turnList.Append(new Turn(bunnyActor, "The bunnies have lost! Retreat!", () => sceneTransition.LoadScene(3)));
+        }
+    }
+
+    /// <summary>
+    /// Insert a death turn for an enemy actor.
+    /// </summary>
+    /// <param name="enemyActor">The enemy that has died.</param>
+    /// <param name="deathAction">The action that the bunny should perform upon death.</param>
+    public void InsertDeathTurn(EnemyActor enemyActor, Action deathAction)
+    {
+        Debug.Log("Enemy has died.");
+        turnList.RemoveUserTurns(enemyActor);
+        turnList.RemoveTargetTurns(enemyActor);
+
+        GainExperience(enemyActor.Experience);
+
+        turnList.Push(new Turn(enemyActor, $"{enemyActor.FighterName} was defeated!", deathAction));
+
+        // TODO: Start new wave here
+    }
+
+    /// <summary>
     /// Insert turns for each enemy into the turn list.
     /// </summary>
     private void InsertEnemyTurns()
@@ -263,6 +316,8 @@ public class BattleManager : MonoBehaviour
         EnemyActor[] aliveEnemies = GetAliveEnemies();
         foreach (EnemyActor enemyActor in aliveEnemies)
         {
+            // FIXME: Not working when some bunnies are dead
+            // FIXME: Calling healing methods when not supposed to
             Turn turn = enemyActor.GetTurn(aliveBunnies, aliveEnemies);
             if (turn != null)
                 turnList.Insert(turn);

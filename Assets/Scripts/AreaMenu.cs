@@ -75,7 +75,7 @@ public class AreaMenu : MonoBehaviour
         }
 
         string stats = $"{bunny.name} the {typeString}" + "\n\n"
-            + $"LEVEL: {bunny.level}" + spacer + $"EXPERIENCE: {bunny.experience}" + "\n\n"
+            + $"LEVEL: {bunny.Level}" + spacer + $"EXPERIENCE: {bunny.Experience}" + "\n\n"
             + $"HEALTH: {bunny.maxHealth}" + spacer + $"SKILL: {bunny.maxSkill}" + "\n\n"
             + $"ATTACK: {new string('*', bunny.attack)}" + spacer 
             + $"DEFENSE: {new string('*', bunny.defense)}" + spacer

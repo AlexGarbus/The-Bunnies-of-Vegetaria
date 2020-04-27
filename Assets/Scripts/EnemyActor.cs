@@ -57,7 +57,7 @@ public class EnemyActor : MonoBehaviour, IActor
 
     public int CalculateDamage(IActor target)
     {
-        return Mathf.FloorToInt(10 * Attack * (1 - (target.Defense - 1) * 0.2f));
+        return Mathf.CeilToInt(10 * Attack * (1 - (target.Defense - 1) * 0.2f));
     }
 
     public void DoDamage(IActor target)
@@ -71,7 +71,7 @@ public class EnemyActor : MonoBehaviour, IActor
     {
         foreach (IActor target in targets)
         {
-            int damage = Mathf.FloorToInt(CalculateDamage(target) / 2f);
+            int damage = Mathf.CeilToInt(CalculateDamage(target) / 2f);
             target.TakeDamage(damage);
         }
         StartCoroutine(TakeStep());
@@ -79,6 +79,9 @@ public class EnemyActor : MonoBehaviour, IActor
 
     public void TakeDamage(int damage)
     {
+        if (!IsAlive)
+            return;
+
         effect.PlaySlash();
         currentHealth -= damage;
         if (currentHealth <= 0)
@@ -90,17 +93,14 @@ public class EnemyActor : MonoBehaviour, IActor
 
     public void Die()
     {
-        battleManager.PushTurn(new Turn(this, $"{FighterName} was defeated!", () =>
-                {
-                    StartCoroutine(FadeOut());
-                    battleManager.GainExperience(Experience);
-                }
-            )
-        );
+        battleManager.InsertDeathTurn(this, () => StartCoroutine(FadeOut()));
     }
 
     public void Heal(int healAmount)
     {
+        if (!IsAlive)
+            return;
+
         currentHealth += healAmount;
         if (currentHealth > fighter.maxHealth)
             currentHealth = fighter.maxHealth;

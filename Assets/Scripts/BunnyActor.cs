@@ -12,7 +12,7 @@ public class BunnyActor : MonoBehaviour, IActor
     public int Attack => fighter.attack;
     public int Defense => fighter.defense;
     public int Speed => fighter.speed;
-    public int Experience => fighter.experience;
+    public int Experience => fighter.Experience;
     public string FighterName => fighter.name;
     public Vector2 StartPosition => startPosition;
     public BattleEffect Effect => effect;
@@ -52,7 +52,7 @@ public class BunnyActor : MonoBehaviour, IActor
 
     public int CalculateDamage(IActor target)
     {
-        return Mathf.FloorToInt((Attack * 5 + fighter.level * (1 - Attack * 5f / 100f)) * (1 - (target.Defense - 1) * 0.2f));
+        return Mathf.CeilToInt((Attack * 5 + fighter.Level * (1 - Attack * 5f / 100f)) * (1 - (target.Defense - 1) * 0.2f));
     }
 
     public void DoDamage(IActor target)
@@ -66,7 +66,7 @@ public class BunnyActor : MonoBehaviour, IActor
     {
         foreach(IActor target in targets)
         {
-            int damage = Mathf.FloorToInt(CalculateDamage(target) / 2f);
+            int damage = Mathf.CeilToInt(CalculateDamage(target) / 2f);
             target.TakeDamage(damage);
         }
         StartCoroutine(TakeStep());
@@ -74,6 +74,9 @@ public class BunnyActor : MonoBehaviour, IActor
 
     public void TakeDamage(int damage)
     {
+        if (!IsAlive)
+            return;
+
         effect.PlaySlash();
         currentHealth -= damage;
         if (currentHealth <= 0)
@@ -85,7 +88,7 @@ public class BunnyActor : MonoBehaviour, IActor
 
     public void Die()
     {
-        battleManager.PushTurn(new Turn(this, $"{FighterName} was defeated!", () => transform.Rotate(new Vector3(0, 0, 90))));
+        battleManager.InsertDeathTurn(this, () => transform.Rotate(new Vector3(0, 0, 90)));
     }
 
     public void Heal(int healAmount)
@@ -120,16 +123,17 @@ public class BunnyActor : MonoBehaviour, IActor
     /// <param name="experience">The amount of experience to gain.</param>
     public void GainExperience(int experience)
     {
-        if (experience == 1000)
-            return;
+        int previousLevel = fighter.Level;
 
-        int previousLevel = fighter.level;
+        fighter.AddExperience(experience);
 
-        fighter.experience += experience;
-        if (fighter.experience > 1000)
-            fighter.experience = 1000;
-
-        if (fighter.level != previousLevel)
-            battleManager.PushTurn(new Turn(this, $"{FighterName} leveled up!", null));
+        if (fighter.Level != previousLevel)
+            battleManager.PushTurn(new Turn(this, $"{FighterName} leveled up!", ()=>
+                    {
+                        currentHealth = fighter.maxHealth;
+                        currentSkill = fighter.maxSkill;
+                    }
+                )
+            );
     }
 }
