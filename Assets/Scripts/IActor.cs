@@ -12,6 +12,8 @@ public interface IActor
     int Defense { get; }
 
     int Speed { get; }
+
+    int Experience { get; }
     
     string FighterName { get; }
 

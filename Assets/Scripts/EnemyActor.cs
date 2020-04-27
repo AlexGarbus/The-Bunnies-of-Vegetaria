@@ -15,6 +15,7 @@ public class EnemyActor : MonoBehaviour, IActor
     public int Attack => fighter.attack;
     public int Defense => fighter.defense;
     public int Speed => fighter.speed;
+    public int Experience => Attack + Defense + Speed;
     public string FighterName => fighter.name;
     public Vector2 StartPosition => startPosition;
     public BattleEffect Effect => effect;
@@ -89,7 +90,13 @@ public class EnemyActor : MonoBehaviour, IActor
 
     public void Die()
     {
-        battleManager.PushTurn(new Turn(this, $"{FighterName} was defeated!", () => StartCoroutine(FadeOut())));
+        battleManager.PushTurn(new Turn(this, $"{FighterName} was defeated!", () =>
+                {
+                    StartCoroutine(FadeOut());
+                    battleManager.GainExperience(Experience);
+                }
+            )
+        );
     }
 
     public void Heal(int healAmount)

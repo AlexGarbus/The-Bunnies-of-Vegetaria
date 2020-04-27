@@ -122,55 +122,14 @@ public class BattleManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Insert a turn into the turn list, making it the next turn that the Battle Manager handles.
+    /// Add experience to all living bunnies.
     /// </summary>
-    /// <param name="turn">The turn that the Battle Manager should handle next.</param>
-    public void PushTurn(Turn turn)
-    {
-        turnList.Push(turn);
-    }
-
-    /// <summary>
-    /// Insert a standard attack turn into the turn list.
-    /// </summary>
-    public void InsertAttackTurn(GameObject targetObject)
-    {
-        IActor user = bunnyActors[inputsReceived];
-        IActor target = targetObject.GetComponent<IActor>();
-        Turn turn = new Turn(user, target, $"{user.FighterName} attacks {target.FighterName}!", () => user.DoDamage(target));
-        turnList.Insert(turn);
-        NextInput();
-    }
-
-    /// <summary>
-    /// Insert a defend turn into the turn list.
-    /// </summary>
-    public void InsertDefendTurn()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    /// <summary>
-    /// Insert a skill turn into the turn list.
-    /// </summary>
-    public void InsertSkillTurn()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    /// <summary>
-    /// Insert turns for each enemy into the turn list.
-    /// </summary>
-    private void InsertEnemyTurns()
+    /// <param name="experience">The amount of experience to give.</param>
+    public void GainExperience(int experience)
     {
         BunnyActor[] aliveBunnies = GetAliveBunnies();
-        EnemyActor[] aliveEnemies = GetAliveEnemies();
-        foreach (EnemyActor enemyActor in aliveEnemies)
-        {
-            Turn turn = enemyActor.GetTurn(aliveBunnies, aliveEnemies);
-            if (turn != null)
-                turnList.Insert(turn);
-        }
+        foreach(BunnyActor bunnyActor in aliveBunnies)
+            bunnyActor.GainExperience(experience);
     }
 
     /// <summary>
@@ -255,4 +214,60 @@ public class BattleManager : MonoBehaviour
 
         battleState = BattleState.SettingUpInput;
     }
+    
+    #region Turn Insertion
+
+    /// <summary>
+    /// Insert a turn into the turn list, making it the next turn that the Battle Manager handles.
+    /// </summary>
+    /// <param name="turn">The turn that the Battle Manager should handle next.</param>
+    public void PushTurn(Turn turn)
+    {
+        turnList.Push(turn);
+    }
+
+    /// <summary>
+    /// Insert a standard attack turn into the turn list.
+    /// </summary>
+    public void InsertAttackTurn(GameObject targetObject)
+    {
+        IActor user = bunnyActors[inputsReceived];
+        IActor target = targetObject.GetComponent<IActor>();
+        Turn turn = new Turn(user, target, $"{user.FighterName} attacks {target.FighterName}!", () => user.DoDamage(target));
+        turnList.Insert(turn);
+        NextInput();
+    }
+
+    /// <summary>
+    /// Insert a defend turn into the turn list.
+    /// </summary>
+    public void InsertDefendTurn()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    /// <summary>
+    /// Insert a skill turn into the turn list.
+    /// </summary>
+    public void InsertSkillTurn()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    /// <summary>
+    /// Insert turns for each enemy into the turn list.
+    /// </summary>
+    private void InsertEnemyTurns()
+    {
+        BunnyActor[] aliveBunnies = GetAliveBunnies();
+        EnemyActor[] aliveEnemies = GetAliveEnemies();
+        foreach (EnemyActor enemyActor in aliveEnemies)
+        {
+            Turn turn = enemyActor.GetTurn(aliveBunnies, aliveEnemies);
+            if (turn != null)
+                turnList.Insert(turn);
+        }
+    }
+
+    #endregion
 }

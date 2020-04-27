@@ -12,6 +12,7 @@ public class BunnyActor : MonoBehaviour, IActor
     public int Attack => fighter.attack;
     public int Defense => fighter.defense;
     public int Speed => fighter.speed;
+    public int Experience => fighter.experience;
     public string FighterName => fighter.name;
     public Vector2 StartPosition => startPosition;
     public BattleEffect Effect => effect;
@@ -111,5 +112,24 @@ public class BunnyActor : MonoBehaviour, IActor
             transform.position = Vector2.MoveTowards(transform.position, startPosition, maxDistanceDelta);
             yield return null;
         }
+    }
+
+    /// <summary>
+    /// Gain experience and level up if enough experience has been gained.
+    /// </summary>
+    /// <param name="experience">The amount of experience to gain.</param>
+    public void GainExperience(int experience)
+    {
+        if (experience == 1000)
+            return;
+
+        int previousLevel = fighter.level;
+
+        fighter.experience += experience;
+        if (fighter.experience > 1000)
+            fighter.experience = 1000;
+
+        if (fighter.level != previousLevel)
+            battleManager.PushTurn(new Turn(this, $"{FighterName} leveled up!", null));
     }
 }
