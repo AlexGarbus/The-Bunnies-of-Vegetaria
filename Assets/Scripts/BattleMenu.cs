@@ -31,10 +31,16 @@ public class BattleMenu : MonoBehaviour
             turnPanel.SetActive(false);
     }
 
-    public void SetPlayerStatText()
+    public void SetPlayerStatText(BunnyActor[] bunnyActors)
     {
-        // TODO: Implement SetPlayerStatText
-        throw new System.NotImplementedException();
+        string stats = string.Empty;
+        for(int i = 0; i < bunnyActors.Length; i++)
+        {
+            stats += string.Format("{0, -16} HP:{1, 3} SP:{2, 3}", bunnyActors[i].FighterName, bunnyActors[i].CurrentHealth, bunnyActors[i].CurrentSkill);
+            if (i < bunnyActors.Length - 1)
+                stats += "\n\n";
+        }
+        playerStatText.text = stats;
     }
 
     public void ShowPlayerInputPanel(bool isActive)
@@ -72,7 +78,7 @@ public class BattleMenu : MonoBehaviour
         {
             Button button = enemyButtons[i];
             EnemyActor actor = enemyActors[i];
-            if (actor.gameObject.activeSelf && actor.CurrentHealth != 0)
+            if (actor.gameObject.activeSelf && actor.IsAlive)
             {
                 button.GetComponentInChildren<TMP_Text>().text = actor.FighterName;
 

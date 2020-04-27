@@ -35,7 +35,7 @@ public class EnemyRepository
     /// <returns>The boss from an area.</returns>
     public Enemy GetBossFromArea(Area areaFilter)
     {
-        Enemy boss = enemies.First(enemy =>
+        Enemy boss = bosses.First(enemy =>
             areaFilter == (Area)Enum.Parse(typeof(Area), enemy.area.Replace(" ", string.Empty), false)
         );
         return boss;

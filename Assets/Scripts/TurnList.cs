@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -62,5 +63,22 @@ public class TurnList
         Turn turn = turns[0];
         turns.RemoveAt(0);
         return turn;
+    }
+
+    /// <summary>
+    /// Remove all turns in the list that belong to a specific user.
+    /// </summary>
+    /// <param name="user">The actor whose turns should be removed.</param>
+    public void RemoveUserTurns(IActor user)
+    {
+        turns.RemoveAll(turn => turn.User == user);
+    }
+
+    /// <summary>
+    /// Clear the turn list.
+    /// </summary>
+    public void Clear()
+    {
+        turns.Clear();
     }
 }

@@ -21,7 +21,7 @@ public class SaveData
         bunnightName = "Bunnight";
         bunnecromancerName = "Bunnecromancer";
         bunnurseName = "Bunnurse";
-        bunneerdowellName = "Bune'er-do-well";
+        bunneerdowellName = "Bunne'er-do-well";
         areasUnlocked = 1;
     }
 }

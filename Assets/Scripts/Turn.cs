@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class Turn
 {
-    public delegate void Delegate();
-
     public IActor User { get; private set; }
     public IActor[] Targets { get; private set; }
     public string Message { get; private set; }

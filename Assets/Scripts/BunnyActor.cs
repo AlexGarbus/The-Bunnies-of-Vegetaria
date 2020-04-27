@@ -7,6 +7,7 @@ public class BunnyActor : MonoBehaviour, IActor
     [SerializeField] private float stepDistance;
     [SerializeField] private int stepFrames;
 
+    public bool IsAlive => currentHealth > 0;
     public int CurrentHealth => currentHealth;
     public int Attack => fighter.attack;
     public int Defense => fighter.defense;
@@ -14,6 +15,7 @@ public class BunnyActor : MonoBehaviour, IActor
     public string FighterName => fighter.name;
     public Vector2 StartPosition => startPosition;
     public BattleEffect Effect => effect;
+    public BattleManager Manager { set => battleManager = value; }
 
     public Fighter FighterInfo 
     {
@@ -23,12 +25,17 @@ public class BunnyActor : MonoBehaviour, IActor
             {
                 fighter = value as Bunny;
                 currentHealth = fighter.maxHealth;
+                currentSkill = fighter.maxSkill;
             }
         }
     }
 
+    public int CurrentSkill => currentSkill;
+
     private int currentHealth;
+    private int currentSkill;
     private Vector2 startPosition;
+    private BattleManager battleManager;
     private Bunny fighter;
     private BattleEffect effect;
 
@@ -42,9 +49,14 @@ public class BunnyActor : MonoBehaviour, IActor
         startPosition = transform.position;
     }
 
+    public int CalculateDamage(IActor target)
+    {
+        return Mathf.FloorToInt((Attack * 5 + fighter.level * (1 - Attack * 5f / 100f)) * (1 - (target.Defense - 1) * 0.2f));
+    }
+
     public void DoDamage(IActor target)
     {
-        int damage = Mathf.FloorToInt((Attack + Attack * (fighter.level / 100f)) * (1 - (target.Defense - 1) * 0.2f));
+        int damage = CalculateDamage(target);
         target.TakeDamage(damage);
         StartCoroutine(TakeStep());
     }
@@ -53,8 +65,8 @@ public class BunnyActor : MonoBehaviour, IActor
     {
         foreach(IActor target in targets)
         {
-            int damage = Mathf.FloorToInt((Attack + Attack * (fighter.level / 100f)) * (1 - (target.Defense - 1) * 0.2f));
-            target.TakeDamage(damage / 2);
+            int damage = Mathf.FloorToInt(CalculateDamage(target) / 2f);
+            target.TakeDamage(damage);
         }
         StartCoroutine(TakeStep());
     }
@@ -72,8 +84,7 @@ public class BunnyActor : MonoBehaviour, IActor
 
     public void Die()
     {
-        // TODO: Insert death turn
-        Debug.Log("player dead");
+        battleManager.PushTurn(new Turn(this, $"{FighterName} was defeated!", () => transform.Rotate(new Vector3(0, 0, 90))));
     }
 
     public void Heal(int healAmount)

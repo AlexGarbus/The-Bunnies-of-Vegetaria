@@ -3,6 +3,8 @@ using UnityEngine;
 
 public interface IActor
 {
+    bool IsAlive { get; }
+
     int CurrentHealth { get; }
 
     int Attack { get; }
@@ -15,9 +17,13 @@ public interface IActor
 
     Vector2 StartPosition { get; }
 
+    BattleEffect Effect { get; }
+
+    BattleManager Manager { set; }
+
     Fighter FighterInfo { set; }
 
-    BattleEffect Effect { get; }
+    int CalculateDamage(IActor target);
 
     void DoDamage(IActor target);
 

@@ -23,7 +23,7 @@ public class BattleManager : MonoBehaviour
 
     private enum BattleState { SettingUpInput, HandlingInput, SettingUpTurns, HandlingTurns }
 
-    private int inputsReceived = 0;
+    private int inputsReceived = -1;
     private int wave = 1;
     private BattleState battleState = BattleState.SettingUpInput;
     private GameManager gameManager;
@@ -50,18 +50,17 @@ public class BattleManager : MonoBehaviour
         // TODO: Set background
 
         // Set up bunny actors
+        foreach (BunnyActor actor in bunnyActors)
+            actor.Manager = this;
         bunnyActors[(int)BunnyType.Bunnight].FighterInfo = gameManager.Bunnight;
         bunnyActors[(int)BunnyType.Bunnecromancer].FighterInfo = gameManager.Bunnecromancer;
         bunnyActors[(int)BunnyType.Bunnurse].FighterInfo = gameManager.Bunnurse;
         bunnyActors[(int)BunnyType.Bunneerdowell].FighterInfo = gameManager.Bunneerdowell;
+        battleMenu.SetPlayerStatText(bunnyActors);
 
         // Set up enemy actors
         foreach (EnemyActor actor in enemyActors)
-        {
-            if (actor.gameObject.activeSelf)
-                actor.gameObject.SetActive(false);
-        }
-
+            actor.Manager = this;
         SetWave();
     }
 
@@ -70,13 +69,13 @@ public class BattleManager : MonoBehaviour
         switch(battleState)
         {
             case BattleState.SettingUpInput:
-                PromptInput();
+                NextInput();
                 battleState = BattleState.HandlingInput;
                 break;
             case BattleState.HandlingInput:
                 if(inputsReceived >= bunnyActors.Length)
                 {
-                    inputsReceived = 0;
+                    inputsReceived = -1;
                     battleState = BattleState.SettingUpTurns;
                 }
                 break;
@@ -101,7 +100,7 @@ public class BattleManager : MonoBehaviour
         List<BunnyActor> aliveActors = new List<BunnyActor>();
         foreach(BunnyActor actor in bunnyActors)
         {
-            if (actor.CurrentHealth > 0)
+            if (actor.IsAlive)
                 aliveActors.Add(actor);
         }
         return aliveActors.ToArray();
@@ -116,10 +115,19 @@ public class BattleManager : MonoBehaviour
         List<EnemyActor> aliveActors = new List<EnemyActor>();
         foreach (EnemyActor actor in enemyActors)
         {
-            if (actor.CurrentHealth > 0)
+            if (actor.IsAlive)
                 aliveActors.Add(actor);
         }
         return aliveActors.ToArray();
+    }
+
+    /// <summary>
+    /// Insert a turn into the turn list, making it the next turn that the Battle Manager handles.
+    /// </summary>
+    /// <param name="turn">The turn that the Battle Manager should handle next.</param>
+    public void PushTurn(Turn turn)
+    {
+        turnList.Push(turn);
     }
 
     /// <summary>
@@ -174,7 +182,7 @@ public class BattleManager : MonoBehaviour
         {
             inputsReceived++;
         }
-        while (inputsReceived < bunnyActors.Length && bunnyActors[inputsReceived].CurrentHealth == 0);
+        while (inputsReceived < bunnyActors.Length && !bunnyActors[inputsReceived].IsAlive);
 
         if(inputsReceived < bunnyActors.Length)
             PromptInput();
@@ -233,10 +241,16 @@ public class BattleManager : MonoBehaviour
         {
             Turn turn = turnList.Pop();
 
-            battleMenu.SetTurnText(turn.Message);
             turn.TurnAction();
+            battleMenu.SetTurnText(turn.Message);
+            battleMenu.SetPlayerStatText(bunnyActors);
 
             yield return new WaitForSeconds(turnTime);
+
+            if (!turn.User.IsAlive)
+                turnList.RemoveUserTurns(turn.User);
+
+            // TODO: Check if one side has been defeated
         }
 
         battleState = BattleState.SettingUpInput;

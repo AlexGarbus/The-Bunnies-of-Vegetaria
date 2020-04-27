@@ -42,7 +42,7 @@ public class SceneTransition : MonoBehaviour
         SetFadeAlpha(1);
 
         int alphaChanges = 0;
-        float waitTime = fadeTime / (alphaChangeCount);
+        float waitTime = fadeTime / alphaChangeCount;
 
         while (alphaChanges < alphaChangeCount)
         {
@@ -69,13 +69,13 @@ public class SceneTransition : MonoBehaviour
         SetFadeAlpha(0);
 
         int alphaChanges = 0;
-        float waitTime = fadeTime / (alphaChangeCount);
+        float waitTime = fadeTime / alphaChangeCount;
 
         while (alphaChanges < alphaChangeCount)
         {
             alphaChanges++;
             SetFadeAlpha((float)alphaChanges / alphaChangeCount);
-            yield return new WaitForSeconds(fadeTime / (alphaChangeCount));
+            yield return new WaitForSeconds(waitTime);
         }
 
         IsFading = false;

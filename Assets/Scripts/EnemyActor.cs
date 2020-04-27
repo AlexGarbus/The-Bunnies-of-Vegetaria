@@ -7,7 +7,10 @@ public class EnemyActor : MonoBehaviour, IActor
 {
     [SerializeField] private float stepDistance;
     [SerializeField] private int stepFrames;
+    [SerializeField] private float deathTime;
+    [SerializeField] private int deathFrames;
 
+    public bool IsAlive => currentHealth > 0;
     public int CurrentHealth => currentHealth;
     public int Attack => fighter.attack;
     public int Defense => fighter.defense;
@@ -15,6 +18,7 @@ public class EnemyActor : MonoBehaviour, IActor
     public string FighterName => fighter.name;
     public Vector2 StartPosition => startPosition;
     public BattleEffect Effect => effect;
+    public BattleManager Manager { set => battleManager = value; }
 
     public Fighter FighterInfo 
     {
@@ -34,8 +38,9 @@ public class EnemyActor : MonoBehaviour, IActor
     private int currentHealth;
     private const int normalHealAmount = 5;
     private Vector2 startPosition;
-    private Enemy fighter;
+    private BattleManager battleManager;
     private BattleEffect effect;
+    private Enemy fighter;
     private SpriteRenderer spriteRenderer;
 
     private void Awake()
@@ -49,9 +54,14 @@ public class EnemyActor : MonoBehaviour, IActor
         startPosition = transform.position;
     }
 
+    public int CalculateDamage(IActor target)
+    {
+        return Mathf.FloorToInt(10 * Attack * (1 - (target.Defense - 1) * 0.2f));
+    }
+
     public void DoDamage(IActor target)
     {
-        int damage = Mathf.FloorToInt(10 * Attack * (1 - (target.Defense - 1) * 0.2f));
+        int damage = CalculateDamage(target);
         target.TakeDamage(damage);
         StartCoroutine(TakeStep());
     }
@@ -60,8 +70,8 @@ public class EnemyActor : MonoBehaviour, IActor
     {
         foreach (IActor target in targets)
         {
-            int damage = Mathf.FloorToInt(10 * Attack * (1 - (target.Defense - 1) * 0.2f));
-            target.TakeDamage(damage / 2);
+            int damage = Mathf.FloorToInt(CalculateDamage(target) / 2f);
+            target.TakeDamage(damage);
         }
         StartCoroutine(TakeStep());
     }
@@ -79,8 +89,7 @@ public class EnemyActor : MonoBehaviour, IActor
 
     public void Die()
     {
-        // TODO: Insert death turn
-        Debug.Log("enemy dead");
+        battleManager.PushTurn(new Turn(this, $"{FighterName} was defeated!", () => StartCoroutine(FadeOut())));
     }
 
     public void Heal(int healAmount)
@@ -156,5 +165,26 @@ public class EnemyActor : MonoBehaviour, IActor
             default:
                 return null;
         }
+    }
+
+    /// <summary>
+    /// Fade the enemy's sprite to transparent, and then deactivate the enemy.
+    /// </summary>
+    private IEnumerator FadeOut()
+    {
+        int framesComplete = 0;
+        float waitTime = deathTime / deathFrames;
+
+        while (framesComplete < deathFrames)
+        {
+            framesComplete++;
+
+            spriteRenderer.color = new Color(1, 1, 1, 1f - (float)framesComplete / deathFrames);
+
+            yield return new WaitForSeconds(waitTime);
+        }
+
+        spriteRenderer.color = new Color(1, 1, 1, 1);
+        gameObject.SetActive(false);
     }
 }

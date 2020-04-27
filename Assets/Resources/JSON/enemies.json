@@ -1,8 +1,8 @@
 ﻿{
 	"enemies":[
-		{"name":"Baby Lettuce", "spriteFileName":"baby lettuce", "area":"LettuceFields", "attack":1, "defense":1, "speed":1, "singleAttack":true, "multiAttack":false, "singleHeal":false, "multiHeal":false},
-		{"name":"Iceberg Lettuce", "spriteFileName":"iceberg lettuce", "area":"LettuceFields", "attack":1, "defense":2, "speed":1, "singleAttack":true, "multiAttack":false, "singleHeal":false, "multiHeal":false},
-		{"name":"Romaine Soldier", "spriteFileName":"romaine soldier", "area":"LettuceFields", "attack":2, "defense":2, "speed":1, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},
+		{"name":"Baby Lettuce", "spriteFileName":"baby lettuce", "area":"LettuceFields", "attack":1, "defense":1, "speed":2, "singleAttack":true, "multiAttack":false, "singleHeal":false, "multiHeal":false},
+		{"name":"Iceberg Lettuce", "spriteFileName":"iceberg lettuce", "area":"LettuceFields", "attack":1, "defense":1, "speed":1, "singleAttack":true, "multiAttack":false, "singleHeal":false, "multiHeal":false},
+		{"name":"Romaine Soldier", "spriteFileName":"romaine soldier", "area":"LettuceFields", "attack":2, "defense":1, "speed":1, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},
 		{"name":"Redleaf Lettuce", "spriteFileName":"redleaf lettuce", "area":"LettuceFields", "attack":1, "defense":1, "speed":2, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},
 		{"name":"Cel Wall", "spriteFileName":"cel wall", "area":"CeleryWoods", "attack":1, "defense":3, "speed":1, "singleAttack":false, "multiAttack":false, "singleHeal":true, "multiHeal":false},
 		{"name":"Celeryhead Shark", "spriteFileName":"celeryhead shark", "area":"CeleryWoods", "attack":2, "defense":2, "speed":2, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},

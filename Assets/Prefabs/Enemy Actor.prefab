@@ -97,6 +97,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stepDistance: 1
   stepFrames: 15
+  deathTime: 0.75
+  deathFrames: 4
 --- !u!1001 &7822970082899647004
 PrefabInstance:
   m_ObjectHideFlags: 0

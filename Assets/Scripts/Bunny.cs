@@ -10,22 +10,6 @@ public class Bunny : Fighter
     public int level;
     public BunnyType type;
 
-    public int CalculateMaxHealth() => Mathf.FloorToInt(10 + 0.9f * CalculateLevel());
-
-    public int CalculateLevel()
-    {
-        int n = 0;
-        while (10 * (n * (n + 1) / 2) <= experience)
-            n++;
-        return n;
-    }
-
-    public int CalculateMaxSkill()
-    {
-        int level = CalculateLevel();
-        return level % 2 == 0 ? level : level - 1;
-    }
-
     public Bunny(BunnyType t, string n, int exp)
     {
         name = n;
@@ -33,6 +17,7 @@ public class Bunny : Fighter
         experience = exp;
         level = CalculateLevel();
         maxHealth = CalculateMaxHealth();
+        maxSkill = CalculateMaxSkill();
 
         // TODO: Maybe load from JSON instead?
         switch(type)
@@ -58,5 +43,21 @@ public class Bunny : Fighter
                 speed = 3;
                 break;
         }
+    }
+
+    private int CalculateMaxHealth() => Mathf.FloorToInt(10 + 0.9f * CalculateLevel());
+
+    private int CalculateLevel()
+    {
+        int n = 0;
+        while (10 * (n * (n + 1) / 2) <= experience)
+            n++;
+        return n;
+    }
+
+    private int CalculateMaxSkill()
+    {
+        int level = CalculateLevel();
+        return level % 2 == 0 ? level : level - 1;
     }
 }
