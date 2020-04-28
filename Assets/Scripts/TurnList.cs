@@ -27,11 +27,7 @@ namespace TheBunniesOfVegetaria
         /// <param name="turn">The turn to insert into the list.</param>
         public void Insert(Turn turn)
         {
-            if (IsEmpty)
-            {
-                turns.Add(turn);
-            }
-            else
+            if (!IsEmpty)
             {
                 for (int i = 0; i < turns.Count; i++)
                 {
@@ -42,6 +38,8 @@ namespace TheBunniesOfVegetaria
                     }
                 }
             }
+
+            turns.Add(turn);
         }
 
         /// <summary>
@@ -91,7 +89,6 @@ namespace TheBunniesOfVegetaria
         /// <param name="user">The actor whose targeted turns should be removed.</param>
         public void RemoveTargetTurns(IActor user)
         {
-            // TODO: Test this
             int removed = 0;
             foreach (Turn turn in turns)
                 if (turn.Targets.Length == 1 && turn.Targets[0] == user)

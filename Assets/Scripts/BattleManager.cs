@@ -316,8 +316,6 @@ namespace TheBunniesOfVegetaria
             EnemyActor[] aliveEnemies = GetAliveEnemies();
             foreach (EnemyActor enemyActor in aliveEnemies)
             {
-                // FIXME: Not working when some bunnies are dead
-                // FIXME: Calling healing methods when not supposed to
                 Turn turn = enemyActor.GetTurn(aliveBunnies, aliveEnemies);
                 if (turn != null)
                     turnList.Insert(turn);

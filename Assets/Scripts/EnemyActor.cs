@@ -144,7 +144,7 @@ namespace TheBunniesOfVegetaria
                 availableTurns.Add(TurnType.MultiAttack);
             if (fighter.singleHeal)
                 availableTurns.Add(TurnType.SingleHeal);
-            if (fighter.multiAttack)
+            if (fighter.multiHeal)
                 availableTurns.Add(TurnType.MultiHeal);
 
             if (availableTurns.Count == 0)
@@ -153,7 +153,7 @@ namespace TheBunniesOfVegetaria
                 return null;
             }
 
-            TurnType selectedTurn = (TurnType)Random.Range(0, availableTurns.Count);
+            TurnType selectedTurn = availableTurns[Random.Range(0, availableTurns.Count)];
 
             switch(selectedTurn)
             {
