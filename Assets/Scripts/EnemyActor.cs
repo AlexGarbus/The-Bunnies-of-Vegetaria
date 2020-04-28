@@ -12,15 +12,15 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private float deathTime;
         [SerializeField] private int deathFrames;
 
-        public bool IsAlive => currentHealth > 0;
-        public int CurrentHealth => currentHealth;
+        public bool IsAlive => CurrentHealth > 0;
+        public int CurrentHealth { get; private set; }
         public int Attack => fighter.attack;
         public int Defense => fighter.defense;
         public int Speed => fighter.speed;
         public int Experience => Attack + Defense + Speed + Random.Range(7, 10);
         public string FighterName => fighter.name;
         public Vector2 StartPosition => startPosition;
-        public BattleEffect Effect => effect;
+        public BattleEffect Effect { get; private set; }
         public BattleManager Manager { set => battleManager = value; }
 
         public Fighter FighterInfo 
@@ -31,24 +31,22 @@ namespace TheBunniesOfVegetaria
                 {
                     fighter = value as Enemy;
                     spriteRenderer.sprite = Resources.Load<Sprite>($"Sprites/Enemies/{fighter.spriteFileName}");
-                    currentHealth = 100;
+                    CurrentHealth = 100;
                 }
             }
         }
 
         private enum TurnType { SingleAttack, MultiAttack, SingleHeal, MultiHeal }
 
-        private int currentHealth;
         private const int normalHealAmount = 5;
         private Vector2 startPosition;
         private BattleManager battleManager;
-        private BattleEffect effect;
         private Enemy fighter;
         private SpriteRenderer spriteRenderer;
 
         private void Awake()
         {
-            effect = GetComponentInChildren<BattleEffect>();
+            Effect = GetComponentInChildren<BattleEffect>();
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
@@ -84,11 +82,11 @@ namespace TheBunniesOfVegetaria
             if (!IsAlive)
                 return;
 
-            effect.PlaySlash();
-            currentHealth -= damage;
-            if (currentHealth <= 0)
+            Effect.PlaySlash();
+            CurrentHealth -= damage;
+            if (CurrentHealth <= 0)
             {
-                currentHealth = 0;
+                CurrentHealth = 0;
                 Die();
             }
         }
@@ -103,10 +101,10 @@ namespace TheBunniesOfVegetaria
             if (!IsAlive)
                 return;
 
-            currentHealth += healAmount;
-            if (currentHealth > fighter.maxHealth)
-                currentHealth = fighter.maxHealth;
-            effect.PlayHeal();
+            CurrentHealth += healAmount;
+            if (CurrentHealth > fighter.maxHealth)
+                CurrentHealth = fighter.maxHealth;
+            Effect.PlayHeal();
         }
 
         public IEnumerator TakeStep()

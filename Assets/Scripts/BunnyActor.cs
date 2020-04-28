@@ -9,17 +9,18 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private float stepDistance;
         [SerializeField] private int stepFrames;
 
-        public bool IsAlive => currentHealth > 0;
-        public int CurrentHealth => currentHealth;
+        [HideInInspector] public bool isDefending = false;
+
+        public bool IsAlive => CurrentHealth > 0;
+        public int CurrentHealth { get; private set; }
         public int Attack => fighter.attack;
         public int Defense => fighter.defense;
         public int Speed => fighter.speed;
         public int Experience => fighter.Experience;
         public string FighterName => fighter.name;
         public Vector2 StartPosition => startPosition;
-        public BattleEffect Effect => effect;
+        public BattleEffect Effect { get; private set; }
         public BattleManager Manager { set => battleManager = value; }
-
         public Fighter FighterInfo 
         {
             set
@@ -27,24 +28,20 @@ namespace TheBunniesOfVegetaria
                 if (value is Bunny)
                 {
                     fighter = value as Bunny;
-                    currentHealth = fighter.maxHealth;
-                    currentSkill = fighter.maxSkill;
+                    CurrentHealth = fighter.maxHealth;
+                    CurrentSkill = fighter.maxSkill;
                 }
             }
         }
+        public int CurrentSkill { get; private set; }
 
-        public int CurrentSkill => currentSkill;
-
-        private int currentHealth;
-        private int currentSkill;
         private Vector2 startPosition;
         private BattleManager battleManager;
         private Bunny fighter;
-        private BattleEffect effect;
 
         private void Awake()
         {
-            effect = GetComponentInChildren<BattleEffect>();
+            Effect = GetComponentInChildren<BattleEffect>();
         }
 
         private void Start()
@@ -79,11 +76,14 @@ namespace TheBunniesOfVegetaria
             if (!IsAlive)
                 return;
 
-            effect.PlaySlash();
-            currentHealth -= damage;
-            if (currentHealth <= 0)
+            if (isDefending)
+                damage = Mathf.CeilToInt(damage / 2f);
+
+            Effect.PlaySlash();
+            CurrentHealth -= damage;
+            if (CurrentHealth <= 0)
             {
-                currentHealth = 0;
+                CurrentHealth = 0;
                 Die();
             }
         }
@@ -133,8 +133,8 @@ namespace TheBunniesOfVegetaria
             {
                 battleManager.PushTurn(new Turn(this, $"{FighterName} leveled up!", () =>
                         {
-                            currentHealth = fighter.maxHealth;
-                            currentSkill = fighter.maxSkill;
+                            CurrentHealth = fighter.maxHealth;
+                            CurrentSkill = fighter.maxSkill;
                         }
                     )
                 );

@@ -29,7 +29,7 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private BunnyActor[] bunnyActors;
         [SerializeField] private EnemyActor[] enemyActors;
 
-        private enum BattleState { Idle, Traveling, SettingUpInput, HandlingInput, SettingUpTurns, HandlingTurns }
+        private enum BattleState { Idle, Traveling, SettingUpInput, HandlingInput, SettingUpTurns, HandlingTurns, DoneHandlingTurns }
 
         private int inputsReceived = -1;
         private int wave = 1;
@@ -77,6 +77,8 @@ namespace TheBunniesOfVegetaria
         {
             switch(battleState)
             {
+                case BattleState.Idle:
+                    break;
                 case BattleState.Traveling:
                     if (!battleBackground.IsScrolling)
                     {
@@ -103,6 +105,27 @@ namespace TheBunniesOfVegetaria
                     battleState = BattleState.HandlingTurns;
                     break;
                 case BattleState.HandlingTurns:
+                    break;
+                case BattleState.DoneHandlingTurns:
+                    if (GetAliveBunnies().Length == 0)
+                    {
+                        // Battle is lost
+                        battleState = BattleState.Idle;
+                    }
+                    else if (GetAliveEnemies().Length == 0)
+                    {
+                        // Battle is won
+                        wave++;
+                        SetWave();
+                        StartTravel();
+                    }
+                    else
+                    {
+                        // Battle is undecided
+                        foreach (BunnyActor bunnyActor in bunnyActors)
+                            bunnyActor.isDefending = false;
+                        battleState = BattleState.SettingUpInput;
+                    }
                     break;
             }
         }
@@ -253,24 +276,7 @@ namespace TheBunniesOfVegetaria
                 yield return new WaitForSeconds(turnTime);
             }
 
-            // Decide what to do once done handling turns
-            if(GetAliveBunnies().Length == 0)
-            {
-                // Battle is lost
-                battleState = BattleState.Idle;
-            }
-            else if (GetAliveEnemies().Length == 0)
-            {
-                // Battle is won
-                wave++;
-                SetWave();
-                StartTravel();
-            }
-            else
-            {
-                // Battle is undecided
-                battleState = BattleState.SettingUpInput;
-            }
+            battleState = BattleState.DoneHandlingTurns;
         }
     
         #region Turn Insertion
@@ -301,7 +307,11 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public void InsertDefendTurn()
         {
-            throw new System.NotImplementedException();
+            bunnyActors[inputsReceived].isDefending = true;
+            IActor user = bunnyActors[inputsReceived];
+            Turn turn = new Turn(user, $"{user.FighterName} is defending!", null);
+            turnList.Insert(turn);
+            NextInput();
         }
 
         /// <summary>
