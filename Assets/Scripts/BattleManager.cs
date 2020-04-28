@@ -29,11 +29,11 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private BunnyActor[] bunnyActors;
         [SerializeField] private EnemyActor[] enemyActors;
 
-        private enum BattleState { Waiting, SettingUpInput, HandlingInput, SettingUpTurns, HandlingTurns }
+        private enum BattleState { Idle, Traveling, SettingUpInput, HandlingInput, SettingUpTurns, HandlingTurns }
 
         private int inputsReceived = -1;
         private int wave = 1;
-        private BattleState battleState = BattleState.SettingUpInput;
+        private BattleState battleState;
         private GameManager gameManager;
         private Enemy[] enemies;
         private Enemy boss;
@@ -70,12 +70,20 @@ namespace TheBunniesOfVegetaria
             foreach (EnemyActor actor in enemyActors)
                 actor.Manager = this;
             SetWave();
+            StartTravel();
         }
 
         private void Update()
         {
             switch(battleState)
             {
+                case BattleState.Traveling:
+                    if (!battleBackground.IsScrolling)
+                    {
+                        battleMenu.ShowPlayerStatPanel(true);
+                        battleState = BattleState.SettingUpInput;
+                    }
+                    break;
                 case BattleState.SettingUpInput:
                     NextInput();
                     battleState = BattleState.HandlingInput;
@@ -172,31 +180,60 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         private void SetWave()
         {
+            int i = 0;
+
             if(wave == maxWaves)
             {
                 // Boss wave
-                enemyActors[0].gameObject.SetActive(true);
-                enemyActors[0].FighterInfo = boss;
+                enemyActors[i].gameObject.SetActive(true);
+                enemyActors[i].FighterInfo = boss;
                 musicSource.clip = bossMusic;
                 musicSource.Play();
+                i++;
             }
             else
             {
                 // Regular enemy wave
-                int i;
                 for(i = 0; i < wave && i < enemyActors.Length; i++)
                 {
                     int enemyIndex = UnityEngine.Random.Range(0, enemies.Length);
                     enemyActors[i].gameObject.SetActive(true);
                     enemyActors[i].FighterInfo = enemies[enemyIndex];
                 }
-            
-                for(int j = i; j < enemyActors.Length; j++)
-                {
-                    if (enemyActors[j].gameObject.activeSelf)
-                        enemyActors[j].gameObject.SetActive(false);
-                }
             }
+
+            // Deactivate remaining actors
+            for (int j = i; j < enemyActors.Length; j++)
+            {
+                if (enemyActors[j].gameObject.activeSelf)
+                    enemyActors[j].gameObject.SetActive(false);
+            }
+        }
+
+        /// <summary>
+        /// Start scrolling the background and moving enemy actors so that the bunnies appear to be traveling.
+        /// </summary>
+        private void StartTravel()
+        {
+            battleState = BattleState.Traveling;
+
+            battleMenu.ShowPlayerStatPanel(false);
+            battleMenu.ShowTurnPanel(false);
+
+            List<Transform> enemyTransforms = new List<Transform>();
+
+            foreach(EnemyActor enemyActor in enemyActors)
+            {
+                if (enemyActor.gameObject.activeSelf)
+                    enemyTransforms.Add(enemyActor.transform);
+            }
+
+            foreach (Transform enemyTransform in enemyTransforms)
+            {
+                enemyTransform.Translate(Vector2.right * battleBackground.ScreenWidth);
+            }
+
+            StartCoroutine(battleBackground.ScrollBackground(1, travelSpeed, enemyTransforms.ToArray()));
         }
 
         /// <summary>
@@ -214,23 +251,26 @@ namespace TheBunniesOfVegetaria
                 battleMenu.SetPlayerStatText(bunnyActors);
 
                 yield return new WaitForSeconds(turnTime);
-            
-                if(GetAliveEnemies().Length == 0)
-                {
-                    // Bunnies have won
-                    if(turnList.IsEmpty)
-                    {
-                        wave++;
-                        SetWave();
-                        StartCoroutine(battleBackground.ScrollBackground(1, travelSpeed));
-                    }
-                }
             }
 
+            // Decide what to do once done handling turns
             if(GetAliveBunnies().Length == 0)
-                battleState = BattleState.Waiting;
+            {
+                // Battle is lost
+                battleState = BattleState.Idle;
+            }
+            else if (GetAliveEnemies().Length == 0)
+            {
+                // Battle is won
+                wave++;
+                SetWave();
+                StartTravel();
+            }
             else
+            {
+                // Battle is undecided
                 battleState = BattleState.SettingUpInput;
+            }
         }
     
         #region Turn Insertion

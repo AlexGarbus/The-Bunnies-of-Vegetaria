@@ -8,6 +8,8 @@ namespace TheBunniesOfVegetaria
 {
     public class BattleMenu : MonoBehaviour
     {
+        [Header("Player Stats")]
+        [SerializeField] private GameObject playerStatPanel;
         [SerializeField] private TMP_Text playerStatText;
 
         [Header("Player Input")]
@@ -23,6 +25,8 @@ namespace TheBunniesOfVegetaria
 
         private void Awake()
         {
+            if (playerStatPanel.activeSelf)
+                playerStatPanel.SetActive(false);
             if (playerInputPanel.activeSelf)
                 playerInputPanel.SetActive(false);
             if (optionPanel.activeSelf)
@@ -31,6 +35,11 @@ namespace TheBunniesOfVegetaria
                 enemyPanel.SetActive(false);
             if (turnPanel.activeSelf)
                 turnPanel.SetActive(false);
+        }
+
+        public void ShowPlayerStatPanel(bool isActive)
+        {
+            playerStatPanel.SetActive(isActive);
         }
 
         public void SetPlayerStatText(BunnyActor[] bunnyActors)
