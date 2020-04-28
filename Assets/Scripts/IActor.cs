@@ -1,41 +1,44 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public interface IActor
+namespace TheBunniesOfVegetaria
 {
-    bool IsAlive { get; }
+    public interface IActor
+    {
+        bool IsAlive { get; }
 
-    int CurrentHealth { get; }
+        int CurrentHealth { get; }
 
-    int Attack { get; }
+        int Attack { get; }
 
-    int Defense { get; }
+        int Defense { get; }
 
-    int Speed { get; }
+        int Speed { get; }
 
-    int Experience { get; }
+        int Experience { get; }
     
-    string FighterName { get; }
+        string FighterName { get; }
 
-    Vector2 StartPosition { get; }
+        Vector2 StartPosition { get; }
 
-    BattleEffect Effect { get; }
+        BattleEffect Effect { get; }
 
-    BattleManager Manager { set; }
+        BattleManager Manager { set; }
 
-    Fighter FighterInfo { set; }
+        Fighter FighterInfo { set; }
 
-    int CalculateDamage(IActor target);
+        int CalculateDamage(IActor target);
 
-    void DoDamage(IActor target);
+        void DoDamage(IActor target);
 
-    void DoDamage(IActor[] targets);
+        void DoDamage(IActor[] targets);
 
-    void TakeDamage(int damage);
+        void TakeDamage(int damage);
 
-    void Die();
+        void Die();
 
-    void Heal(int healAmount);
+        void Heal(int healAmount);
 
-    IEnumerator TakeStep();
+        IEnumerator TakeStep();
+    }
 }

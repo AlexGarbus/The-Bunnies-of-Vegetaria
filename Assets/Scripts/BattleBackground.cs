@@ -2,54 +2,57 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattleBackground : MonoBehaviour
+namespace TheBunniesOfVegetaria
 {
-    private float minPositionX, maxPositionX;
-    private SpriteRenderer[] spriteRenderers;
-
-    private void Awake()
+    public class BattleBackground : MonoBehaviour
     {
-        spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-        minPositionX = spriteRenderers[0].transform.position.x - 4;
-        maxPositionX = spriteRenderers[spriteRenderers.Length - 1].transform.position.x;
-    }
+        private float minPositionX, maxPositionX;
+        private SpriteRenderer[] spriteRenderers;
 
-    /// <summary>
-    /// Set the battle background.
-    /// </summary>
-    /// <param name="backgroundTile">The tile to use for the battle background. Should be 64 pixels (4 world units) long.</param>
-    public void SetBackground(Sprite backgroundTile)
-    {
-        foreach (SpriteRenderer spriteRenderer in spriteRenderers)
-            spriteRenderer.sprite = backgroundTile;
-    }
+        private void Awake()
+        {
+            spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+            minPositionX = spriteRenderers[0].transform.position.x - 4;
+            maxPositionX = spriteRenderers[spriteRenderers.Length - 1].transform.position.x;
+        }
 
-    /// <summary>
-    /// Scroll the background horizontally by a certain number of screens.
-    /// </summary>
-    /// <param name="screens">The number of screens to scroll.</param>
-    /// <param name="speed">The speed at which to scroll the background.</param>
-    public IEnumerator ScrollBackground(int screens, float speed)
-    {
-        int tilesScrolled = 0;
-
-        do
+        /// <summary>
+        /// Set the battle background.
+        /// </summary>
+        /// <param name="backgroundTile">The tile to use for the battle background. Should be 64 pixels (4 world units) long.</param>
+        public void SetBackground(Sprite backgroundTile)
         {
             foreach (SpriteRenderer spriteRenderer in spriteRenderers)
+                spriteRenderer.sprite = backgroundTile;
+        }
+
+        /// <summary>
+        /// Scroll the background horizontally by a certain number of screens.
+        /// </summary>
+        /// <param name="screens">The number of screens to scroll.</param>
+        /// <param name="speed">The speed at which to scroll the background.</param>
+        public IEnumerator ScrollBackground(int screens, float speed)
+        {
+            int tilesScrolled = 0;
+
+            do
             {
-                Transform spriteTransform = spriteRenderer.transform;
-                spriteTransform.Translate(Vector2.left * speed * Time.fixedDeltaTime);
-
-                if (spriteTransform.position.x <= minPositionX)
+                foreach (SpriteRenderer spriteRenderer in spriteRenderers)
                 {
-                    Vector2 newPosition = spriteTransform.position;
-                    newPosition.x = maxPositionX;
-                    spriteTransform.position = newPosition;
-                    tilesScrolled++;
-                }
-            }
+                    Transform spriteTransform = spriteRenderer.transform;
+                    spriteTransform.Translate(Vector2.left * speed * Time.fixedDeltaTime);
 
-            yield return null;
-        } while (tilesScrolled < screens * spriteRenderers.Length);
+                    if (spriteTransform.position.x <= minPositionX)
+                    {
+                        Vector2 newPosition = spriteTransform.position;
+                        newPosition.x = maxPositionX;
+                        spriteTransform.position = newPosition;
+                        tilesScrolled++;
+                    }
+                }
+
+                yield return null;
+            } while (tilesScrolled < screens * spriteRenderers.Length);
+        }
     }
 }

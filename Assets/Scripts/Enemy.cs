@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class Enemy : Fighter
+namespace TheBunniesOfVegetaria
 {
-    public string spriteFileName, area;
-    public bool singleAttack, multiAttack, singleHeal, multiHeal;
-
-    public Enemy()
+    [System.Serializable]
+    public class Enemy : Fighter
     {
-        maxHealth = 100;
+        public string spriteFileName, area;
+        public bool singleAttack, multiAttack, singleHeal, multiHeal;
+
+        public Enemy()
+        {
+            maxHealth = 100;
+        }
     }
 }

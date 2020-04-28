@@ -2,23 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
-public class BattleEffect : MonoBehaviour
+namespace TheBunniesOfVegetaria
 {
-    private Animator animator;
-
-    private void Start()
+    [RequireComponent(typeof(Animator))]
+    public class BattleEffect : MonoBehaviour
     {
-        animator = GetComponent<Animator>();
-    }
+        private Animator animator;
 
-    public void PlaySlash()
-    {
-        animator.SetTrigger("Slash");
-    }
+        private void Start()
+        {
+            animator = GetComponent<Animator>();
+        }
 
-    public void PlayHeal()
-    {
-        animator.SetTrigger("Heal");
+        public void PlaySlash()
+        {
+            animator.SetTrigger("Slash");
+        }
+
+        public void PlayHeal()
+        {
+            animator.SetTrigger("Heal");
+        }
     }
 }
