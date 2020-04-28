@@ -87,7 +87,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonText: {fileID: 8004110640333517117}
   areaImage: {fileID: 8738866}
-  area: 0
 --- !u!1001 &1295359283722995579
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -109,7 +108,7 @@ PrefabInstance:
     - target: {fileID: 3683853067246735547, guid: 5c2eff33af895604096bb8d22044cbb2,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3683853067246735547, guid: 5c2eff33af895604096bb8d22044cbb2,
         type: 3}
@@ -184,7 +183,7 @@ PrefabInstance:
     - target: {fileID: 6764464509658483424, guid: 5c2eff33af895604096bb8d22044cbb2,
         type: 3}
       propertyPath: m_Name
-      value: Area Button Variant
+      value: Area Button
       objectReference: {fileID: 0}
     - target: {fileID: 8169818093293861662, guid: 5c2eff33af895604096bb8d22044cbb2,
         type: 3}

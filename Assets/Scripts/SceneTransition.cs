@@ -93,6 +93,16 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
+        /// Save the player's data and then start the FadeOutToScene coroutine.
+        /// </summary>
+        /// <param name="sceneIndex">The build index of the scene to load.</param>
+        public void SaveAndLoadScene(int sceneIndex)
+        {
+            SaveLoad.Save();
+            StartCoroutine(FadeOutToScene(sceneIndex));
+        }
+
+        /// <summary>
         /// Fade out to a solid color, then load a new scene.
         /// </summary>
         /// <param name="sceneIndex">The build index of the scene to load.</param>

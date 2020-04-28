@@ -326,7 +326,7 @@ namespace TheBunniesOfVegetaria
             if(GetAliveBunnies().Length == 0)
             {
                 turnList.RemoveEnemyTurns();
-                turnList.Append(new Turn(bunnyActor, "The bunnies have lost! Retreat!", () => sceneTransition.LoadScene(3)));
+                turnList.Append(new Turn(bunnyActor, "The bunnies have lost! Retreat!", () => sceneTransition.SaveAndLoadScene(3)));
             }
         }
 
@@ -343,8 +343,6 @@ namespace TheBunniesOfVegetaria
             GainExperience(enemyActor.Experience);
 
             turnList.Push(new Turn(enemyActor, $"{enemyActor.FighterName} was defeated!", deathAction));
-
-            // TODO: Start new wave here
         }
 
         /// <summary>

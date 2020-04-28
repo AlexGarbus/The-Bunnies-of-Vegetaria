@@ -17,7 +17,7 @@ namespace TheBunniesOfVegetaria
         public int Attack => fighter.attack;
         public int Defense => fighter.defense;
         public int Speed => fighter.speed;
-        public int Experience => Attack + Defense + Speed;
+        public int Experience => Attack + Defense + Speed + Random.Range(7, 10);
         public string FighterName => fighter.name;
         public Vector2 StartPosition => startPosition;
         public BattleEffect Effect => effect;

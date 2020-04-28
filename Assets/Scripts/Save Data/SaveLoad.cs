@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
 using UnityEngine;
 
 namespace TheBunniesOfVegetaria
@@ -14,11 +11,14 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public static void Save()
         {
+            BunniesToSaveData();
+
             BinaryFormatter bf = new BinaryFormatter();
             using (FileStream file = File.Create(Application.persistentDataPath + "/save.dat"))
             {
                 bf.Serialize(file, SaveData.current);
             }
+
             Debug.Log("DATA SAVED");
         }
 
@@ -34,6 +34,7 @@ namespace TheBunniesOfVegetaria
                 {
                     SaveData.current = (SaveData)bf.Deserialize(file);
                 }
+
                 Debug.Log("DATA LOADED");
             }
             else
@@ -50,6 +51,22 @@ namespace TheBunniesOfVegetaria
         public static bool SaveExists()
         {
             return File.Exists(Application.persistentDataPath + "/save.dat");
+        }
+
+        /// <summary>
+        /// Convert the bunny objects stored in the game manager to save data.
+        /// </summary>
+        private static void BunniesToSaveData()
+        {
+            GameManager gameManager = GameManager.Instance;
+            SaveData.current.bunnightName = gameManager.Bunnight.name;
+            SaveData.current.bunnightExp = gameManager.Bunnight.Experience;
+            SaveData.current.bunnecromancerName = gameManager.Bunnecromancer.name;
+            SaveData.current.bunnecromancerExp = gameManager.Bunnecromancer.Experience;
+            SaveData.current.bunnurseName = gameManager.Bunnurse.name;
+            SaveData.current.bunnurseExp = gameManager.Bunnurse.Experience;
+            SaveData.current.bunneerdowellName = gameManager.Bunneerdowell.name;
+            SaveData.current.bunneerdowellExp = gameManager.Bunneerdowell.Experience;
         }
     }
 }

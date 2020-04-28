@@ -29,10 +29,12 @@ namespace TheBunniesOfVegetaria
 
         private int namesInput = 0;
         private DescriptionHolder descriptionHolder;
+        private GameManager gameManager;
 
         private void Start()
         {
             descriptionHolder = JsonUtility.FromJson<DescriptionHolder>(Resources.Load<TextAsset>("JSON/naming").text);
+            gameManager = GameManager.Instance;
             PromptNextName();
         }
 
@@ -73,22 +75,22 @@ namespace TheBunniesOfVegetaria
             switch (namesInput)
             {
                 case 0:
-                    nameInput.text = SaveData.current.bunnightName;
+                    nameInput.text = gameManager.Bunnight.name;
                     break;
                 case 1:
-                    SaveData.current.bunnightName = nameInput.text;
-                    nameInput.text = SaveData.current.bunnecromancerName;
+                    gameManager.Bunnight.name = nameInput.text;
+                    nameInput.text = gameManager.Bunnecromancer.name;
                     break;
                 case 2:
-                    SaveData.current.bunnecromancerName = nameInput.text;
-                    nameInput.text = SaveData.current.bunnurseName;
+                    gameManager.Bunnecromancer.name = nameInput.text;
+                    nameInput.text = gameManager.Bunnurse.name;
                     break;
                 case 3:
-                    SaveData.current.bunnurseName = nameInput.text;
-                    nameInput.text = SaveData.current.bunneerdowellName;
+                    gameManager.Bunnurse.name = nameInput.text;
+                    nameInput.text = gameManager.Bunneerdowell.name;
                     break;
                 case 4:
-                    SaveData.current.bunneerdowellName = nameInput.text;
+                    gameManager.Bunneerdowell.name = nameInput.text;
 
                     // All names have been input
                     ConfirmNames();
@@ -107,8 +109,7 @@ namespace TheBunniesOfVegetaria
         private void ConfirmNames()
         {
             confirmationPanel.SetActive(true);
-            SaveData save = SaveData.current;
-            confirmationNames.text = save.bunnightName + "\n\n\n\n" + save.bunnecromancerName + "\n\n\n\n" + save.bunnurseName + "\n\n\n\n" + save.bunneerdowellName;
+            confirmationNames.text = gameManager.Bunnight.name + "\n\n\n\n" + gameManager.Bunnecromancer.name + "\n\n\n\n" + gameManager.Bunnurse.name + "\n\n\n\n" + gameManager.Bunneerdowell.name;
         }
     }
 }

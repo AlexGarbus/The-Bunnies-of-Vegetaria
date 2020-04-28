@@ -1239,7 +1239,7 @@ PrefabInstance:
     - target: {fileID: 3683853067246735547, guid: 5c2eff33af895604096bb8d22044cbb2,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: LoadScene
+      value: SaveAndLoadScene
       objectReference: {fileID: 0}
     - target: {fileID: 3683853067246735547, guid: 5c2eff33af895604096bb8d22044cbb2,
         type: 3}
@@ -2564,7 +2564,7 @@ GameObject:
   - component: {fileID: 1974298575}
   - component: {fileID: 1974298574}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Naming Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
