@@ -106,9 +106,17 @@ namespace TheBunniesOfVegetaria
                     else if (GetAliveEnemies().Length == 0)
                     {
                         // Battle is won
-                        wave++;
-                        SetWave();
-                        StartTravel();
+                        if(wave == maxWaves)
+                        {
+                            // Boss defeated
+                            battleState = BattleState.Idle;
+                        }
+                        else
+                        {
+                            // Regular wave defeated
+                            SetWave();
+                            StartTravel();
+                        }
                     }
                     else
                     {
@@ -322,12 +330,16 @@ namespace TheBunniesOfVegetaria
         {
             turnList.RemoveUserTurns(bunnyActor);
             turnList.RemoveTargetTurns(bunnyActor);
-            turnList.Push(new Turn(bunnyActor, $"{bunnyActor.FighterName} was defeated!", deathAction));
+
+            Turn turn = new Turn(bunnyActor, $"{bunnyActor.FighterName} was defeated!", deathAction);
+            turnList.Push(turn);
 
             if(GetAliveBunnies().Length == 0)
             {
+                // Battle has been lost
                 turnList.RemoveEnemyTurns();
-                turnList.Append(new Turn(bunnyActor, "The bunnies have lost! Retreat!", () => sceneTransition.SaveAndLoadScene(3)));
+                turn = new Turn(bunnyActor, "The bunnies have lost! Retreat!", () => sceneTransition.SaveAndLoadScene(3));
+                turnList.Append(turn);
             }
         }
 
@@ -343,7 +355,26 @@ namespace TheBunniesOfVegetaria
 
             GainExperience(enemyActor.Experience);
 
-            turnList.Push(new Turn(enemyActor, $"{enemyActor.FighterName} was defeated!", deathAction));
+            Turn turn = new Turn(enemyActor, $"{enemyActor.FighterName} was defeated!", deathAction);
+            turnList.Push(turn);
+
+            if(GetAliveEnemies().Length == 0 && wave == maxWaves)
+            {
+                // Boss has been defeated
+                turn = new Turn(enemyActor, "This area is clear!", () =>
+                    {
+                        // TODO: Don't increment for final area
+                        SaveData.current.areasUnlocked++;
+                        sceneTransition.SaveAndLoadScene(3);
+                    }
+                );
+                turnList.Append(turn);
+            }
+            else
+            {
+                // Regular wave has been defeated
+                wave++;
+            }
         }
 
         /// <summary>
