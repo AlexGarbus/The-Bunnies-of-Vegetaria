@@ -44,7 +44,7 @@ SpriteAtlas:
     packables:
     - {fileID: 102900000, guid: 98f076f146d6c644eafbd6b408dfef24, type: 3}
     - {fileID: 102900000, guid: c2563b2dba9e78e4d879655dcec63f73, type: 3}
-    totalSpriteSurfaceArea: 278640
+    totalSpriteSurfaceArea: 324720
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -58,6 +58,7 @@ SpriteAtlas:
   - {fileID: -5010287565412364656, guid: 578919f1fd253d840b991551bbecd79a, type: 3}
   - {fileID: 21300000, guid: b54098128b2c5b64bbdd6027a7edc270, type: 3}
   - {fileID: 21300000, guid: aa3c8a137c6150a46977f0c57d776661, type: 3}
+  - {fileID: 21300000, guid: f4f842339cb7b9641a993df3aff44f94, type: 3}
   - {fileID: -1049461823314036041, guid: c19ff573b0ca3a6419c4f5f68ab45387, type: 3}
   - {fileID: -2480101461718692971, guid: c19ff573b0ca3a6419c4f5f68ab45387, type: 3}
   - {fileID: -1250687572758538602, guid: c19ff573b0ca3a6419c4f5f68ab45387, type: 3}
@@ -76,6 +77,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 806af44648c126d46aadb1a9a9e0c999, type: 3}
   - {fileID: 21300000, guid: 652d5aa6f096d0845817e4dcd98c8298, type: 3}
   - {fileID: 21300000, guid: b87bc4b6885e2624ca864dd5c27fc1a1, type: 3}
+  - {fileID: 21300000, guid: 561e9617ac45710418bbf1f206abedd3, type: 3}
   - {fileID: 21300000, guid: 6dc5bde7fb62c6b4e9695e4edb8524d8, type: 3}
   - {fileID: 21300000, guid: b30f499854228db488e5ba7303b16ac3, type: 3}
   - {fileID: 21300000, guid: 857bd6a87bb02554eb54bdb94aa017d8, type: 3}
@@ -88,6 +90,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 0b600d9ae61e5264d8ff8d4dc07b47b7, type: 3}
   - {fileID: 21300000, guid: c8000baa7d88961409057201c15a8179, type: 3}
   - {fileID: 21300000, guid: 96c42e8b513a0484bb43a21770c7b631, type: 3}
+  - {fileID: 21300000, guid: db47033c1593328458a591ba84bf9c76, type: 3}
   - {fileID: 21300000, guid: 0d61a5cca72731d40b48cc010b068f5f, type: 3}
   - {fileID: 21300000, guid: 484cb68dfb9976f47bb216826296cfe6, type: 3}
   - {fileID: 21300000, guid: 860c7cddf2414ad49a715aefee66aaba, type: 3}
@@ -109,6 +112,7 @@ SpriteAtlas:
   - attack_1
   - armored choy
   - salad bowl
+  - bg_final
   - heal_0
   - heal_1
   - heal_2
@@ -127,18 +131,20 @@ SpriteAtlas:
   - bg_broccoli forest
   - lettuce fields
   - big chokus
+  - bg_carrot top
   - bok o clock
   - soul choy
   - brockey
   - romaine soldier
   - sweet carrot
   - clawery
-  - bg_celery forest
+  - bg_celery woods
   - ui_window
   - player_bunnight
   - broccoltree
   - carrot dragon
   - ui_map
+  - bg_bok choy bluff
   - caulifaker
   - broccoflower
   - player_bunnecromancer

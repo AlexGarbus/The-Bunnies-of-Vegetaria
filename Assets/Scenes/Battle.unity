@@ -1246,7 +1246,6 @@ MonoBehaviour:
   battleMenu: {fileID: 1974298574}
   sceneTransition: {fileID: 1318449200}
   battleBackground: {fileID: 1604408059}
-  backgrounds: []
   maxWaves: 5
   turnTime: 1
   travelSpeed: 1
@@ -2578,6 +2577,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6028e4fc204d2e84680689167fd29ec3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backgrounds:
+  - {fileID: 21300000, guid: 138e1314e9734f64fa1d50009ce68b99, type: 3}
+  - {fileID: 21300000, guid: 5859755ab5f15b44390db273f457bbb5, type: 3}
+  - {fileID: 21300000, guid: 806af44648c126d46aadb1a9a9e0c999, type: 3}
+  - {fileID: 21300000, guid: db47033c1593328458a591ba84bf9c76, type: 3}
+  - {fileID: 21300000, guid: 561e9617ac45710418bbf1f206abedd3, type: 3}
+  - {fileID: 21300000, guid: f4f842339cb7b9641a993df3aff44f94, type: 3}
 --- !u!1001 &1682564803
 PrefabInstance:
   m_ObjectHideFlags: 0

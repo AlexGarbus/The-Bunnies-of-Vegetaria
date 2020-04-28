@@ -6,6 +6,9 @@ namespace TheBunniesOfVegetaria
 {
     public class BattleBackground : MonoBehaviour
     {
+        [Tooltip("The background sprites for each area. These should be in ascending order by area.")]
+        [SerializeField] private Sprite[] backgrounds;
+
         public bool IsScrolling { get; private set; } = false;
         public float ScreenWidth => Mathf.Abs(maxPositionX - minPositionX);
 
@@ -19,14 +22,9 @@ namespace TheBunniesOfVegetaria
             maxPositionX = spriteRenderers[spriteRenderers.Length - 1].transform.position.x;
         }
 
-        /// <summary>
-        /// Set the battle background.
-        /// </summary>
-        /// <param name="backgroundTile">The tile to use for the battle background. Should be 64 pixels (4 world units) long.</param>
-        public void SetBackground(Sprite backgroundTile)
+        private void Start()
         {
-            foreach (SpriteRenderer spriteRenderer in spriteRenderers)
-                spriteRenderer.sprite = backgroundTile;
+            SetBackground(GameManager.Instance.BattleArea);
         }
 
         /// <summary>
@@ -77,6 +75,16 @@ namespace TheBunniesOfVegetaria
             }
 
             IsScrolling = false;
+        }
+
+        /// <summary>
+        /// Set the battle background.
+        /// </summary>
+        /// <param name="area">The area to set as the background.</param>
+        private void SetBackground(Globals.Area area)
+        {
+            foreach (SpriteRenderer spriteRenderer in spriteRenderers)
+                spriteRenderer.sprite = backgrounds[(int)area - 1];
         }
 
         /// <summary>

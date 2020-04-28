@@ -16,9 +16,6 @@ namespace TheBunniesOfVegetaria
 
         [Header("Background")]
         [SerializeField] private BattleBackground battleBackground;
-        // TODO: Maybe load from JSON instead?
-        [Tooltip("The backgrounds for each area. These should be in ascending order by area.")]
-        [SerializeField] private Sprite[] backgrounds;
 
         [Header("Battle Flow")]
         [SerializeField] private int maxWaves = 5;
@@ -44,18 +41,12 @@ namespace TheBunniesOfVegetaria
             gameManager = GameManager.Instance;
 
             // Get area
-            Globals.Area area;
-            if (gameManager.AreaIndex == 0)
-                area = Globals.Area.LettuceFields;
-            else
-                area = (Globals.Area)gameManager.AreaIndex;
+            Globals.Area area = gameManager.BattleArea;
 
             // Load enemies
             EnemyRepository enemyRepository = EnemyRepository.LoadFromJSON();
             enemies = enemyRepository.GetEnemiesFromArea(area).ToArray();
             boss = enemyRepository.GetBossFromArea(area);
-
-            // TODO: Set background
 
             // Set up bunny actors
             foreach (BunnyActor actor in bunnyActors)

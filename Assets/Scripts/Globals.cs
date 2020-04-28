@@ -15,7 +15,8 @@ namespace TheBunniesOfVegetaria
             CeleryWoods,
             BroccoliForest,
             BokChoyBluff,
-            CarrotTop
+            CarrotTop,
+            Final
         }
 
         /// <summary>

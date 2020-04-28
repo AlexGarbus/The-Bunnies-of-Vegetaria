@@ -12,7 +12,7 @@ namespace TheBunniesOfVegetaria
 
         [SerializeField] private AudioMixer mixer;
 
-        public int AreaIndex { get; set; } = 0;
+        public Globals.Area BattleArea { get; set; } = Globals.Area.LettuceFields;
         public Bunny Bunnight { get; private set; }
         public Bunny Bunnecromancer { get; private set; }
         public Bunny Bunnurse { get; private set; }
@@ -32,16 +32,22 @@ namespace TheBunniesOfVegetaria
             DontDestroyOnLoad(gameObject);
         }
 
-        void Start()
+        private void Start()
         {
             LoadSettings();
             CreateBunnies();
         }
     
-        void Update()
+        private void Update()
         {
             if(SceneManager.GetActiveScene().buildIndex > 0)
                 AddPlaytime();
+        }
+
+        private void OnApplicationQuit()
+        {
+            if (SceneManager.GetActiveScene().buildIndex > 0)
+                SaveLoad.Save();
         }
 
         /// <summary>
