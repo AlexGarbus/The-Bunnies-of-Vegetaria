@@ -60,18 +60,18 @@ namespace TheBunniesOfVegetaria
             return Mathf.CeilToInt(10 * Attack * (1 - (target.Defense - 1) * 0.2f));
         }
 
-        public void DoDamage(IActor target)
+        public void DoDamage(IActor target, float multiplier = 1)
         {
-            int damage = CalculateDamage(target);
+            int damage = CalculateDamage(target) * (int)multiplier;
             target.TakeDamage(damage);
             StartCoroutine(TakeStep());
         }
 
-        public void DoDamage(IActor[] targets)
+        public void DoDamage(IActor[] targets, float multiplier = 0.5f)
         {
             foreach (IActor target in targets)
             {
-                int damage = Mathf.CeilToInt(CalculateDamage(target) / 2f);
+                int damage = Mathf.CeilToInt(CalculateDamage(target) * multiplier);
                 target.TakeDamage(damage);
             }
             StartCoroutine(TakeStep());

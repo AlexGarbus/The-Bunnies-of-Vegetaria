@@ -29,9 +29,9 @@ namespace TheBunniesOfVegetaria
 
         int CalculateDamage(IActor target);
 
-        void DoDamage(IActor target);
+        void DoDamage(IActor target, float multiplier = 1);
 
-        void DoDamage(IActor[] targets);
+        void DoDamage(IActor[] targets, float multiplier = 0.5f);
 
         void TakeDamage(int damage);
 

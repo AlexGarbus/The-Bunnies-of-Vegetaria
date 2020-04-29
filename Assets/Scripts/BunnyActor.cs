@@ -54,18 +54,18 @@ namespace TheBunniesOfVegetaria
             return Mathf.CeilToInt((Attack * 5 + fighter.Level * (1 - Attack * 5f / 100f)) * (1 - (target.Defense - 1) * 0.2f));
         }
 
-        public void DoDamage(IActor target)
+        public void DoDamage(IActor target, float multiplier = 1)
         {
-            int damage = CalculateDamage(target);
+            int damage = CalculateDamage(target) * (int)multiplier;
             target.TakeDamage(damage);
             StartCoroutine(TakeStep());
         }
 
-        public void DoDamage(IActor[] targets)
+        public void DoDamage(IActor[] targets, float multiplier = 0.5f)
         {
             foreach(IActor target in targets)
             {
-                int damage = Mathf.CeilToInt(CalculateDamage(target) / 2f);
+                int damage = Mathf.CeilToInt(CalculateDamage(target) * multiplier);
                 target.TakeDamage(damage);
             }
             StartCoroutine(TakeStep());
@@ -95,7 +95,13 @@ namespace TheBunniesOfVegetaria
 
         public void Heal(int healAmount)
         {
-            throw new System.NotImplementedException();
+            if (!IsAlive)
+                return;
+
+            CurrentHealth += healAmount;
+            if (CurrentHealth > fighter.maxHealth)
+                CurrentHealth = fighter.maxHealth;
+            Effect.PlayHeal();
         }
 
         public IEnumerator TakeStep()
@@ -119,7 +125,29 @@ namespace TheBunniesOfVegetaria
             }
         }
 
-        /// <summary>
+        public void RestoreSkill(int skillAmount)
+        {
+            if (!IsAlive)
+                return;
+
+            CurrentSkill += skillAmount;
+            if (CurrentSkill > fighter.maxSkill)
+                CurrentSkill = fighter.maxSkill;
+            Effect.PlayHeal();
+        }
+        
+        public void Revive()
+        {
+            if (IsAlive)
+                return;
+
+            CurrentHealth = fighter.maxHealth;
+            Turn turn = new Turn(this, $"{FighterName} was revived!", () => transform.Rotate(new Vector3(0, 0, -90)));
+            battleManager.PushTurn(turn);
+            Effect.PlayHeal();
+        }
+
+/// <summary>
         /// Gain experience and level up if enough experience has been gained.
         /// </summary>
         /// <param name="experience">The amount of experience to gain.</param>
