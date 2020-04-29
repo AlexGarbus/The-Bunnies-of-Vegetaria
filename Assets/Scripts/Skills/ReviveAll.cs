@@ -10,6 +10,7 @@ namespace TheBunniesOfVegetaria
             Description = $"Revive defeated party members";
         }
 
+        // TODO: Add healthAmount parameter
         public override void Use(BunnyActor user, IActor[] targets)
         {
             foreach (IActor target in targets)

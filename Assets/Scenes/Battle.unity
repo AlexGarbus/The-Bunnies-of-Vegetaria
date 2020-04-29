@@ -299,6 +299,7 @@ GameObject:
   m_Component:
   - component: {fileID: 149833661}
   - component: {fileID: 149833660}
+  - component: {fileID: 149833663}
   - component: {fileID: 149833662}
   m_Layer: 0
   m_Name: Bunnecromancer
@@ -354,7 +355,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &149833661
@@ -387,6 +388,25 @@ MonoBehaviour:
   stepDistance: 1
   stepFrames: 30
   isDefending: 0
+--- !u!95 &149833663
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 149833659}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 4f9d8c75d955a0e4fba0fb2027a704b7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &159340336 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6764464509658483424, guid: 5c2eff33af895604096bb8d22044cbb2,
@@ -1900,6 +1920,7 @@ GameObject:
   m_Component:
   - component: {fileID: 625147146}
   - component: {fileID: 625147145}
+  - component: {fileID: 625147148}
   - component: {fileID: 625147147}
   m_Layer: 0
   m_Name: Bunnight
@@ -1955,7 +1976,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &625147146
@@ -1988,6 +2009,25 @@ MonoBehaviour:
   stepDistance: 1
   stepFrames: 30
   isDefending: 0
+--- !u!95 &625147148
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625147144}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 5ad8f6c04cb533f478bf99599dbb73ff, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &646128231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3524,6 +3564,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1918942893}
   - component: {fileID: 1918942892}
+  - component: {fileID: 1918942895}
   - component: {fileID: 1918942894}
   m_Layer: 0
   m_Name: Bunneerdowell
@@ -3579,7 +3620,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1918942893
@@ -3612,6 +3653,25 @@ MonoBehaviour:
   stepDistance: 1
   stepFrames: 30
   isDefending: 0
+--- !u!95 &1918942895
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918942891}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 8009812f3dc606a4abe0bfa9e0f8781c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1921446222
 GameObject:
   m_ObjectHideFlags: 0
@@ -4475,6 +4535,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2055506502}
   - component: {fileID: 2055506501}
+  - component: {fileID: 2055506504}
   - component: {fileID: 2055506503}
   m_Layer: 0
   m_Name: Bunnurse
@@ -4530,7 +4591,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &2055506502
@@ -4563,6 +4624,25 @@ MonoBehaviour:
   stepDistance: 1
   stepFrames: 30
   isDefending: 0
+--- !u!95 &2055506504
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055506500}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 640cfbe9fdfa3a8428eabcc96de0a30b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &2070497089
 PrefabInstance:
   m_ObjectHideFlags: 0

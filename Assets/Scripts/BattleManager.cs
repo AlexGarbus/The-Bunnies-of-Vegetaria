@@ -84,6 +84,8 @@ namespace TheBunniesOfVegetaria
                 case BattleState.Traveling:
                     if (!battleBackground.IsScrolling)
                     {
+                        foreach (BunnyActor bunnyActor in bunnyActors)
+                            bunnyActor.SetMoving(false);
                         battleMenu.ShowPlayerStatPanel(true);
                         battleState = BattleState.SettingUpInput;
                     }
@@ -225,6 +227,9 @@ namespace TheBunniesOfVegetaria
 
             battleMenu.ShowPlayerStatPanel(false);
             battleMenu.ShowTurnPanel(false);
+
+            foreach (BunnyActor bunnyActor in bunnyActors)
+                bunnyActor.SetMoving(true);
 
             List<Transform> enemyTransforms = new List<Transform>();
 
@@ -404,15 +409,16 @@ namespace TheBunniesOfVegetaria
             Turn turn = new Turn(enemyActor, $"{enemyActor.FighterName} was defeated!", deathAction);
             turnList.Push(turn);
 
-            if(GetAliveEnemies().Length == 0 && wave == maxWaves)
+            if(GetAliveEnemies().Length == 0)
             {
                 if(wave == maxWaves)
                 {
                     // Boss has been defeated
                     turn = new Turn(enemyActor, "This area is clear!", () =>
                         {
-                            // TODO: Don't increment for final area
-                            SaveData.current.areasUnlocked++;
+                            // TODO: Increment to Carrot Top
+                            if (SaveData.current.areasUnlocked + 1 < (int)Globals.Area.CarrotTop)
+                                SaveData.current.areasUnlocked++;
                             sceneTransition.SaveAndLoadScene(3);
                         }
                     );

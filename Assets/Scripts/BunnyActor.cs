@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace TheBunniesOfVegetaria
 {
+    [RequireComponent(typeof(Animator))]
     public class BunnyActor : MonoBehaviour, IActor
     {
         [SerializeField] private float stepDistance;
@@ -39,12 +40,14 @@ namespace TheBunniesOfVegetaria
         private Skill[] AvailableSkills => fighter.GetAvailableSkills();
         
         private Vector2 startPosition;
+        private Animator animator;
         private BattleManager battleManager;
         private Bunny fighter;
 
         private void Awake()
         {
             Effect = GetComponentInChildren<BattleEffect>();
+            animator = GetComponent<Animator>();
         }
 
         private void Start()
@@ -202,6 +205,14 @@ namespace TheBunniesOfVegetaria
                     )
                 );
             }
+        }
+    
+        public void SetMoving(bool isMoving)
+        {
+            if (!IsAlive)
+                return;
+
+            animator.SetBool("Moving", isMoving);
         }
     }
 }

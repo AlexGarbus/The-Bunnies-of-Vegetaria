@@ -43,9 +43,9 @@ namespace TheBunniesOfVegetaria
                     attack = 1;
                     defense = 5;
                     speed = 2;
-                    Skills[0] = new HealAll(5, 5, "Heal", 10);
-                    Skills[1] = new HealAll(10, 10, "Super Heal", 20);
-                    Skills[2] = new ReviveAll(20, 20, "Revive");
+                    Skills[0] = new ReviveAll(5, 5, "Revive");
+                    Skills[1] = new HealAll(10, 10, "Heal", 20);
+                    Skills[2] = new ReviveAll(20, 20, "Resurrect");
                     break;
                 case Globals.BunnyType.Bunneerdowell:
                     attack = 4;
@@ -112,7 +112,7 @@ namespace TheBunniesOfVegetaria
         private int CalculateMaxSkill()
         {
             int level = CalculateLevel();
-            return level / 5 * 5;
+            return level / 5 * 10;
         }
     }
 }
