@@ -12,6 +12,7 @@ namespace TheBunniesOfVegetaria
         public int Experience { get; private set; }
         public Skill[] Skills { get; private set; } = new Skill[3];
 
+        // TODO: Construct from JSON
         public Bunny(Globals.BunnyType t, string n, int exp)
         {
             name = n;
@@ -43,9 +44,9 @@ namespace TheBunniesOfVegetaria
                     attack = 1;
                     defense = 5;
                     speed = 2;
-                    Skills[0] = new ReviveAll(5, 5, "Revive");
-                    Skills[1] = new HealAll(10, 10, "Heal", 20);
-                    Skills[2] = new ReviveAll(20, 20, "Resurrect");
+                    Skills[0] = new HealAll(5, 5, "Heal", 10);
+                    Skills[1] = new ReviveAll(5, 5, "Revive", 10);
+                    Skills[2] = new ReviveAll(20, 20, "Resurrect", 25);
                     break;
                 case Globals.BunnyType.Bunneerdowell:
                     attack = 4;

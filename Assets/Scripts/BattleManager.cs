@@ -40,7 +40,7 @@ namespace TheBunniesOfVegetaria
         private enum BattleState { Idle, Traveling, SettingUpInput, HandlingInput, SettingUpTurns, HandlingTurns, DoneHandlingTurns }
 
         private int inputsReceived = -1;
-        private int wave = 1;
+        private int wave = 0;
         private BattleState battleState;
         private GameManager gameManager;
         private Enemy[] enemies;
@@ -71,7 +71,7 @@ namespace TheBunniesOfVegetaria
             // Set up enemy actors
             foreach (EnemyActor actor in enemyActors)
                 actor.Manager = this;
-            SetWave();
+            NextWave();
             StartTravel();
         }
 
@@ -127,7 +127,12 @@ namespace TheBunniesOfVegetaria
                         else
                         {
                             // Regular wave defeated
-                            SetWave();
+                            foreach(BunnyActor bunnyActor in bunnyActors)
+                            {
+                                if (!bunnyActor.IsAlive)
+                                    bunnyActor.Revive();
+                            }
+                            NextWave();
                             StartTravel();
                         }
                     }
@@ -184,13 +189,14 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Set the current wave of enemies.
+        /// Set the next wave of enemies.
         /// </summary>
-        private void SetWave()
+        private void NextWave()
         {
             int i = 0;
+            wave++;
 
-            if(wave == maxWaves)
+            if (wave == maxWaves)
             {
                 // Boss wave
                 enemyActors[i].gameObject.SetActive(true);
@@ -319,6 +325,9 @@ namespace TheBunniesOfVegetaria
         /// <param name="turn">The turn that the Battle Manager should handle next.</param>
         public void PushTurn(Turn turn)
         {
+            if (battleState != BattleState.HandlingTurns)
+                return;
+
             turnList.Push(turn);
         }
 
@@ -423,11 +432,6 @@ namespace TheBunniesOfVegetaria
                         }
                     );
                     turnList.Append(turn);
-                }
-                else
-                {
-                    // Regular wave has been defeated
-                    wave++;
                 }
             }
         }

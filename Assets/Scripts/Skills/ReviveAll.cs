@@ -4,13 +4,15 @@ namespace TheBunniesOfVegetaria
 {
     public class ReviveAll : Skill
     {
-        public ReviveAll(int cost, int minimumLevel, string name) : base(cost, minimumLevel, name)
+        private int healthAmount;
+
+        public ReviveAll(int cost, int minimumLevel, string name, int healthAmount) : base(cost, minimumLevel, name)
         {
+            this.healthAmount = healthAmount;
             Target = TargetType.Bunny;
             Description = $"Revive defeated party members";
         }
 
-        // TODO: Add healthAmount parameter
         public override void Use(BunnyActor user, IActor[] targets)
         {
             foreach (IActor target in targets)
@@ -18,7 +20,7 @@ namespace TheBunniesOfVegetaria
                 if (!target.IsAlive && target is BunnyActor)
                 {
                     BunnyActor targetBunny = (BunnyActor)target;
-                    targetBunny.Revive();
+                    targetBunny.Revive(healthAmount);
                 }
             }
         }

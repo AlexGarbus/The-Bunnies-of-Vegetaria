@@ -174,14 +174,13 @@ namespace TheBunniesOfVegetaria
             Effect.PlayHeal();
         }
         
-        public void Revive()
+        public void Revive(int healthAmount = 10)
         {
             if (IsAlive)
                 return;
 
-            CurrentHealth = fighter.maxHealth;
-            Turn turn = new Turn(this, $"{FighterName} was revived!", () => transform.Rotate(new Vector3(0, 0, -90)));
-            battleManager.PushTurn(turn);
+            CurrentHealth = Mathf.Clamp(healthAmount, 0, fighter.maxHealth);
+            transform.Rotate(new Vector3(0, 0, -90));
             Effect.PlayHeal();
         }
 
