@@ -11,11 +11,11 @@ namespace TheBunniesOfVegetaria
         {
             minMultiplier = min;
             maxMultiplier = max;
-            type = TargetType.Enemy;
+            Target = TargetType.Enemy;
             Description = $"Random damage to all enemies.";
         }
 
-        public override void Use(IActor user, IActor[] targets)
+        public override void Use(BunnyActor user, IActor[] targets)
         {
             for(int i = 0; i < targets.Length; i++)
             {

@@ -11,12 +11,15 @@
 
         // Progression
         public int areasUnlocked;
-        public bool[] enemiesSeen;
-        public bool[] achievements;
-        public bool[] tutorials;
 
         // Play time
         public float hours, minutes, seconds;
+
+        // Unused progression variables
+        // Will be implemented in future versions
+        public bool[] enemiesSeen;
+        public bool[] achievements;
+        public bool[] tutorials;
 
         public SaveData()
         {

@@ -16,26 +16,37 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private GameObject playerInputPanel;
         [SerializeField] private TMP_Text inputPromptText;
         [SerializeField] private GameObject optionPanel;
+        [SerializeField] private GameObject skillOptionButton;
+        [SerializeField] private GameObject skillPanel;
         [SerializeField] private GameObject enemyPanel;
-        [SerializeField] private Button[] enemyButtons;
 
         [Header("Turns")]
         [SerializeField] private GameObject turnPanel;
         [SerializeField] private TMP_Text turnText;
 
+        private Button[] skillButtons;
+        private Button[] enemyButtons;
+
         private void Awake()
         {
+            skillButtons = skillPanel.GetComponentsInChildren<Button>();
+            enemyButtons = enemyPanel.GetComponentsInChildren<Button>();
+
             if (playerStatPanel.activeSelf)
                 playerStatPanel.SetActive(false);
             if (playerInputPanel.activeSelf)
                 playerInputPanel.SetActive(false);
             if (optionPanel.activeSelf)
                 optionPanel.SetActive(false);
+            if (skillPanel.activeSelf)
+                skillPanel.SetActive(false);
             if (enemyPanel.activeSelf)
                 enemyPanel.SetActive(false);
             if (turnPanel.activeSelf)
                 turnPanel.SetActive(false);
         }
+
+        #region Player Stats
 
         public void ShowPlayerStatPanel(bool isActive)
         {
@@ -54,9 +65,15 @@ namespace TheBunniesOfVegetaria
             playerStatText.text = stats;
         }
 
-        public void ShowPlayerInputPanel(bool isActive)
+        #endregion
+
+        #region Player Input
+
+        public void ShowPlayerInputPanel(bool isActive, BunnyActor bunnyActor = null)
         {
             playerInputPanel.SetActive(isActive);
+            if(bunnyActor)
+                skillOptionButton.SetActive(bunnyActor.AvailableSkillStrings.Length != 0);
         }
 
         public void SetInputPromptText(string message)
@@ -69,14 +86,14 @@ namespace TheBunniesOfVegetaria
             optionPanel.SetActive(isActive);
         }
 
-        public void ShowTurnPanel(bool isActive)
+        public void ShowSkillPanel(bool isActive)
         {
-            turnPanel.SetActive(isActive);
+            skillPanel.SetActive(isActive);
         }
 
-        public void SetTurnText(string message)
+        public void ShowEnemyPanel(bool isActive)
         {
-            turnText.text = message;
+            enemyPanel.SetActive(isActive);
         }
 
         /// <summary>
@@ -102,5 +119,43 @@ namespace TheBunniesOfVegetaria
                 }
             }
         }
+
+        /// <summary>
+        /// Set the number of active skill buttons and the text on each button.
+        /// </summary>
+        /// <param name="bunnyActor">The bunny actor to set the buttons for.</param>
+        public void SetSkillButtons(BunnyActor bunnyActor)
+        {
+            string[] availableSkills = bunnyActor.AvailableSkillStrings;
+
+            for (int i = 0; i < skillButtons.Length; i++)
+            {
+                if (i < availableSkills.Length)
+                {
+                    skillButtons[i].gameObject.SetActive(true);
+                    skillButtons[i].GetComponentInChildren<TMP_Text>().text = availableSkills[i];
+                }
+                else
+                {
+                    skillButtons[i].gameObject.SetActive(false);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Turns
+
+        public void ShowTurnPanel(bool isActive)
+        {
+            turnPanel.SetActive(isActive);
+        }
+
+        public void SetTurnText(string message)
+        {
+            turnText.text = message;
+        }
+
+        #endregion
     }
 }

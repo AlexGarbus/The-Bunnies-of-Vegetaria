@@ -34,7 +34,10 @@ namespace TheBunniesOfVegetaria
             }
         }
         public int CurrentSkill { get; private set; }
+        public string[] AvailableSkillStrings => fighter.GetAvailableSkillStrings();
 
+        private Skill[] AvailableSkills => fighter.GetAvailableSkills();
+        
         private Vector2 startPosition;
         private BattleManager battleManager;
         private Bunny fighter;
@@ -123,6 +126,38 @@ namespace TheBunniesOfVegetaria
                 transform.position = Vector2.MoveTowards(transform.position, startPosition, maxDistanceDelta);
                 yield return null;
             }
+        }
+
+        public bool CanUseSkill(int skillIndex)
+        {
+            Skill skill = fighter.Skills[skillIndex];
+            return CurrentSkill >= skill.Cost && fighter.Level >= skill.MinimumLevel;
+        }
+
+        public string GetSkillName(int skillIndex)
+        {
+            return fighter.Skills[skillIndex].Name;
+        }
+
+        public Skill.TargetType GetSkillTarget(int skillIndex)
+        {
+            return fighter.Skills[skillIndex].Target;
+        }
+
+        /// <summary>
+        /// Use a skill.
+        /// </summary>
+        /// <param name="skillIndex">The index of the skill to use.</param>
+        /// <param name="targets">The target actors of this skill.</param>
+        public void UseSkill(int skillIndex, IActor[] targets)
+        {
+            if (!CanUseSkill(skillIndex))
+                return;
+
+            Skill skill = fighter.Skills[skillIndex];
+
+            CurrentSkill -= skill.Cost;
+            skill.Use(this, targets);
         }
 
         public void RestoreSkill(int skillAmount)

@@ -9,11 +9,11 @@ namespace TheBunniesOfVegetaria
         public HealAll(int cost, int minimumLevel, string name, int healthAmount) : base(cost, minimumLevel, name)
         {
             this.healAmount = healthAmount;
-            type = TargetType.Bunny;
+            Target = TargetType.Bunny;
             Description = $"Party HP +{healthAmount}";
         }
 
-        public override void Use(IActor user, IActor[] targets)
+        public override void Use(BunnyActor user, IActor[] targets)
         {
             foreach (IActor target in targets)
             {

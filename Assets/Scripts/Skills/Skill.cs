@@ -9,7 +9,7 @@
 
         public enum TargetType { Bunny, Enemy }
 
-        protected TargetType type;
+        public TargetType Target { get; protected set; }
 
         public Skill(int cost, int minimumLevel, string name)
         {
@@ -18,6 +18,11 @@
             Name = name;
         }
 
-        public abstract void Use(IActor user, IActor[] targets);
+        public override string ToString()
+        {
+            return $"{Name} ({Cost} SP): {Description}";
+        }
+
+        public abstract void Use(BunnyActor user, IActor[] targets);
     }
 }

@@ -9,11 +9,11 @@ namespace TheBunniesOfVegetaria
         public DamageAll(int cost, int minimumLevel, string name, float multiplier) : base(cost, minimumLevel, name)
         {
             this.multiplier = multiplier;
-            type = TargetType.Enemy;
+            Target = TargetType.Enemy;
             Description = $"{multiplier}x damage to all enemies";
         }
 
-        public override void Use(IActor user, IActor[] targets)
+        public override void Use(BunnyActor user, IActor[] targets)
         {
             user.DoDamage(targets, multiplier);
         }

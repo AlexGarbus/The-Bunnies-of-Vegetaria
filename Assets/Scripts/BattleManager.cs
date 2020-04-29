@@ -25,6 +25,17 @@ namespace TheBunniesOfVegetaria
         [Header("Actors")]
         [SerializeField] private BunnyActor[] bunnyActors;
         [SerializeField] private EnemyActor[] enemyActors;
+        
+        private BunnyActor SelectedBunny 
+        {
+            get 
+            {
+                if (inputsReceived >= 0 && inputsReceived < bunnyActors.Length)
+                    return bunnyActors[inputsReceived];
+                else
+                    return null;
+            }
+        }
 
         private enum BattleState { Idle, Traveling, SettingUpInput, HandlingInput, SettingUpTurns, HandlingTurns, DoneHandlingTurns }
 
@@ -171,33 +182,6 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Count the input for the current bunny as received and prepare to either receive the next input or begin handling turns.
-        /// </summary>
-        private void NextInput()
-        {
-            do
-            {
-                inputsReceived++;
-            }
-            while (inputsReceived < bunnyActors.Length && !bunnyActors[inputsReceived].IsAlive);
-
-            if(inputsReceived < bunnyActors.Length)
-                PromptInput();
-        }
-
-        /// <summary>
-        /// Prompt the user to input their turn for the current bunny.
-        /// </summary>
-        private void PromptInput()
-        {
-            battleMenu.ShowPlayerInputPanel(true);
-            battleMenu.ShowOptionPanel(true);
-            battleMenu.ShowTurnPanel(false);
-            battleMenu.SetEnemyButtons(enemyActors);
-            battleMenu.SetInputPromptText($"What will {bunnyActors[inputsReceived].FighterName} do?");
-        }
-
-        /// <summary>
         /// Set the current wave of enemies.
         /// </summary>
         private void SetWave()
@@ -277,6 +261,50 @@ namespace TheBunniesOfVegetaria
 
             battleState = BattleState.DoneHandlingTurns;
         }
+
+        #region Player Input
+
+        /// <summary>
+        /// Generate and display the skill input menu.
+        /// </summary>
+        public void SkillInput()
+        {
+            if (SelectedBunny.AvailableSkillStrings.Length != 0)
+            {
+                battleMenu.ShowOptionPanel(false);
+                battleMenu.SetSkillButtons(SelectedBunny);
+                battleMenu.ShowSkillPanel(true);
+            }
+        }
+
+        /// <summary>
+        /// Count the input for the current bunny as received and prepare to either receive the next input or begin handling turns.
+        /// </summary>
+        private void NextInput()
+        {
+            do
+            {
+                inputsReceived++;
+            }
+            while (inputsReceived < bunnyActors.Length && !SelectedBunny.IsAlive);
+
+            if(inputsReceived < bunnyActors.Length)
+                PromptInput();
+        }
+
+        /// <summary>
+        /// Prompt the user to input their turn for the current bunny.
+        /// </summary>
+        private void PromptInput()
+        {
+            battleMenu.ShowPlayerInputPanel(true, SelectedBunny);
+            battleMenu.ShowOptionPanel(true);
+            battleMenu.ShowTurnPanel(false);
+            battleMenu.SetEnemyButtons(enemyActors);
+            battleMenu.SetInputPromptText($"What will {SelectedBunny.FighterName} do?");
+        }
+
+        #endregion
     
         #region Turn Insertion
 
@@ -294,10 +322,12 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public void InsertAttackTurn(GameObject targetObject)
         {
-            IActor user = bunnyActors[inputsReceived];
+            IActor user = SelectedBunny;
             IActor target = targetObject.GetComponent<IActor>();
             Turn turn = new Turn(user, target, $"{user.FighterName} attacks {target.FighterName}!", () => user.DoDamage(target));
             turnList.Insert(turn);
+
+            battleMenu.ShowEnemyPanel(false);
             NextInput();
         }
 
@@ -306,19 +336,35 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public void InsertDefendTurn()
         {
-            bunnyActors[inputsReceived].isDefending = true;
-            IActor user = bunnyActors[inputsReceived];
+            SelectedBunny.isDefending = true;
+            IActor user = SelectedBunny;
             Turn turn = new Turn(user, $"{user.FighterName} is defending!", null);
             turnList.Insert(turn);
+
             NextInput();
         }
 
         /// <summary>
         /// Insert a skill turn into the turn list.
         /// </summary>
-        public void InsertSkillTurn()
+        public void InsertSkillTurn(int skillIndex)
         {
-            throw new System.NotImplementedException();
+            BunnyActor user = SelectedBunny;
+
+            if (!SelectedBunny.CanUseSkill(skillIndex))
+                return;
+
+            IActor[] targets;
+            if (user.GetSkillTarget(skillIndex) == Skill.TargetType.Bunny)
+                targets = bunnyActors;
+            else
+                targets = GetAliveEnemies();
+
+            Turn turn = new Turn(user, targets, $"{user.FighterName} used {user.GetSkillName(skillIndex)}!", () => user.UseSkill(skillIndex, targets));
+            turnList.Insert(turn);
+
+            battleMenu.ShowSkillPanel(false);
+            NextInput();
         }
 
         /// <summary>
@@ -360,20 +406,23 @@ namespace TheBunniesOfVegetaria
 
             if(GetAliveEnemies().Length == 0 && wave == maxWaves)
             {
-                // Boss has been defeated
-                turn = new Turn(enemyActor, "This area is clear!", () =>
-                    {
-                        // TODO: Don't increment for final area
-                        SaveData.current.areasUnlocked++;
-                        sceneTransition.SaveAndLoadScene(3);
-                    }
-                );
-                turnList.Append(turn);
-            }
-            else
-            {
-                // Regular wave has been defeated
-                wave++;
+                if(wave == maxWaves)
+                {
+                    // Boss has been defeated
+                    turn = new Turn(enemyActor, "This area is clear!", () =>
+                        {
+                            // TODO: Don't increment for final area
+                            SaveData.current.areasUnlocked++;
+                            sceneTransition.SaveAndLoadScene(3);
+                        }
+                    );
+                    turnList.Append(turn);
+                }
+                else
+                {
+                    // Regular wave has been defeated
+                    wave++;
+                }
             }
         }
 

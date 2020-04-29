@@ -6,11 +6,11 @@ namespace TheBunniesOfVegetaria
     {
         public ReviveAll(int cost, int minimumLevel, string name) : base(cost, minimumLevel, name)
         {
-            type = TargetType.Bunny;
+            Target = TargetType.Bunny;
             Description = $"Revive defeated party members";
         }
 
-        public override void Use(IActor user, IActor[] targets)
+        public override void Use(BunnyActor user, IActor[] targets)
         {
             foreach (IActor target in targets)
             {
