@@ -15,6 +15,7 @@ namespace TheBunniesOfVegetaria
         [Header("Player Input")]
         [SerializeField] private GameObject playerInputPanel;
         [SerializeField] private TMP_Text inputPromptText;
+        [SerializeField] private GameObject backButton;
         [SerializeField] private GameObject optionPanel;
         [SerializeField] private GameObject skillOptionButton;
         [SerializeField] private GameObject skillPanel;
@@ -36,6 +37,8 @@ namespace TheBunniesOfVegetaria
                 playerStatPanel.SetActive(false);
             if (playerInputPanel.activeSelf)
                 playerInputPanel.SetActive(false);
+            if (backButton.activeSelf)
+                backButton.SetActive(false);
             if (optionPanel.activeSelf)
                 optionPanel.SetActive(false);
             if (skillPanel.activeSelf)
@@ -81,6 +84,28 @@ namespace TheBunniesOfVegetaria
             inputPromptText.text = message;
         }
 
+        public void ShowBackButton(bool isActive)
+        {
+            backButton.SetActive(isActive);
+        }
+
+        /// <summary>
+        /// Go back to a previous menu.
+        /// </summary>
+        public void GoBack()
+        {
+            if(enemyPanel.activeSelf)
+            {
+                optionPanel.SetActive(true);
+                ShowEnemyPanel(false);
+            }
+            else if(skillPanel.activeSelf)
+            {
+                optionPanel.SetActive(true);
+                ShowSkillPanel(false);
+            }
+        }
+
         public void ShowOptionPanel(bool isActive)
         {
             optionPanel.SetActive(isActive);
@@ -89,11 +114,13 @@ namespace TheBunniesOfVegetaria
         public void ShowSkillPanel(bool isActive)
         {
             skillPanel.SetActive(isActive);
+            backButton.SetActive(isActive);
         }
 
         public void ShowEnemyPanel(bool isActive)
         {
             enemyPanel.SetActive(isActive);
+            backButton.SetActive(isActive);
         }
 
         /// <summary>
