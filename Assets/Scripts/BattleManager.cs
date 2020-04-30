@@ -266,8 +266,12 @@ namespace TheBunniesOfVegetaria
                     // Boss has been defeated
                     turn = new Turn(enemyActor, "This area is clear!", () =>
                         {
-                            if (SaveData.current.areasUnlocked < (int)Globals.Area.CarrotTop)
+                            if (SaveData.current.areasUnlocked == (int)gameManager.BattleArea 
+                                && SaveData.current.areasUnlocked < (int)Globals.Area.CarrotTop)
+                            {
                                 SaveData.current.areasUnlocked++;
+                            }
+                                
                             sceneTransition.SaveAndLoadScene(3);
                         }
                     );
