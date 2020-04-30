@@ -11,6 +11,8 @@ namespace TheBunniesOfVegetaria
         public int Experience { get; private set; }
         public Skill[] Skills { get; private set; } = new Skill[3];
 
+        private int maxExperience;
+
         // TODO: Construct from JSON
         public Bunny(Globals.BunnyType bunnyType, string name, int experience)
         {
@@ -20,6 +22,7 @@ namespace TheBunniesOfVegetaria
             Level = CalculateLevel();
             MaxHealth = CalculateMaxHealth();
             MaxSkillPoints = CalculateMaxSkillPoints();
+            maxExperience = 5050;
 
             switch(Type)
             {
@@ -66,8 +69,8 @@ namespace TheBunniesOfVegetaria
         {
             Experience += value;
 
-            if (Experience > 1000)
-                Experience = 1000;
+            if (Experience > maxExperience)
+                Experience = maxExperience;
 
             Level = CalculateLevel();
             MaxHealth = CalculateMaxHealth();
@@ -131,7 +134,7 @@ namespace TheBunniesOfVegetaria
         private int CalculateLevel()
         {
             int n = 0;
-            while (10 * (n * (n + 1) / 2f) <= Experience)
+            while ((n * (n + 1) / 2f) <= Experience)
                 n++;
             return n;
         }

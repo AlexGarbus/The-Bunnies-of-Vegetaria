@@ -354,8 +354,7 @@ namespace TheBunniesOfVegetaria
         /// <param name="experience">The amount of experience to give.</param>
         private void GainExperience(int experience)
         {
-            BunnyActor[] aliveBunnies = GetAliveBunnies();
-            foreach(BunnyActor bunnyActor in aliveBunnies)
+            foreach(BunnyActor bunnyActor in GetAliveBunnies())
                 bunnyActor.GainExperience(experience);
         }
 
