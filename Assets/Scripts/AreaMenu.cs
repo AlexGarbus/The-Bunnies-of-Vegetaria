@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -47,6 +45,10 @@ namespace TheBunniesOfVegetaria
             }
         }
 
+        /// <summary>
+        /// Display the stats for a selected bunny.
+        /// </summary>
+        /// <param name="typeIndex">The integer value of the bunny type to display stats for.</param>
         public void DisplayBunnyStats(int typeIndex)
         {
             Globals.BunnyType type = (Globals.BunnyType)typeIndex;
@@ -75,7 +77,7 @@ namespace TheBunniesOfVegetaria
 
             string stats = $"{bunny.name} the {typeString}" + "\n\n"
                 + $"LEVEL: {bunny.Level}" + spacer + $"EXPERIENCE: {bunny.Experience}" + "\n\n"
-                + $"HEALTH: {bunny.maxHealth}" + spacer + $"SKILL: {bunny.maxSkill}" + "\n\n"
+                + $"HEALTH: {bunny.MaxHealth}" + spacer + $"SKILL: {bunny.MaxSkillPoints}" + "\n\n"
                 + $"ATTACK: {new string('*', bunny.attack)}" + spacer 
                 + $"DEFENSE: {new string('*', bunny.defense)}" + spacer
                 + $"SPEED: {new string('*', bunny.speed)}";

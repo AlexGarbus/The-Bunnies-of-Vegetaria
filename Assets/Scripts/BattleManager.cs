@@ -11,11 +11,9 @@ namespace TheBunniesOfVegetaria
     {
         [SerializeField] private AudioClip bossMusic;
         [SerializeField] private AudioSource musicSource;
+        [SerializeField] private BattleBackground battleBackground;
         [SerializeField] private BattleMenu battleMenu;
         [SerializeField] private SceneTransition sceneTransition;
-
-        [Header("Background")]
-        [SerializeField] private BattleBackground battleBackground;
 
         [Header("Battle Flow")]
         [SerializeField] private int maxWaves = 5;
@@ -23,7 +21,9 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private float travelSpeed = 1f;
 
         [Header("Actors")]
+        [Tooltip("The bunny objects in the scene. These should be ordered according to the BunnyType enum.")]
         [SerializeField] private BunnyActor[] bunnyActors;
+        [Tooltip("The enemyobjects in the scene. These should be in ascending order by spawn position.")]
         [SerializeField] private EnemyActor[] enemyActors;
         
         private BunnyActor SelectedBunny 
@@ -62,16 +62,17 @@ namespace TheBunniesOfVegetaria
             // Set up bunny actors
             foreach (BunnyActor actor in bunnyActors)
                 actor.Manager = this;
-            bunnyActors[(int)Globals.BunnyType.Bunnight].FighterInfo = gameManager.Bunnight;
-            bunnyActors[(int)Globals.BunnyType.Bunnecromancer].FighterInfo = gameManager.Bunnecromancer;
-            bunnyActors[(int)Globals.BunnyType.Bunnurse].FighterInfo = gameManager.Bunnurse;
-            bunnyActors[(int)Globals.BunnyType.Bunneerdowell].FighterInfo = gameManager.Bunneerdowell;
+            bunnyActors[(int)Globals.BunnyType.Bunnight].FighterData = gameManager.Bunnight;
+            bunnyActors[(int)Globals.BunnyType.Bunnecromancer].FighterData = gameManager.Bunnecromancer;
+            bunnyActors[(int)Globals.BunnyType.Bunnurse].FighterData = gameManager.Bunnurse;
+            bunnyActors[(int)Globals.BunnyType.Bunneerdowell].FighterData = gameManager.Bunneerdowell;
             battleMenu.SetPlayerStatText(bunnyActors);
 
             // Set up enemy actors
             foreach (EnemyActor actor in enemyActors)
                 actor.Manager = this;
-            NextWave();
+
+            SetNextWave();
             StartTravel();
         }
 
@@ -127,12 +128,10 @@ namespace TheBunniesOfVegetaria
                         else
                         {
                             // Regular wave defeated
-                            foreach(BunnyActor bunnyActor in bunnyActors)
-                            {
-                                if (!bunnyActor.IsAlive)
-                                    bunnyActor.Revive();
-                            }
-                            NextWave();
+                            foreach (BunnyActor bunnyActor in GetDefeatedBunnies())
+                                bunnyActor.Revive();
+                            battleMenu.SetPlayerStatText(bunnyActors);
+                            SetNextWave();
                             StartTravel();
                         }
                     }
@@ -146,113 +145,7 @@ namespace TheBunniesOfVegetaria
                     break;
             }
         }
-
-        /// <summary>
-        /// Get all bunny actors with health greater than 0.
-        /// </summary>
-        /// <returns>An array with all alive bunny actors.</returns>
-        public BunnyActor[] GetAliveBunnies()
-        {
-            List<BunnyActor> aliveActors = new List<BunnyActor>();
-            foreach(BunnyActor actor in bunnyActors)
-            {
-                if (actor.IsAlive)
-                    aliveActors.Add(actor);
-            }
-            return aliveActors.ToArray();
-        }
-
-        /// <summary>
-        /// Get all enemy actors with health greater than 0.
-        /// </summary>
-        /// <returns>An array with all alive enemy actors.</returns>
-        public EnemyActor[] GetAliveEnemies()
-        {
-            List<EnemyActor> aliveActors = new List<EnemyActor>();
-            foreach (EnemyActor actor in enemyActors)
-            {
-                if (actor.IsAlive)
-                    aliveActors.Add(actor);
-            }
-            return aliveActors.ToArray();
-        }
-
-        /// <summary>
-        /// Add experience to all living bunnies.
-        /// </summary>
-        /// <param name="experience">The amount of experience to give.</param>
-        private void GainExperience(int experience)
-        {
-            BunnyActor[] aliveBunnies = GetAliveBunnies();
-            foreach(BunnyActor bunnyActor in aliveBunnies)
-                bunnyActor.GainExperience(experience);
-        }
-
-        /// <summary>
-        /// Set the next wave of enemies.
-        /// </summary>
-        private void NextWave()
-        {
-            int i = 0;
-            wave++;
-
-            if (wave == maxWaves)
-            {
-                // Boss wave
-                enemyActors[i].gameObject.SetActive(true);
-                enemyActors[i].FighterInfo = boss;
-                musicSource.clip = bossMusic;
-                musicSource.Play();
-                i++;
-            }
-            else
-            {
-                // Regular enemy wave
-                for(i = 0; i < wave && i < enemyActors.Length; i++)
-                {
-                    int enemyIndex = UnityEngine.Random.Range(0, enemies.Length);
-                    enemyActors[i].gameObject.SetActive(true);
-                    enemyActors[i].FighterInfo = enemies[enemyIndex];
-                }
-            }
-
-            // Deactivate remaining actors
-            for (int j = i; j < enemyActors.Length; j++)
-            {
-                if (enemyActors[j].gameObject.activeSelf)
-                    enemyActors[j].gameObject.SetActive(false);
-            }
-        }
-
-        /// <summary>
-        /// Start scrolling the background and moving enemy actors so that the bunnies appear to be traveling.
-        /// </summary>
-        private void StartTravel()
-        {
-            battleState = BattleState.Traveling;
-
-            battleMenu.ShowPlayerStatPanel(false);
-            battleMenu.ShowTurnPanel(false);
-
-            foreach (BunnyActor bunnyActor in bunnyActors)
-                bunnyActor.SetMoving(true);
-
-            List<Transform> enemyTransforms = new List<Transform>();
-
-            foreach(EnemyActor enemyActor in enemyActors)
-            {
-                if (enemyActor.gameObject.activeSelf)
-                    enemyTransforms.Add(enemyActor.transform);
-            }
-
-            foreach (Transform enemyTransform in enemyTransforms)
-            {
-                enemyTransform.Translate(Vector2.right * battleBackground.ScreenWidth);
-            }
-
-            StartCoroutine(battleBackground.ScrollBackground(1, travelSpeed, enemyTransforms.ToArray()));
-        }
-
+        
         /// <summary>
         /// Perform each turn in the turn list.
         /// </summary>
@@ -273,52 +166,16 @@ namespace TheBunniesOfVegetaria
             battleState = BattleState.DoneHandlingTurns;
         }
 
-        #region Player Input
-
-        /// <summary>
-        /// Generate and display the skill input menu.
-        /// </summary>
-        public void SkillInput()
-        {
-            if (SelectedBunny.AvailableSkillStrings.Length != 0)
-            {
-                battleMenu.ShowOptionPanel(false);
-                battleMenu.SetSkillButtons(SelectedBunny);
-                battleMenu.ShowSkillPanel(true);
-            }
-        }
-
-        /// <summary>
-        /// Count the input for the current bunny as received and prepare to either receive the next input or begin handling turns.
-        /// </summary>
-        private void NextInput()
-        {
-            do
-            {
-                inputsReceived++;
-            }
-            while (inputsReceived < bunnyActors.Length && !SelectedBunny.IsAlive);
-
-            if(inputsReceived < bunnyActors.Length)
-                PromptInput();
-        }
-
-        /// <summary>
-        /// Prompt the user to input their turn for the current bunny.
-        /// </summary>
-        private void PromptInput()
-        {
-            battleMenu.ShowPlayerInputPanel(true, SelectedBunny);
-            battleMenu.ShowOptionPanel(true);
-            battleMenu.ShowTurnPanel(false);
-            battleMenu.SetEnemyButtons(enemyActors);
-            battleMenu.SetInputPromptText($"What will {SelectedBunny.FighterName} do?");
-        }
-
-        #endregion
-    
         #region Turn Insertion
 
+        /// <summary>
+        /// Insert turns based on the status of the actors.
+        /// </summary>
+        private void InsertStatusTurns()
+        {
+            // TODO: Implement
+        }
+        
         /// <summary>
         /// Insert a turn into the turn list, making it the next turn that the Battle Manager handles.
         /// </summary>
@@ -449,6 +306,166 @@ namespace TheBunniesOfVegetaria
                 if (turn != null)
                     turnList.Insert(turn);
             }
+        }
+
+        #endregion
+
+        #region Actor Management
+
+        /// <summary>
+        /// Get all bunny actors with health greater than 0.
+        /// </summary>
+        /// <returns>An array with all bunny actors considered as alive.</returns>
+        private BunnyActor[] GetAliveBunnies()
+        {
+            return bunnyActors.Where(actor => actor.IsAlive).ToArray();
+        }
+
+        /// <summary>
+        /// Get all bunny actors with health equal to 0.
+        /// </summary>
+        /// <returns>An array with all bunny actors considered as defeated.</returns>
+        private BunnyActor[] GetDefeatedBunnies()
+        {
+            return bunnyActors.Where(actor => !actor.IsAlive).ToArray();
+        }
+
+        /// <summary>
+        /// Get all enemy actors with health greater than 0.
+        /// </summary>
+        /// <returns>An array with all enemy actors considered as alive.</returns>
+        private EnemyActor[] GetAliveEnemies()
+        {
+            return enemyActors.Where(actor => actor.IsAlive).ToArray();
+        }
+
+        /// <summary>
+        /// Get all enemy actors with health equal to 0.
+        /// </summary>
+        /// <returns>An array with all enemy actors considered as defeated.</returns>
+        private EnemyActor[] GetDefeatedEnemies()
+        {
+            return enemyActors.Where(actor => !actor.IsAlive).ToArray();
+        }
+
+        /// <summary>
+        /// Add experience to all living bunnies.
+        /// </summary>
+        /// <param name="experience">The amount of experience to give.</param>
+        private void GainExperience(int experience)
+        {
+            BunnyActor[] aliveBunnies = GetAliveBunnies();
+            foreach(BunnyActor bunnyActor in aliveBunnies)
+                bunnyActor.GainExperience(experience);
+        }
+
+        /// <summary>
+        /// Set the next wave of enemies.
+        /// </summary>
+        private void SetNextWave()
+        {
+            int i = 0;
+            wave++;
+
+            if (wave == maxWaves)
+            {
+                // Boss wave
+                enemyActors[i].gameObject.SetActive(true);
+                enemyActors[i].FighterData = boss;
+                musicSource.clip = bossMusic;
+                musicSource.Play();
+                i++;
+            }
+            else
+            {
+                // Regular enemy wave
+                for(i = 0; i < wave && i < enemyActors.Length; i++)
+                {
+                    int enemyIndex = UnityEngine.Random.Range(0, enemies.Length);
+                    enemyActors[i].gameObject.SetActive(true);
+                    enemyActors[i].FighterData = enemies[enemyIndex];
+                }
+            }
+
+            // Deactivate remaining actors
+            for (int j = i; j < enemyActors.Length; j++)
+            {
+                if (enemyActors[j].gameObject.activeSelf)
+                    enemyActors[j].gameObject.SetActive(false);
+            }
+        }
+
+        /// <summary>
+        /// Start scrolling the background and moving enemy actors so that the bunnies appear to be traveling.
+        /// </summary>
+        private void StartTravel()
+        {
+            battleState = BattleState.Traveling;
+
+            battleMenu.ShowPlayerStatPanel(false);
+            battleMenu.ShowTurnPanel(false);
+
+            foreach (BunnyActor bunnyActor in bunnyActors)
+                bunnyActor.SetMoving(true);
+
+            List<Transform> enemyTransforms = new List<Transform>();
+
+            foreach(EnemyActor enemyActor in enemyActors)
+            {
+                if (enemyActor.gameObject.activeSelf)
+                    enemyTransforms.Add(enemyActor.transform);
+            }
+
+            foreach (Transform enemyTransform in enemyTransforms)
+            {
+                enemyTransform.Translate(Vector2.right * battleBackground.ScreenWidth);
+            }
+
+            StartCoroutine(battleBackground.ScrollBackground(1, travelSpeed, enemyTransforms.ToArray()));
+        }
+
+        #endregion
+
+        #region Player Input
+
+        /// <summary>
+        /// Generate and display the skill input menu.
+        /// </summary>
+        public void SkillInput()
+        {
+            if (SelectedBunny.AvailableSkillStrings.Length != 0)
+            {
+                battleMenu.ShowOptionPanel(false);
+                battleMenu.SetSkillButtons(SelectedBunny);
+                battleMenu.ShowSkillPanel(true);
+            }
+        }
+
+        /// <summary>
+        /// Count the input for the current bunny as received and prepare to either receive the next input or begin handling turns.
+        /// </summary>
+        private void NextInput()
+        {
+            do
+            {
+                inputsReceived++;
+            }
+            while (inputsReceived < bunnyActors.Length && !SelectedBunny.IsAlive);
+
+            if(inputsReceived < bunnyActors.Length)
+                PromptInput();
+        }
+
+        /// <summary>
+        /// Prompt the user to input their turn for the current bunny.
+        /// </summary>
+        private void PromptInput()
+        {
+            battleMenu.ShowPlayerInputPanel(true, SelectedBunny);
+            battleMenu.ShowOptionPanel(true);
+            battleMenu.ShowTurnPanel(false);
+            battleMenu.SetEnemyButtons(enemyActors);
+            battleMenu.SetInputPromptText($"What will {SelectedBunny.FighterName} do?");
         }
 
         #endregion

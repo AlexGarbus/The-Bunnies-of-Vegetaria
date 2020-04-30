@@ -23,7 +23,7 @@ namespace TheBunniesOfVegetaria
         public BattleEffect Effect { get; private set; }
         public BattleManager Manager { set => battleManager = value; }
 
-        public Fighter FighterInfo 
+        public Fighter FighterData 
         {
             set
             {
@@ -102,8 +102,8 @@ namespace TheBunniesOfVegetaria
                 return;
 
             CurrentHealth += healAmount;
-            if (CurrentHealth > fighter.maxHealth)
-                CurrentHealth = fighter.maxHealth;
+            if (CurrentHealth > fighter.MaxHealth)
+                CurrentHealth = fighter.MaxHealth;
             Effect.PlayHeal();
         }
 

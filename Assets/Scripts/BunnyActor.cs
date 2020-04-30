@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TheBunniesOfVegetaria
@@ -13,31 +12,30 @@ namespace TheBunniesOfVegetaria
         [HideInInspector] public bool isDefending = false;
 
         public bool IsAlive => CurrentHealth > 0;
-        public int CurrentHealth { get; private set; }
         public int Attack => fighter.attack;
         public int Defense => fighter.defense;
         public int Speed => fighter.speed;
         public int Experience => fighter.Experience;
+        public int CurrentHealth { get; private set; }
+        public int CurrentSkillPoints { get; private set; }
         public string FighterName => fighter.name;
         public Vector2 StartPosition => startPosition;
         public BattleEffect Effect { get; private set; }
+        // TODO: Try to remove references to this.
         public BattleManager Manager { set => battleManager = value; }
-        public Fighter FighterInfo 
+        public Fighter FighterData 
         {
             set
             {
                 if (value is Bunny)
                 {
                     fighter = value as Bunny;
-                    CurrentHealth = fighter.maxHealth;
-                    CurrentSkill = fighter.maxSkill;
+                    CurrentHealth = fighter.MaxHealth;
+                    CurrentSkillPoints = fighter.MaxSkillPoints;
                 }
             }
         }
-        public int CurrentSkill { get; private set; }
         public string[] AvailableSkillStrings => fighter.GetAvailableSkillStrings();
-
-        private Skill[] AvailableSkills => fighter.GetAvailableSkills();
         
         private Vector2 startPosition;
         private Animator animator;
@@ -105,8 +103,8 @@ namespace TheBunniesOfVegetaria
                 return;
 
             CurrentHealth += healAmount;
-            if (CurrentHealth > fighter.maxHealth)
-                CurrentHealth = fighter.maxHealth;
+            if (CurrentHealth > fighter.MaxHealth)
+                CurrentHealth = fighter.MaxHealth;
             Effect.PlayHeal();
         }
 
@@ -134,7 +132,7 @@ namespace TheBunniesOfVegetaria
         public bool CanUseSkill(int skillIndex)
         {
             Skill skill = fighter.Skills[skillIndex];
-            return CurrentSkill >= skill.Cost && fighter.Level >= skill.MinimumLevel;
+            return CurrentSkillPoints >= skill.Cost && fighter.Level >= skill.MinimumLevel;
         }
 
         public string GetSkillName(int skillIndex)
@@ -159,7 +157,7 @@ namespace TheBunniesOfVegetaria
 
             Skill skill = fighter.Skills[skillIndex];
 
-            CurrentSkill -= skill.Cost;
+            CurrentSkillPoints -= skill.Cost;
             skill.Use(this, targets);
         }
 
@@ -168,9 +166,9 @@ namespace TheBunniesOfVegetaria
             if (!IsAlive)
                 return;
 
-            CurrentSkill += skillAmount;
-            if (CurrentSkill > fighter.maxSkill)
-                CurrentSkill = fighter.maxSkill;
+            CurrentSkillPoints += skillAmount;
+            if (CurrentSkillPoints > fighter.MaxSkillPoints)
+                CurrentSkillPoints = fighter.MaxSkillPoints;
             Effect.PlayHeal();
         }
         
@@ -179,7 +177,7 @@ namespace TheBunniesOfVegetaria
             if (IsAlive)
                 return;
 
-            CurrentHealth = Mathf.Clamp(healthAmount, 0, fighter.maxHealth);
+            CurrentHealth = Mathf.Clamp(healthAmount, 0, fighter.MaxHealth);
             transform.Rotate(new Vector3(0, 0, -90));
             Effect.PlayHeal();
         }
@@ -198,8 +196,8 @@ namespace TheBunniesOfVegetaria
             {
                 battleManager.PushTurn(new Turn(this, $"{FighterName} leveled up!", () =>
                         {
-                            CurrentHealth = fighter.maxHealth;
-                            CurrentSkill = fighter.maxSkill;
+                            CurrentHealth = fighter.MaxHealth;
+                            CurrentSkillPoints = fighter.MaxSkillPoints;
                         }
                     )
                 );

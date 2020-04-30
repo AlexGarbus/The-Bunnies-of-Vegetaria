@@ -1,16 +1,14 @@
-﻿using UnityEngine;
-
-namespace TheBunniesOfVegetaria
+﻿namespace TheBunniesOfVegetaria
 {
-    public class HealAll : Skill
+    public class HealAllSkill : Skill
     {
         private int healAmount;
 
-        public HealAll(int cost, int minimumLevel, string name, int healthAmount) : base(cost, minimumLevel, name)
+        public HealAllSkill(int cost, int minimumLevel, string name, int healAmount) : base(cost, minimumLevel, name)
         {
-            this.healAmount = healthAmount;
+            this.healAmount = healAmount;
             Target = TargetType.Bunny;
-            Description = $"Party HP +{healthAmount}";
+            Description = $"Party HP +{healAmount}";
         }
 
         public override void Use(BunnyActor user, IActor[] targets)

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -48,55 +47,75 @@ namespace TheBunniesOfVegetaria
         // TODO: Implement settings menu
         #region Settings
     
-        // Save the current PlayerPrefs
+        /// <summary>
+        /// Save the current player prefs.
+        /// </summary>
         public void SaveSettings()
         {
             PlayerPrefs.SetFloat("MusicVolume", musicSlider.value);
             PlayerPrefs.SetFloat("FxVolume", fxSlider.value);
             PlayerPrefs.SetInt("Quality", qualityDropdown.value);
+
             if(fullscreenToggle.isOn)
                 PlayerPrefs.SetInt("Fullscreen", 1);
             else
                 PlayerPrefs.SetInt("Fullscreen", 0);
+
             for(int i = 0; i < resolutions.Length; i++)
                 if(resolutions[i].Equals(Screen.currentResolution))
                 {
                     PlayerPrefs.SetInt("Resolution", i);
                     break;
                 }
+
             PlayerPrefs.Save();
             Debug.Log("SETTINGS SAVED");
         }
 
-        // Set the volume of the game's music
+        /// <summary>
+        /// Set the volume of the game's music.
+        /// </summary>
+        /// <param name="volume"></param>
         public void SetMusicVolume(float volume)
         {
             mixer.SetFloat("musicVolume", volume);
             SaveSettings();
         }
 
-        // Set the volume of the game's sound effects
+        /// <summary>
+        /// Set the volume of the game's sound effects.
+        /// </summary>
+        /// <param name="volume"></param>
         public void SetFXVolume(float volume)
         {
             mixer.SetFloat("fxVolume", volume);
             SaveSettings();
         }
 
-        // Set the game's graphics quality level
+        /// <summary>
+        /// Set the game's graphics quality level.
+        /// </summary>
+        /// <param name="qualityLevel"></param>
         public void SetQualityLevel(int qualityLevel)
         {
             QualitySettings.SetQualityLevel(qualityLevel);
             SaveSettings();
         }
 
-        // Set whether the game window is fullscreen
+        /// <summary>
+        /// Set whether the game window is fullscreen.
+        /// </summary>
+        /// <param name="isFullscreen"></param>
         public void SetFullscreen (bool isFullscreen)
         {
             Screen.fullScreen = isFullscreen;
             SaveSettings();
         }
 
-        // Set the screen's resolution
+        /// <summary>
+        /// Set the screen's resolution.
+        /// </summary>
+        /// <param name="resolutionIndex"></param>
         public void SetResolution (int resolutionIndex)
         {
             Resolution resolution = resolutions[resolutionIndex];
@@ -104,7 +123,9 @@ namespace TheBunniesOfVegetaria
             SaveSettings();
         }
 
-        // Update the UI to show the current settings
+        /// <summary>
+        /// Update the UI to show the game's current settings.
+        /// </summary>
         private void UpdateSettings()
         {
             // Update volume

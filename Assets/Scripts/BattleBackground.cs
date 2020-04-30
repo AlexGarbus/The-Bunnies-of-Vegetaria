@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TheBunniesOfVegetaria
@@ -28,13 +27,16 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Scroll the background horizontally by a certain number of screens.
+        /// Scroll the background horizontally to the left by a certain number of screens.
         /// </summary>
-        /// <param name="screens">The number of screens to scroll left (positive) or right (negative).</param>
+        /// <param name="screens">The number of screens to scroll left.</param>
         /// <param name="speed">The speed at which to scroll the background.</param>
         /// <param name="movingTransforms">An array of the transform components for objects that should move with the background.</param>
         public IEnumerator ScrollBackground(int screens, float speed, Transform[] movingTransforms)
         {
+            if (screens <= 0)
+                yield break;
+
             IsScrolling = true;
             int tilesScrolled = 0;
 
@@ -48,6 +50,7 @@ namespace TheBunniesOfVegetaria
 
                     if (spriteTransform.position.x <= minPositionX)
                     {
+                        // Reposition offscreen tile
                         Vector2 newPosition = spriteTransform.position;
                         newPosition.x = maxPositionX;
                         spriteTransform.position = newPosition;
@@ -84,7 +87,9 @@ namespace TheBunniesOfVegetaria
         private void SetBackground(Globals.Area area)
         {
             foreach (SpriteRenderer spriteRenderer in spriteRenderers)
+            {
                 spriteRenderer.sprite = backgrounds[(int)area - 1];
+            }
         }
 
         /// <summary>

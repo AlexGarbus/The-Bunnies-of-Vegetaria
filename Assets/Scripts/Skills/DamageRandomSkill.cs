@@ -2,11 +2,11 @@
 
 namespace TheBunniesOfVegetaria
 { 
-    public class DamageRandom : Skill
+    public class DamageRandomSkill : Skill
     {
         private float multiplier;
 
-        public DamageRandom(int cost, int minimumLevel, string name, float multiplier) : base(cost, minimumLevel, name) 
+        public DamageRandomSkill(int cost, int minimumLevel, string name, float multiplier) : base(cost, minimumLevel, name) 
         {
             this.multiplier = multiplier;
             Target = TargetType.Enemy;

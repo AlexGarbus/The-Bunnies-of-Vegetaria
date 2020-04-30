@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +12,7 @@ namespace TheBunniesOfVegetaria
         [Header("Name Input")]
         [SerializeField] private TMP_Text descriptionText;
         [SerializeField] private Image bunnyImage;
+        [Tooltip("The sprites to use for each bunny type. These should be ordered according to the BunnyType enum.")]
         [SerializeField] private Sprite[] bunnySprites;
         [SerializeField] private TMP_InputField nameInput;
 
@@ -20,7 +20,9 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private GameObject confirmationPanel;
         [SerializeField] private TMP_Text confirmationNames;
 
-        // Holder struct is needed to read descriptions with JSONUtility
+        /// <summary>
+        /// Struct used for reading descriptions from JSON.
+        /// </summary>
         [System.Serializable]
         private struct DescriptionHolder
         {
@@ -91,8 +93,6 @@ namespace TheBunniesOfVegetaria
                     break;
                 case 4:
                     gameManager.Bunneerdowell.name = nameInput.text;
-
-                    // All names have been input
                     ConfirmNames();
                     namesInput = 0;
                     return;

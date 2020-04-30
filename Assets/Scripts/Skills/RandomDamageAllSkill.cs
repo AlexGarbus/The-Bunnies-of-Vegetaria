@@ -2,12 +2,12 @@
 
 namespace TheBunniesOfVegetaria
 {
-    public class RandomDamageAll : Skill
+    public class RandomDamageAllSkill : Skill
     {
         private float minMultiplier;
         private float maxMultiplier;
 
-        public RandomDamageAll(int cost, int minimumLevel, string name, float min, float max) : base(cost, minimumLevel, name)
+        public RandomDamageAllSkill(int cost, int minimumLevel, string name, float min, float max) : base(cost, minimumLevel, name)
         {
             minMultiplier = min;
             maxMultiplier = max;
@@ -17,11 +17,8 @@ namespace TheBunniesOfVegetaria
 
         public override void Use(BunnyActor user, IActor[] targets)
         {
-            for(int i = 0; i < targets.Length; i++)
-            {
-                float multiplier = Random.Range(minMultiplier, maxMultiplier);
-                user.DoDamage(targets[i], multiplier);
-            }
+            float multiplier = Random.Range(minMultiplier, maxMultiplier);
+            user.DoDamage(targets, multiplier);
         }
     }
 }

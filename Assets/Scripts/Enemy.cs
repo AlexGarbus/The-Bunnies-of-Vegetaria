@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace TheBunniesOfVegetaria
+﻿namespace TheBunniesOfVegetaria
 {
     [System.Serializable]
     public class Enemy : Fighter
@@ -12,7 +8,7 @@ namespace TheBunniesOfVegetaria
 
         public Enemy()
         {
-            maxHealth = 100;
+            MaxHealth = 100;
         }
     }
 }

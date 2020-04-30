@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace TheBunniesOfVegetaria
 {
@@ -89,10 +86,6 @@ namespace TheBunniesOfVegetaria
         /// <param name="user">The actor whose targeted turns should be removed.</param>
         public void RemoveTargetTurns(IActor user)
         {
-            int removed = 0;
-            foreach (Turn turn in turns)
-                if (turn.Targets.Length == 1 && turn.Targets[0] == user)
-                    removed++;
             turns.RemoveAll(turn => turn.Targets.Length == 1 && turn.Targets[0] == user);
         }
 

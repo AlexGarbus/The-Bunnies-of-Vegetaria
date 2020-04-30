@@ -1,12 +1,10 @@
-﻿using UnityEngine;
-
-namespace TheBunniesOfVegetaria
+﻿namespace TheBunniesOfVegetaria
 {
-    public class DamageAll : Skill
+    public class DamageAllSkill : Skill
     {
         private float multiplier;
 
-        public DamageAll(int cost, int minimumLevel, string name, float multiplier) : base(cost, minimumLevel, name)
+        public DamageAllSkill(int cost, int minimumLevel, string name, float multiplier) : base(cost, minimumLevel, name)
         {
             this.multiplier = multiplier;
             Target = TargetType.Enemy;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -27,6 +26,7 @@ namespace TheBunniesOfVegetaria
             IEnumerable<Enemy> enemiesFromArea = enemies.Where(enemy => 
                 areaFilter == (Globals.Area)Enum.Parse(typeof(Globals.Area), enemy.area.Replace(" ", string.Empty), false)
             );
+
             return enemiesFromArea;
         }
 
@@ -40,6 +40,7 @@ namespace TheBunniesOfVegetaria
             Enemy boss = bosses.First(enemy =>
                 areaFilter == (Globals.Area)Enum.Parse(typeof(Globals.Area), enemy.area.Replace(" ", string.Empty), false)
             );
+
             return boss;
         }
     }

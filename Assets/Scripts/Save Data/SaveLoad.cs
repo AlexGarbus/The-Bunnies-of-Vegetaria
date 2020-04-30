@@ -54,7 +54,7 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Convert the bunny objects stored in the game manager to save data.
+        /// Get save data values for the bunnies from the game manager.
         /// </summary>
         private static void BunniesToSaveData()
         {

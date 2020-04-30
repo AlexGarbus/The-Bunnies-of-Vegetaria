@@ -1,12 +1,10 @@
-﻿using UnityEngine;
-
-namespace TheBunniesOfVegetaria
+﻿namespace TheBunniesOfVegetaria
 {
-    public class ReviveAll : Skill
+    public class ReviveAllSkill : Skill
     {
         private int healthAmount;
 
-        public ReviveAll(int cost, int minimumLevel, string name, int healthAmount) : base(cost, minimumLevel, name)
+        public ReviveAllSkill(int cost, int minimumLevel, string name, int healthAmount) : base(cost, minimumLevel, name)
         {
             this.healthAmount = healthAmount;
             Target = TargetType.Bunny;

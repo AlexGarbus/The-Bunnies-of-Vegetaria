@@ -33,20 +33,13 @@ namespace TheBunniesOfVegetaria
             skillButtons = skillPanel.GetComponentsInChildren<Button>();
             enemyButtons = enemyPanel.GetComponentsInChildren<Button>();
 
-            if (playerStatPanel.activeSelf)
-                playerStatPanel.SetActive(false);
-            if (playerInputPanel.activeSelf)
-                playerInputPanel.SetActive(false);
-            if (backButton.activeSelf)
-                backButton.SetActive(false);
-            if (optionPanel.activeSelf)
-                optionPanel.SetActive(false);
-            if (skillPanel.activeSelf)
-                skillPanel.SetActive(false);
-            if (enemyPanel.activeSelf)
-                enemyPanel.SetActive(false);
-            if (turnPanel.activeSelf)
-                turnPanel.SetActive(false);
+            playerStatPanel.SetActive(false);
+            playerInputPanel.SetActive(false);
+            backButton.SetActive(false);
+            optionPanel.SetActive(false);
+            skillPanel.SetActive(false);
+            enemyPanel.SetActive(false);
+            turnPanel.SetActive(false);
         }
 
         #region Player Stats
@@ -61,7 +54,7 @@ namespace TheBunniesOfVegetaria
             string stats = string.Empty;
             for(int i = 0; i < bunnyActors.Length; i++)
             {
-                stats += string.Format("{0, -16} HP:{1, 3} SP:{2, 3}", bunnyActors[i].FighterName, bunnyActors[i].CurrentHealth, bunnyActors[i].CurrentSkill);
+                stats += string.Format("{0, -16} HP:{1, 3} SP:{2, 3}", bunnyActors[i].FighterName, bunnyActors[i].CurrentHealth, bunnyActors[i].CurrentSkillPoints);
                 if (i < bunnyActors.Length - 1)
                     stats += "\n\n";
             }
@@ -133,6 +126,7 @@ namespace TheBunniesOfVegetaria
             {
                 Button button = enemyButtons[i];
                 EnemyActor actor = enemyActors[i];
+
                 if (actor.gameObject.activeSelf && actor.IsAlive)
                 {
                     button.GetComponentInChildren<TMP_Text>().text = actor.FighterName;

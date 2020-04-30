@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
@@ -27,7 +25,9 @@ namespace TheBunniesOfVegetaria
                 SaveLoad.Load();
             }
             else if (Instance != this)
+            {
                 Destroy(gameObject);
+            }
 
             DontDestroyOnLoad(gameObject);
         }
@@ -51,7 +51,7 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Load settings from PlayerPrefs
+        /// Load settings from PlayerPrefs.
         /// </summary>
         private void LoadSettings()
         {
@@ -83,7 +83,7 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Add to the play time in the save data.
+        /// Add to the total play time in the save data.
         /// </summary>
         private void AddPlaytime()
         {

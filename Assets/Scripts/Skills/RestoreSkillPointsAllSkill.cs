@@ -1,12 +1,10 @@
-﻿using UnityEngine;
-
-namespace TheBunniesOfVegetaria
+﻿namespace TheBunniesOfVegetaria
 {
-    public class RestoreSkillAll : Skill
+    public class RestoreSkillPointsAllSkill : Skill
     {
         private int skillAmount;
 
-        public RestoreSkillAll(int cost, int minimumLevel, string name, int skillAmount) : base(cost, minimumLevel, name)
+        public RestoreSkillPointsAllSkill(int cost, int minimumLevel, string name, int skillAmount) : base(cost, minimumLevel, name)
         {
             this.skillAmount = skillAmount;
             Target = TargetType.Bunny;

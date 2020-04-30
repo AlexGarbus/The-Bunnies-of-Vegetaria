@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -24,12 +23,17 @@ namespace TheBunniesOfVegetaria
         private void Start()
         {
             cutscene = JsonUtility.FromJson<Cutscene>(cutsceneJson.text);
+
             musicPlayer = GetComponent<AudioSource>();
             musicPlayer.clip = Resources.Load<AudioClip>($"Music/{cutscene.music}");
             musicPlayer.Play();
+
             StartCoroutine(TypeText());
         }
 
+        /// <summary>
+        /// Type out each line of cutscene text character-by-character.
+        /// </summary>
         private IEnumerator TypeText()
         {
             int textIndex = 0;

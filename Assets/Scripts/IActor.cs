@@ -7,8 +7,6 @@ namespace TheBunniesOfVegetaria
     {
         bool IsAlive { get; }
 
-        int CurrentHealth { get; }
-
         int Attack { get; }
 
         int Defense { get; }
@@ -17,6 +15,8 @@ namespace TheBunniesOfVegetaria
 
         int Experience { get; }
     
+        int CurrentHealth { get; }
+
         string FighterName { get; }
 
         Vector2 StartPosition { get; }
@@ -25,7 +25,7 @@ namespace TheBunniesOfVegetaria
 
         BattleManager Manager { set; }
 
-        Fighter FighterInfo { set; }
+        Fighter FighterData { set; }
 
         int CalculateDamage(IActor target);
 
