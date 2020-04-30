@@ -174,7 +174,7 @@ namespace TheBunniesOfVegetaria
         {
             SelectedBunny.isDefending = true;
             IActor user = SelectedBunny;
-            Turn turn = new Turn(user, $"{user.FighterName} is defending!", null);
+            Turn turn = new Turn(user, user, $"{user.FighterName} is defending!", null);
             turnList.Insert(turn);
 
             NextInput();
@@ -257,17 +257,22 @@ namespace TheBunniesOfVegetaria
             Turn turn = new Turn(enemyActor, $"{enemyActor.FighterName} was defeated!", () => enemyActor.Defeat());
             turnList.Push(turn);
 
-            if(GetAliveEnemies().Length == 0 && wave == maxWaves)
+            if(GetAliveEnemies().Length == 0)
             {
-                // Boss has been defeated
-                turn = new Turn(enemyActor, "This area is clear!", () =>
-                    {
-                        if (SaveData.current.areasUnlocked < (int)Globals.Area.CarrotTop)
-                            SaveData.current.areasUnlocked++;
-                        sceneTransition.SaveAndLoadScene(3);
-                    }
-                );
-                turnList.Append(turn);
+                turnList.RemoveNonemptyTargetTurns();
+
+                if (wave == maxWaves)
+                {
+                    // Boss has been defeated
+                    turn = new Turn(enemyActor, "This area is clear!", () =>
+                        {
+                            if (SaveData.current.areasUnlocked < (int)Globals.Area.CarrotTop)
+                                SaveData.current.areasUnlocked++;
+                            sceneTransition.SaveAndLoadScene(3);
+                        }
+                    );
+                    turnList.Append(turn);
+                }
             }
         }
 

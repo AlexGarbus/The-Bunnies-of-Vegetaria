@@ -79,9 +79,9 @@ namespace TheBunniesOfVegetaria
                 case EnemyTurnType.MultiAttack:
                     return new Turn(this, bunnyActors, $"{FighterName} attacks the whole party!", () => DoDamage(bunnyActors));
                 case EnemyTurnType.SingleHeal:
-                    return new Turn(this, $"{FighterName} healed itself!", () => Heal(normalHealAmount * 2));
+                    return new Turn(this, this, $"{FighterName} healed itself!", () => Heal(normalHealAmount * 2));
                 case EnemyTurnType.MultiHeal:
-                    return new Turn(this, $"{FighterName} healed all enemies!", () =>
+                    return new Turn(this, enemyActors, $"{FighterName} healed all enemies!", () =>
                         {
                             foreach (EnemyActor enemyActor in enemyActors)
                                 enemyActor.Heal(normalHealAmount);
@@ -94,6 +94,9 @@ namespace TheBunniesOfVegetaria
 
         public IEnumerator TakeStep()
         {
+            if (!IsAlive)
+                yield break;
+
             Vector2 startPosition = transform.position;
             Vector2 targetPosition = startPosition + Vector2.left * stepDistance;
 
@@ -162,6 +165,9 @@ namespace TheBunniesOfVegetaria
 
         public void DoDamage(IActor target, float multiplier = 1)
         {
+            if (!IsAlive)
+                return;
+
             int damage = CalculateDamage(target) * (int)multiplier;
             target.TakeDamage(damage);
             StartCoroutine(TakeStep());
@@ -169,6 +175,9 @@ namespace TheBunniesOfVegetaria
 
         public void DoDamage(IActor[] targets, float multiplier = 0.5f)
         {
+            if (!IsAlive)
+                return;
+
             foreach (IActor target in targets)
             {
                 int damage = Mathf.CeilToInt(CalculateDamage(target) * multiplier);
@@ -193,6 +202,9 @@ namespace TheBunniesOfVegetaria
 
         public void Defeat()
         {
+            if (IsAlive)
+                return;
+
             StartCoroutine(FadeOut());
         }
 

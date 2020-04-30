@@ -90,6 +90,14 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
+        /// Remove all turns in the list that have at least one target.
+        /// </summary>
+        public void RemoveNonemptyTargetTurns()
+        {
+            turns.RemoveAll(turn => turn.Targets.Length > 0);
+        }
+
+        /// <summary>
         /// Remove all turns in the list that have a bunny as their user.
         /// </summary>
         public void RemoveBunnyTurns()
