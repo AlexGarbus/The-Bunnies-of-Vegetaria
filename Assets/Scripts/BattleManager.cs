@@ -464,7 +464,7 @@ namespace TheBunniesOfVegetaria
             battleMenu.ShowTurnPanel(false);
             battleMenu.SetEnemyButtons(enemyActors); 
             battleMenu.SetSkillButtons();
-            battleMenu.SetInputPromptText($"What will {SelectedBunny.FighterName} do?");
+            battleMenu.PromptPlayerInput();
         }
 
         #endregion

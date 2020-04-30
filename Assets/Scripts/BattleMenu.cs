@@ -74,9 +74,9 @@ namespace TheBunniesOfVegetaria
             playerInputPanel.SetActive(isActive);
         }
 
-        public void SetInputPromptText(string message)
+        public void PromptPlayerInput()
         {
-            inputPromptText.text = message;
+            inputPromptText.text = $"What will {SelectedBunny.FighterName} do?";
         }
 
         public void ShowBackButton(bool isActive)
@@ -89,16 +89,13 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public void GoBack()
         {
-            if(enemyPanel.activeSelf)
-            {
-                optionPanel.SetActive(true);
+            optionPanel.SetActive(true);
+            PromptPlayerInput();
+
+            if (enemyPanel.activeSelf)
                 ShowEnemyPanel(false);
-            }
-            else if(skillPanel.activeSelf)
-            {
-                optionPanel.SetActive(true);
+            if (skillPanel.activeSelf)
                 ShowSkillPanel(false);
-            }
         }
 
         public void ShowOptionPanel(bool isActive)
