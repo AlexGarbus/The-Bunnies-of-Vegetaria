@@ -23,7 +23,7 @@ namespace TheBunniesOfVegetaria
 
         BattleEffect Effect { get; }
 
-        BattleManager Manager { set; }
+        GameObject Observer { set; }
 
         Fighter FighterData { set; }
 
@@ -35,7 +35,7 @@ namespace TheBunniesOfVegetaria
 
         void TakeDamage(int damage);
 
-        void Die();
+        void Defeat();
 
         void Heal(int healAmount);
 

@@ -25,6 +25,10 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private GameObject turnPanel;
         [SerializeField] private TMP_Text turnText;
 
+        public BunnyActor SelectedBunny { private get; set; }
+
+        private bool ShowSkills => SelectedBunny != null && SelectedBunny.AvailableSkillStrings.Length != 0;
+
         private Button[] skillButtons;
         private Button[] enemyButtons;
 
@@ -65,11 +69,9 @@ namespace TheBunniesOfVegetaria
 
         #region Player Input
 
-        public void ShowPlayerInputPanel(bool isActive, BunnyActor bunnyActor = null)
+        public void ShowPlayerInputPanel(bool isActive)
         {
             playerInputPanel.SetActive(isActive);
-            if(bunnyActor)
-                skillOptionButton.SetActive(bunnyActor.AvailableSkillStrings.Length != 0);
         }
 
         public void SetInputPromptText(string message)
@@ -102,6 +104,7 @@ namespace TheBunniesOfVegetaria
         public void ShowOptionPanel(bool isActive)
         {
             optionPanel.SetActive(isActive);
+            skillOptionButton.SetActive(ShowSkills);
         }
 
         public void ShowSkillPanel(bool isActive)
@@ -144,11 +147,13 @@ namespace TheBunniesOfVegetaria
         /// <summary>
         /// Set the number of active skill buttons and the text on each button.
         /// </summary>
-        /// <param name="bunnyActor">The bunny actor to set the buttons for.</param>
-        public void SetSkillButtons(BunnyActor bunnyActor)
+        public void SetSkillButtons()
         {
-            string[] availableSkills = bunnyActor.AvailableSkillStrings;
+            if (!ShowSkills)
+                return;
 
+            string[] availableSkills = SelectedBunny.AvailableSkillStrings;
+            
             for (int i = 0; i < skillButtons.Length; i++)
             {
                 if (i < availableSkills.Length)

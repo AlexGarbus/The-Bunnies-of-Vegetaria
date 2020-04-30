@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace TheBunniesOfVegetaria
 {
@@ -61,7 +59,7 @@ namespace TheBunniesOfVegetaria
 
             // Set up bunny actors
             foreach (BunnyActor actor in bunnyActors)
-                actor.Manager = this;
+                actor.Observer = gameObject;
             bunnyActors[(int)Globals.BunnyType.Bunnight].FighterData = gameManager.Bunnight;
             bunnyActors[(int)Globals.BunnyType.Bunnecromancer].FighterData = gameManager.Bunnecromancer;
             bunnyActors[(int)Globals.BunnyType.Bunnurse].FighterData = gameManager.Bunnurse;
@@ -70,7 +68,7 @@ namespace TheBunniesOfVegetaria
 
             // Set up enemy actors
             foreach (EnemyActor actor in enemyActors)
-                actor.Manager = this;
+                actor.Observer = gameObject;
 
             SetNextWave();
             StartTravel();
@@ -120,20 +118,7 @@ namespace TheBunniesOfVegetaria
                     else if (GetAliveEnemies().Length == 0)
                     {
                         // Battle is won
-                        if(wave == maxWaves)
-                        {
-                            // Boss defeated
-                            battleState = BattleState.Idle;
-                        }
-                        else
-                        {
-                            // Regular wave defeated
-                            foreach (BunnyActor bunnyActor in GetDefeatedBunnies())
-                                bunnyActor.Revive();
-                            battleMenu.SetPlayerStatText(bunnyActors);
-                            SetNextWave();
-                            StartTravel();
-                        }
+                        FinishWave();
                     }
                     else
                     {
@@ -166,32 +151,12 @@ namespace TheBunniesOfVegetaria
             battleState = BattleState.DoneHandlingTurns;
         }
 
-        #region Turn Insertion
+        #region Action Turns
 
         /// <summary>
-        /// Insert turns based on the status of the actors.
+        /// Insert a standard bunny attack turn into the turn list.
         /// </summary>
-        private void InsertStatusTurns()
-        {
-            // TODO: Implement
-        }
-        
-        /// <summary>
-        /// Insert a turn into the turn list, making it the next turn that the Battle Manager handles.
-        /// </summary>
-        /// <param name="turn">The turn that the Battle Manager should handle next.</param>
-        public void PushTurn(Turn turn)
-        {
-            if (battleState != BattleState.HandlingTurns)
-                return;
-
-            turnList.Push(turn);
-        }
-
-        /// <summary>
-        /// Insert a standard attack turn into the turn list.
-        /// </summary>
-        public void InsertAttackTurn(GameObject targetObject)
+        public void InsertBunnyAttackTurn(GameObject targetObject)
         {
             IActor user = SelectedBunny;
             IActor target = targetObject.GetComponent<IActor>();
@@ -203,9 +168,9 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Insert a defend turn into the turn list.
+        /// Insert a bunny defend turn into the turn list.
         /// </summary>
-        public void InsertDefendTurn()
+        public void InsertBunnyDefendTurn()
         {
             SelectedBunny.isDefending = true;
             IActor user = SelectedBunny;
@@ -216,9 +181,9 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Insert a skill turn into the turn list.
+        /// Insert a bunny skill turn into the turn list.
         /// </summary>
-        public void InsertSkillTurn(int skillIndex)
+        public void InsertBunnySkillTurn(int skillIndex)
         {
             BunnyActor user = SelectedBunny;
 
@@ -239,61 +204,6 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Insert a death turn for a bunny actor and lose the battle if all bunnies are dead.
-        /// </summary>
-        /// <param name="bunnyActor">The bunny that has died.</param>
-        /// <param name="deathAction">The action that the bunny should perform upon death.</param>
-        public void InsertDeathTurn(BunnyActor bunnyActor, Action deathAction)
-        {
-            turnList.RemoveUserTurns(bunnyActor);
-            turnList.RemoveTargetTurns(bunnyActor);
-
-            Turn turn = new Turn(bunnyActor, $"{bunnyActor.FighterName} was defeated!", deathAction);
-            turnList.Push(turn);
-
-            if(GetAliveBunnies().Length == 0)
-            {
-                // Battle has been lost
-                turnList.RemoveEnemyTurns();
-                turn = new Turn(bunnyActor, "The bunnies have lost! Retreat!", () => sceneTransition.SaveAndLoadScene(3));
-                turnList.Append(turn);
-            }
-        }
-
-        /// <summary>
-        /// Insert a death turn for an enemy actor.
-        /// </summary>
-        /// <param name="enemyActor">The enemy that has died.</param>
-        /// <param name="deathAction">The action that the bunny should perform upon death.</param>
-        public void InsertDeathTurn(EnemyActor enemyActor, Action deathAction)
-        {
-            turnList.RemoveUserTurns(enemyActor);
-            turnList.RemoveTargetTurns(enemyActor);
-
-            GainExperience(enemyActor.Experience);
-
-            Turn turn = new Turn(enemyActor, $"{enemyActor.FighterName} was defeated!", deathAction);
-            turnList.Push(turn);
-
-            if(GetAliveEnemies().Length == 0)
-            {
-                if(wave == maxWaves)
-                {
-                    // Boss has been defeated
-                    turn = new Turn(enemyActor, "This area is clear!", () =>
-                        {
-                            // TODO: Increment to Carrot Top
-                            if (SaveData.current.areasUnlocked + 1 < (int)Globals.Area.CarrotTop)
-                                SaveData.current.areasUnlocked++;
-                            sceneTransition.SaveAndLoadScene(3);
-                        }
-                    );
-                    turnList.Append(turn);
-                }
-            }
-        }
-
-        /// <summary>
         /// Insert turns for each enemy into the turn list.
         /// </summary>
         private void InsertEnemyTurns()
@@ -306,6 +216,74 @@ namespace TheBunniesOfVegetaria
                 if (turn != null)
                     turnList.Insert(turn);
             }
+        }
+
+        #endregion
+
+        #region Status Turns
+
+        /// <summary>
+        /// Insert a defeat turn for a bunny actor and lose the battle if all bunnies are defeated.
+        /// </summary>
+        /// <param name="bunnyActor">The bunny that has been defeated.</param>
+        private void BunnyDefeat(BunnyActor bunnyActor)
+        {
+            turnList.RemoveUserTurns(bunnyActor);
+            turnList.RemoveTargetTurns(bunnyActor);
+
+            Turn turn = new Turn(bunnyActor, $"{bunnyActor.FighterName} was defeated!", () => bunnyActor.Defeat());
+            turnList.Push(turn);
+
+            if(GetAliveBunnies().Length == 0)
+            {
+                // Battle has been lost
+                turnList.RemoveEnemyTurns();
+                turn = new Turn(bunnyActor, "The bunnies have lost! Retreat!", () => sceneTransition.SaveAndLoadScene(3));
+                turnList.Append(turn);
+            }
+        }
+
+        /// <summary>
+        /// Insert a defeat turn for an enemy actor.
+        /// </summary>
+        /// <param name="enemyActor">The enemy that has been defeated.</param>
+        private void EnemyDefeat(EnemyActor enemyActor)
+        {
+            turnList.RemoveUserTurns(enemyActor);
+            turnList.RemoveTargetTurns(enemyActor);
+
+            GainExperience(enemyActor.Experience);
+
+            Turn turn = new Turn(enemyActor, $"{enemyActor.FighterName} was defeated!", () => enemyActor.Defeat());
+            turnList.Push(turn);
+
+            if(GetAliveEnemies().Length == 0 && wave == maxWaves)
+            {
+                // Boss has been defeated
+                turn = new Turn(enemyActor, "This area is clear!", () =>
+                    {
+                        if (SaveData.current.areasUnlocked < (int)Globals.Area.CarrotTop)
+                            SaveData.current.areasUnlocked++;
+                        sceneTransition.SaveAndLoadScene(3);
+                    }
+                );
+                turnList.Append(turn);
+            }
+        }
+
+        /// <summary>
+        /// Insert a level up turn for a bunny actor.
+        /// </summary>
+        /// <param name="bunnyActor">The bunny actor that has leveled up.</param>
+        private void LevelUp(BunnyActor bunnyActor)
+        {
+            Turn turn = new Turn(bunnyActor, $"{bunnyActor.FighterName} leveled up!", () =>
+                {
+                    bunnyActor.Heal(100);
+                    bunnyActor.RestoreSkillPoints(100);
+                }
+            );
+            turnList.Push(turn);
         }
 
         #endregion
@@ -359,10 +337,34 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
+        /// Finish the current wave of enemies and determine what to do next.
+        /// </summary>
+        private void FinishWave()
+        {
+            foreach (BunnyActor bunnyActor in GetDefeatedBunnies())
+                bunnyActor.Revive();
+
+            battleMenu.SetPlayerStatText(bunnyActors);
+
+            if(wave == maxWaves)
+            {
+                battleState = BattleState.Idle;
+            }
+            else
+            {
+                SetNextWave();
+                StartTravel();
+            }
+        }
+
+        /// <summary>
         /// Set the next wave of enemies.
         /// </summary>
         private void SetNextWave()
         {
+            if (wave == maxWaves)
+                return;
+
             int i = 0;
             wave++;
 
@@ -428,19 +430,6 @@ namespace TheBunniesOfVegetaria
         #region Player Input
 
         /// <summary>
-        /// Generate and display the skill input menu.
-        /// </summary>
-        public void SkillInput()
-        {
-            if (SelectedBunny.AvailableSkillStrings.Length != 0)
-            {
-                battleMenu.ShowOptionPanel(false);
-                battleMenu.SetSkillButtons(SelectedBunny);
-                battleMenu.ShowSkillPanel(true);
-            }
-        }
-
-        /// <summary>
         /// Count the input for the current bunny as received and prepare to either receive the next input or begin handling turns.
         /// </summary>
         private void NextInput()
@@ -456,14 +445,16 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Prompt the user to input their turn for the current bunny.
+        /// Set up the input menu and prompt the user to input their turn for the current bunny.
         /// </summary>
         private void PromptInput()
         {
-            battleMenu.ShowPlayerInputPanel(true, SelectedBunny);
+            battleMenu.SelectedBunny = SelectedBunny;
+            battleMenu.ShowPlayerInputPanel(true);
             battleMenu.ShowOptionPanel(true);
             battleMenu.ShowTurnPanel(false);
-            battleMenu.SetEnemyButtons(enemyActors);
+            battleMenu.SetEnemyButtons(enemyActors); 
+            battleMenu.SetSkillButtons();
             battleMenu.SetInputPromptText($"What will {SelectedBunny.FighterName} do?");
         }
 

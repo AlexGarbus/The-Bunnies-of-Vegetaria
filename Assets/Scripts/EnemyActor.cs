@@ -8,7 +8,7 @@ namespace TheBunniesOfVegetaria
     public class EnemyActor : MonoBehaviour, IActor
     {
         [SerializeField] private float stepDistance;
-        [SerializeField] private int stepFrames;
+        [SerializeField] private int stepSpeed;
         [SerializeField] private float deathTime;
         [SerializeField] private int deathFrames;
 
@@ -21,8 +21,7 @@ namespace TheBunniesOfVegetaria
         public string FighterName => fighter.name;
         public Vector2 StartPosition => startPosition;
         public BattleEffect Effect { get; private set; }
-        public BattleManager Manager { set => battleManager = value; }
-
+        public GameObject Observer { set => observer = value; }
         public Fighter FighterData 
         {
             set
@@ -36,11 +35,11 @@ namespace TheBunniesOfVegetaria
             }
         }
 
-        private enum TurnType { SingleAttack, MultiAttack, SingleHeal, MultiHeal }
+        private enum EnemyTurnType { SingleAttack, MultiAttack, SingleHeal, MultiHeal }
 
         private const int normalHealAmount = 5;
         private Vector2 startPosition;
-        private BattleManager battleManager;
+        private GameObject observer;
         private Enemy fighter;
         private SpriteRenderer spriteRenderer;
 
@@ -54,6 +53,107 @@ namespace TheBunniesOfVegetaria
         {
             startPosition = transform.position;
         }
+        
+        /// <summary>
+        /// Generate a randomly-selected turn for this enemy actor.
+        /// </summary>
+        /// <param name="bunnyActors">All bunny actors that this enemy can attack.</param>
+        /// <param name="enemyActors">All enemy actors that this enemy can heal, including itself.</param>
+        public Turn GetTurn(BunnyActor[] bunnyActors, EnemyActor[] enemyActors)
+        {
+            EnemyTurnType[] availableTurnTypes = GetAvailableTurnTypes();
+
+            if (availableTurnTypes.Length == 0)
+            {
+                Debug.LogError("Enemy has no available turns!");
+                return null;
+            }
+
+            EnemyTurnType selectedTurn = availableTurnTypes[Random.Range(0, availableTurnTypes.Length)];
+
+            switch(selectedTurn)
+            {
+                case EnemyTurnType.SingleAttack:
+                    BunnyActor bunnyActor = bunnyActors[Random.Range(0, bunnyActors.Length)];
+                    return new Turn(this, bunnyActor, $"{FighterName} attacks {bunnyActor.FighterName}!", () => DoDamage(bunnyActor));
+                case EnemyTurnType.MultiAttack:
+                    return new Turn(this, bunnyActors, $"{FighterName} attacks the whole party!", () => DoDamage(bunnyActors));
+                case EnemyTurnType.SingleHeal:
+                    return new Turn(this, $"{FighterName} healed itself!", () => Heal(normalHealAmount * 2));
+                case EnemyTurnType.MultiHeal:
+                    return new Turn(this, $"{FighterName} healed all enemies!", () =>
+                        {
+                            foreach (EnemyActor enemyActor in enemyActors)
+                                enemyActor.Heal(normalHealAmount);
+                        }
+                    );
+                default:
+                    return null;
+            }
+        }
+
+        public IEnumerator TakeStep()
+        {
+            Vector2 startPosition = transform.position;
+            Vector2 targetPosition = startPosition + Vector2.left * stepDistance;
+
+            // Step forward
+            while ((Vector2)transform.position != targetPosition)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, targetPosition, stepSpeed * Time.deltaTime);
+                yield return null;
+            }
+
+            // Step back
+            while ((Vector2)transform.position != startPosition)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, startPosition, stepSpeed * Time.deltaTime);
+                yield return null;
+            }
+        }
+
+        /// <summary>
+        /// Get an array of turn types that this enemy can use.
+        /// </summary>
+        /// <returns>An array of all turn types available to this actor.</returns>
+        private EnemyTurnType[] GetAvailableTurnTypes()
+        {
+            List<EnemyTurnType> availableTurns = new List<EnemyTurnType>(4);
+
+            if (fighter.singleAttack)
+                availableTurns.Add(EnemyTurnType.SingleAttack);
+            if (fighter.multiAttack)
+                availableTurns.Add(EnemyTurnType.MultiAttack);
+            if (fighter.singleHeal)
+                availableTurns.Add(EnemyTurnType.SingleHeal);
+            if (fighter.multiHeal)
+                availableTurns.Add(EnemyTurnType.MultiHeal);
+
+            return availableTurns.ToArray();
+        }
+
+        /// <summary>
+        /// Fade the enemy's sprite to transparent, and then deactivate the enemy.
+        /// </summary>
+        private IEnumerator FadeOut()
+        {
+            int framesComplete = 0;
+            float waitTime = deathTime / deathFrames;
+
+            while (framesComplete < deathFrames)
+            {
+                framesComplete++;
+
+                spriteRenderer.color = new Color(1, 1, 1, 1f - (float)framesComplete / deathFrames);
+
+                yield return new WaitForSeconds(waitTime);
+            }
+
+            spriteRenderer.color = new Color(1, 1, 1, 1);
+            gameObject.SetActive(false);
+        }
+
+        #region Health
 
         public int CalculateDamage(IActor target)
         {
@@ -87,13 +187,13 @@ namespace TheBunniesOfVegetaria
             if (CurrentHealth <= 0)
             {
                 CurrentHealth = 0;
-                Die();
+                observer.SendMessage("EnemyDefeat", this);
             }
         }
 
-        public void Die()
+        public void Defeat()
         {
-            battleManager.InsertDeathTurn(this, () => StartCoroutine(FadeOut()));
+            StartCoroutine(FadeOut());
         }
 
         public void Heal(int healAmount)
@@ -107,92 +207,6 @@ namespace TheBunniesOfVegetaria
             Effect.PlayHeal();
         }
 
-        public IEnumerator TakeStep()
-        {
-            Vector2 startPosition = transform.position;
-            Vector2 targetPosition = startPosition + Vector2.left * stepDistance;
-            float maxDistanceDelta = stepDistance / (stepFrames / 2);
-
-            // Step forward
-            while ((Vector2)transform.position != targetPosition)
-            {
-                transform.position = Vector2.MoveTowards(transform.position, targetPosition, maxDistanceDelta);
-                yield return null;
-            }
-
-            // Step back
-            while ((Vector2)transform.position != startPosition)
-            {
-                transform.position = Vector2.MoveTowards(transform.position, startPosition, maxDistanceDelta);
-                yield return null;
-            }
-        }
-
-        /// <summary>
-        /// Get a randomly selected turn from the enemy.
-        /// </summary>
-        /// <param name="bunnyActors">All bunny actors that the enemy can attack.</param>
-        /// <param name="enemyActors">All enemy actors that the enemy can heal, including itself.</param>
-        public Turn GetTurn(BunnyActor[] bunnyActors, EnemyActor[] enemyActors)
-        {
-            List<TurnType> availableTurns = new List<TurnType>(4);
-            if (fighter.singleAttack)
-                availableTurns.Add(TurnType.SingleAttack);
-            if (fighter.multiAttack)
-                availableTurns.Add(TurnType.MultiAttack);
-            if (fighter.singleHeal)
-                availableTurns.Add(TurnType.SingleHeal);
-            if (fighter.multiHeal)
-                availableTurns.Add(TurnType.MultiHeal);
-
-            if (availableTurns.Count == 0)
-            {
-                Debug.LogError("Enemy has no available turns!");
-                return null;
-            }
-
-            TurnType selectedTurn = availableTurns[Random.Range(0, availableTurns.Count)];
-
-            switch(selectedTurn)
-            {
-                case TurnType.SingleAttack:
-                    BunnyActor bunnyActor = bunnyActors[Random.Range(0, bunnyActors.Length)];
-                    return new Turn(this, bunnyActor, $"{FighterName} attacks {bunnyActor.FighterName}!", () => DoDamage(bunnyActor));
-                case TurnType.MultiAttack:
-                    return new Turn(this, bunnyActors, $"{FighterName} attacks the whole party!", () => DoDamage(bunnyActors));
-                case TurnType.SingleHeal:
-                    return new Turn(this, $"{FighterName} healed itself!", () => Heal(normalHealAmount * 2));
-                case TurnType.MultiHeal:
-                    return new Turn(this, $"{FighterName} healed all enemies!", () =>
-                        {
-                            foreach (EnemyActor enemyActor in enemyActors)
-                                enemyActor.Heal(normalHealAmount);
-                        }
-                    );
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// Fade the enemy's sprite to transparent, and then deactivate the enemy.
-        /// </summary>
-        private IEnumerator FadeOut()
-        {
-            int framesComplete = 0;
-            float waitTime = deathTime / deathFrames;
-
-            while (framesComplete < deathFrames)
-            {
-                framesComplete++;
-
-                spriteRenderer.color = new Color(1, 1, 1, 1f - (float)framesComplete / deathFrames);
-
-                yield return new WaitForSeconds(waitTime);
-            }
-
-            spriteRenderer.color = new Color(1, 1, 1, 1);
-            gameObject.SetActive(false);
-        }
+        #endregion
     }
 }

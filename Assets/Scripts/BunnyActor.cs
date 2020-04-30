@@ -7,7 +7,7 @@ namespace TheBunniesOfVegetaria
     public class BunnyActor : MonoBehaviour, IActor
     {
         [SerializeField] private float stepDistance;
-        [SerializeField] private int stepFrames;
+        [SerializeField] private float stepSpeed;
 
         [HideInInspector] public bool isDefending = false;
 
@@ -21,8 +21,7 @@ namespace TheBunniesOfVegetaria
         public string FighterName => fighter.name;
         public Vector2 StartPosition => startPosition;
         public BattleEffect Effect { get; private set; }
-        // TODO: Try to remove references to this.
-        public BattleManager Manager { set => battleManager = value; }
+        public GameObject Observer { set => observer = value; }
         public Fighter FighterData 
         {
             set
@@ -39,7 +38,7 @@ namespace TheBunniesOfVegetaria
         
         private Vector2 startPosition;
         private Animator animator;
-        private BattleManager battleManager;
+        private GameObject observer;
         private Bunny fighter;
 
         private void Awake()
@@ -53,6 +52,54 @@ namespace TheBunniesOfVegetaria
             startPosition = transform.position;
         }
 
+        public IEnumerator TakeStep()
+        {
+            Vector2 startPosition = transform.position;
+            Vector2 targetPosition = startPosition + Vector2.right * stepDistance;
+
+            // Step forward
+            while ((Vector2)transform.position != targetPosition)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, targetPosition, stepSpeed * Time.deltaTime);
+                yield return null;
+            }
+
+            // Step back
+            while ((Vector2)transform.position != startPosition)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, startPosition, stepSpeed * Time.deltaTime);
+                yield return null;
+            }
+        }
+
+        /// <summary>
+        /// Gain experience and level up if enough experience has been gained.
+        /// </summary>
+        /// <param name="experience">The amount of experience to gain.</param>
+        public void GainExperience(int experience)
+        {
+            int previousLevel = fighter.Level;
+
+            fighter.AddExperience(experience);
+
+            if (fighter.Level != previousLevel)
+                observer.SendMessage("LevelUp", this);
+        }
+    
+        /// <summary>
+        /// Set whether this bunny actor should be playing its moving animation.
+        /// </summary>
+        /// <param name="isMoving"></param>
+        public void SetMoving(bool isMoving)
+        {
+            if (!IsAlive)
+                return;
+
+            animator.SetBool("Moving", isMoving);
+        }
+        
+        #region Health
+
         public int CalculateDamage(IActor target)
         {
             return Mathf.CeilToInt((Attack * 5 + fighter.Level * (1 - Attack * 5f / 100f)) * (1 - (target.Defense - 1) * 0.2f));
@@ -60,6 +107,9 @@ namespace TheBunniesOfVegetaria
 
         public void DoDamage(IActor target, float multiplier = 1)
         {
+            if (!IsAlive)
+                return;
+
             int damage = CalculateDamage(target) * (int)multiplier;
             target.TakeDamage(damage);
             StartCoroutine(TakeStep());
@@ -67,7 +117,10 @@ namespace TheBunniesOfVegetaria
 
         public void DoDamage(IActor[] targets, float multiplier = 0.5f)
         {
-            foreach(IActor target in targets)
+            if (!IsAlive)
+                return;
+
+            foreach (IActor target in targets)
             {
                 int damage = Mathf.CeilToInt(CalculateDamage(target) * multiplier);
                 target.TakeDamage(damage);
@@ -83,18 +136,19 @@ namespace TheBunniesOfVegetaria
             if (isDefending)
                 damage = Mathf.CeilToInt(damage / 2f);
 
-            Effect.PlaySlash();
             CurrentHealth -= damage;
             if (CurrentHealth <= 0)
             {
                 CurrentHealth = 0;
-                Die();
+                observer.SendMessage("BunnyDefeat", this);
             }
+            
+            Effect.PlaySlash();
         }
 
-        public void Die()
+        public void Defeat()
         {
-            battleManager.InsertDeathTurn(this, () => transform.Rotate(new Vector3(0, 0, 90)));
+            transform.Rotate(new Vector3(0, 0, 90));
         }
 
         public void Heal(int healAmount)
@@ -105,29 +159,27 @@ namespace TheBunniesOfVegetaria
             CurrentHealth += healAmount;
             if (CurrentHealth > fighter.MaxHealth)
                 CurrentHealth = fighter.MaxHealth;
+            
+            Effect.PlayHeal();
+        }
+        
+        /// <summary>
+        /// Reverse the effects of defeat and restore this bunny actor's health.
+        /// </summary>
+        /// <param name="healthAmount">The amount of health that this bunny actor should have upon revival.</param>
+        public void Revive(int healthAmount = 10)
+        {
+            if (IsAlive)
+                return;
+
+            CurrentHealth = Mathf.Clamp(healthAmount, 0, fighter.MaxHealth);
+            transform.Rotate(new Vector3(0, 0, -90));
             Effect.PlayHeal();
         }
 
-        public IEnumerator TakeStep()
-        {
-            Vector2 startPosition = transform.position;
-            Vector2 targetPosition = startPosition + Vector2.right * stepDistance;
-            float maxDistanceDelta = stepDistance / (stepFrames / 2);
+        #endregion
 
-            // Step forward
-            while ((Vector2)transform.position != targetPosition)
-            {
-                transform.position = Vector2.MoveTowards(transform.position, targetPosition, maxDistanceDelta);
-                yield return null;
-            }
-
-            // Step back
-            while ((Vector2)transform.position != startPosition)
-            {
-                transform.position = Vector2.MoveTowards(transform.position, startPosition, maxDistanceDelta);
-                yield return null;
-            }
-        }
+        #region Skills
 
         public bool CanUseSkill(int skillIndex)
         {
@@ -161,7 +213,7 @@ namespace TheBunniesOfVegetaria
             skill.Use(this, targets);
         }
 
-        public void RestoreSkill(int skillAmount)
+        public void RestoreSkillPoints(int skillAmount)
         {
             if (!IsAlive)
                 return;
@@ -171,45 +223,7 @@ namespace TheBunniesOfVegetaria
                 CurrentSkillPoints = fighter.MaxSkillPoints;
             Effect.PlayHeal();
         }
-        
-        public void Revive(int healthAmount = 10)
-        {
-            if (IsAlive)
-                return;
 
-            CurrentHealth = Mathf.Clamp(healthAmount, 0, fighter.MaxHealth);
-            transform.Rotate(new Vector3(0, 0, -90));
-            Effect.PlayHeal();
-        }
-
-/// <summary>
-        /// Gain experience and level up if enough experience has been gained.
-        /// </summary>
-        /// <param name="experience">The amount of experience to gain.</param>
-        public void GainExperience(int experience)
-        {
-            int previousLevel = fighter.Level;
-
-            fighter.AddExperience(experience);
-
-            if (fighter.Level != previousLevel)
-            {
-                battleManager.PushTurn(new Turn(this, $"{FighterName} leveled up!", () =>
-                        {
-                            CurrentHealth = fighter.MaxHealth;
-                            CurrentSkillPoints = fighter.MaxSkillPoints;
-                        }
-                    )
-                );
-            }
-        }
-    
-        public void SetMoving(bool isMoving)
-        {
-            if (!IsAlive)
-                return;
-
-            animator.SetBool("Moving", isMoving);
-        }
+        #endregion
     }
 }
