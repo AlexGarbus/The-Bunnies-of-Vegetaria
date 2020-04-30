@@ -30,33 +30,33 @@ namespace TheBunniesOfVegetaria
                     attack = 4;
                     defense = 4;
                     speed = 1;
-                    Skills[0] = new DamageAllSkill(5, 5, "Slash", 0.5f);
-                    Skills[1] = new DamageRandomSkill(10, 10, "Slash of Faith", 2);
-                    Skills[2] = new DamageAllSkill(20, 20, "Wide Slash", 1);
+                    Skills[0] = new DamageAllSkill(5, 5, "SLASH", 0.5f);
+                    Skills[1] = new DamageRandomSkill(10, 10, "SLASH OF FAITH", 2);
+                    Skills[2] = new DamageAllSkill(20, 20, "WIDE SLASH", 1);
                     break;
                 case Globals.BunnyType.Bunnecromancer:
                     attack = 3;
                     defense = 3;
                     speed = 4;
-                    Skills[0] = new RestoreSkillPointsAllSkill(5, 5, "Energize", 10);
-                    Skills[1] = new DamageRandomSkill(10, 10, "Magic Missile", 2);
-                    Skills[2] = new RestoreSkillPointsAllSkill(20, 20, "Synergize", 20);
+                    Skills[0] = new RestoreSkillPointsAllSkill(5, 5, "ENERGIZE", 10);
+                    Skills[1] = new DamageRandomSkill(10, 10, "MAGIC MISSILE", 2);
+                    Skills[2] = new RestoreSkillPointsAllSkill(20, 20, "SYNERGIZE", 20);
                     break;
                 case Globals.BunnyType.Bunnurse:
                     attack = 2;
                     defense = 5;
                     speed = 2;
-                    Skills[0] = new HealAllSkill(5, 5, "Heal", 10);
-                    Skills[1] = new ReviveAllSkill(10, 5, "Revive", 10);
-                    Skills[2] = new ReviveAllSkill(20, 20, "Resurrect", 25);
+                    Skills[0] = new HealAllSkill(5, 5, "HEAL", 10);
+                    Skills[1] = new ReviveAllSkill(10, 5, "REVIVE", 10);
+                    Skills[2] = new ReviveAllSkill(20, 20, "RESURRECT", 25);
                     break;
                 case Globals.BunnyType.Bunneerdowell:
                     attack = 4;
                     defense = 2;
                     speed = 3;
-                    Skills[0] = new DamageAllSkill(5, 5, "Fist Flurry", 0.5f);
-                    Skills[1] = new RandomDamageAllSkill(10, 10, "Blind Fury", 0.25f, 2);
-                    Skills[2] = new DamageAllSkill(20, 20, "Burning Rage", 1);
+                    Skills[0] = new DamageAllSkill(5, 5, "FIST FLURRY", 0.5f);
+                    Skills[1] = new RandomDamageAllSkill(10, 10, "BLIND FURY", 0.25f, 2);
+                    Skills[2] = new DamageAllSkill(20, 20, "BURNING RAGE", 1);
                     break;
             }
         }
