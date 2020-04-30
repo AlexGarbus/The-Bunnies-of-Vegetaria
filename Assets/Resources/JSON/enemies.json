@@ -24,7 +24,7 @@
 	"bosses":[
 		{"name":"SALAD BOWL", "spriteFileName":"salad bowl", "area":"LettuceFields", "attack":2, "defense":2, "speed":2, "singleAttack":true, "multiAttack":false, "singleHeal":true, "multiHeal":false},
 		{"name":"CELEREYE", "spriteFileName":"celereye", "area":"CeleryWoods", "attack":3, "defense":3, "speed":3, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":false},
-		{"name":"BROCCOLTREE", "spriteFileName":"broccoltree", "area":"BroccoliForest", "attack":3 "defense":4, "speed":1, "singleAttack":true, "multiAttack":false, "singleHeal":true, "multiHeal":false},
+		{"name":"BROCCOLTREE", "spriteFileName":"broccoltree", "area":"BroccoliForest", "attack":3, "defense":4, "speed":1, "singleAttack":true, "multiAttack":false, "singleHeal":true, "multiHeal":false},
 		{"name":"SOUL CHOY", "spriteFileName":"soul choy", "area":"BokChoyBluff", "attack":4, "defense":4, "speed":4, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":false}
 	]
 }

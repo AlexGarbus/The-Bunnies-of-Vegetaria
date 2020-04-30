@@ -51,8 +51,9 @@ namespace TheBunniesOfVegetaria
                     if (spriteTransform.position.x <= minPositionX)
                     {
                         // Reposition offscreen tile
+                        float horizontalOffset = minPositionX - spriteTransform.position.x;
                         Vector2 newPosition = spriteTransform.position;
-                        newPosition.x = maxPositionX;
+                        newPosition.x = maxPositionX + horizontalOffset;
                         spriteTransform.position = newPosition;
                         tilesScrolled++;
                     }

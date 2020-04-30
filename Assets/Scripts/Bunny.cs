@@ -141,8 +141,7 @@ namespace TheBunniesOfVegetaria
 
         private int CalculateMaxSkillPoints()
         {
-            int level = CalculateLevel();
-            return level / 5 * 10;
+            return Level / 5 * 10;
         }
 
         #endregion

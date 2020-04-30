@@ -347,7 +347,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9d28bc7a8333c2341911630ff2a0c221, type: 3}
+  m_Sprite: {fileID: 4982551920430869430, guid: 9d28bc7a8333c2341911630ff2a0c221,
+    type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -482,7 +483,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8768d2be22ad45e41b6163584d3b6a9a, type: 3}
+  m_Sprite: {fileID: -7632031996456188614, guid: 8768d2be22ad45e41b6163584d3b6a9a,
+    type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -555,7 +557,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 47145b9556d6f0d4a877c4c2d3822592, type: 3}
+  m_Sprite: {fileID: -8967483991131029896, guid: 47145b9556d6f0d4a877c4c2d3822592,
+    type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1186,7 +1189,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 860c7cddf2414ad49a715aefee66aaba, type: 3}
+  m_Sprite: {fileID: 8944981333966925485, guid: 860c7cddf2414ad49a715aefee66aaba,
+    type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2586,10 +2590,10 @@ MonoBehaviour:
   descriptionText: {fileID: 1076726215}
   bunnyImage: {fileID: 1963056555}
   bunnySprites:
-  - {fileID: 21300000, guid: 9d28bc7a8333c2341911630ff2a0c221, type: 3}
-  - {fileID: 21300000, guid: 860c7cddf2414ad49a715aefee66aaba, type: 3}
-  - {fileID: 21300000, guid: 47145b9556d6f0d4a877c4c2d3822592, type: 3}
-  - {fileID: 21300000, guid: 8768d2be22ad45e41b6163584d3b6a9a, type: 3}
+  - {fileID: 4982551920430869430, guid: 9d28bc7a8333c2341911630ff2a0c221, type: 3}
+  - {fileID: 8944981333966925485, guid: 860c7cddf2414ad49a715aefee66aaba, type: 3}
+  - {fileID: -8967483991131029896, guid: 47145b9556d6f0d4a877c4c2d3822592, type: 3}
+  - {fileID: -7632031996456188614, guid: 8768d2be22ad45e41b6163584d3b6a9a, type: 3}
   nameInput: {fileID: 24713840}
   confirmationPanel: {fileID: 1186648878}
   confirmationNames: {fileID: 720952007}

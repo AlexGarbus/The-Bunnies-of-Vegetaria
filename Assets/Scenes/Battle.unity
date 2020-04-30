@@ -1764,12 +1764,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bossMusic: {fileID: 8300000, guid: ae337fd22a8d695419e1548c1198eb25, type: 3}
   musicSource: {fileID: 399193394}
+  battleBackground: {fileID: 1604408059}
   battleMenu: {fileID: 1974298574}
   sceneTransition: {fileID: 1318449200}
-  battleBackground: {fileID: 1604408059}
   maxWaves: 5
   turnTime: 1
-  travelSpeed: 1
+  travelSpeed: 5
   bunnyActors:
   - {fileID: 625147147}
   - {fileID: 149833662}
