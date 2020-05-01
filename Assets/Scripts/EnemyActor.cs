@@ -88,7 +88,7 @@ namespace TheBunniesOfVegetaria
                     return new Turn(this, this, $"{FighterName} healed itself!", () =>
                         {
                             Heal(normalHealAmount * 2);
-                            Sound.PlayOneShot(attackSound);
+                            Sound.PlayOneShot(healSound);
                         }
                     );
                 case EnemyTurnType.MultiHeal:

@@ -13,7 +13,7 @@ namespace TheBunniesOfVegetaria
 
         private int maxExperience;
 
-        // TODO: Construct from JSON
+        // TODO: Construct from JSON instead
         public Bunny(Globals.BunnyType bunnyType, string name, int experience)
         {
             base.name = name;
@@ -47,7 +47,7 @@ namespace TheBunniesOfVegetaria
                     defense = 5;
                     speed = 2;
                     Skills[0] = new HealAllSkill(5, 5, "HEAL", 10);
-                    Skills[1] = new ReviveAllSkill(10, 5, "REVIVE", 10);
+                    Skills[1] = new ReviveAllSkill(10, 10, "REVIVE", 10);
                     Skills[2] = new ReviveAllSkill(20, 20, "RESURRECT", 25);
                     break;
                 case Globals.BunnyType.Bunneerdowell:
