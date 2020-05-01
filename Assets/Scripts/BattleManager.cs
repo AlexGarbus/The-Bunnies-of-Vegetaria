@@ -40,6 +40,7 @@ namespace TheBunniesOfVegetaria
         private int inputsReceived = -1;
         private int wave = 0;
         private BattleState battleState;
+        private AudioClip healSound;
         private GameManager gameManager;
         private Enemy[] enemies;
         private Enemy boss;
@@ -47,6 +48,7 @@ namespace TheBunniesOfVegetaria
 
         private void Start()
         {
+            healSound = Resources.Load<AudioClip>("Sounds/heal");
             gameManager = GameManager.Instance;
 
             // Get area
@@ -290,6 +292,7 @@ namespace TheBunniesOfVegetaria
                 {
                     bunnyActor.Heal(100);
                     bunnyActor.RestoreSkillPoints(100);
+                    bunnyActor.Sound.PlayOneShot(healSound);
                 }
             );
             turnList.Push(turn);
@@ -352,7 +355,7 @@ namespace TheBunniesOfVegetaria
         {
             BunnyActor[] defeatedBunnies = GetDefeatedBunnies();
             if (defeatedBunnies.Length > 0)
-                defeatedBunnies[0].Sound.PlayOneShot(Resources.Load<AudioClip>("Sounds/Heal"));
+                defeatedBunnies[0].Sound.PlayOneShot(healSound);
             foreach (BunnyActor bunnyActor in defeatedBunnies)
                 bunnyActor.Revive();
 
