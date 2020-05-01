@@ -3,22 +3,25 @@ using UnityEngine;
 
 namespace TheBunniesOfVegetaria
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     public class BattleBackground : MonoBehaviour
     {
         [Tooltip("The background sprites for each area. These should be in ascending order by area.")]
         [SerializeField] private Sprite[] backgrounds;
 
         public bool IsScrolling { get; private set; } = false;
-        public float ScreenWidth => Mathf.Abs(maxPositionX - minPositionX);
+        public float ScreenWidth => spriteWidth / 2f;
 
-        private float minPositionX, maxPositionX;
-        private SpriteRenderer[] spriteRenderers;
+        private float spriteWidth;
+        private Vector2 startPosition;
+        private SpriteRenderer spriteRenderer;
 
         private void Awake()
         {
-            spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-            minPositionX = spriteRenderers[0].transform.position.x - 4;
-            maxPositionX = spriteRenderers[spriteRenderers.Length - 1].transform.position.x;
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteWidth = spriteRenderer.bounds.size.x;
+            startPosition = Vector2.right * spriteWidth / 4f;
+            transform.position = startPosition;
         }
 
         private void Start()
@@ -38,40 +41,30 @@ namespace TheBunniesOfVegetaria
                 yield break;
 
             IsScrolling = true;
-            int tilesScrolled = 0;
+            int screensScrolled = 0;
 
             do
             {
-                // Move background tiles
-                foreach (SpriteRenderer spriteRenderer in spriteRenderers)
+                // Move background
+                transform.Translate(Vector2.left * speed * Time.deltaTime);
+                if (transform.position.x < -startPosition.x)
                 {
-                    Transform spriteTransform = spriteRenderer.transform;
-                    spriteTransform.Translate(Vector2.left * speed * Time.fixedDeltaTime);
-
-                    if (spriteTransform.position.x <= minPositionX)
-                    {
-                        // Reposition offscreen tile
-                        float horizontalOffset = minPositionX - spriteTransform.position.x;
-                        Vector2 newPosition = spriteTransform.position;
-                        newPosition.x = maxPositionX + horizontalOffset;
-                        spriteTransform.position = newPosition;
-                        tilesScrolled++;
-                    }
+                    Vector2 newPosition = startPosition;
+                    newPosition.x -= (-startPosition.x - transform.position.x);
+                    transform.position = newPosition;
+                    screensScrolled++;
                 }
 
-                // Move objects
+                // Move objects with background
                 foreach (Transform movingTransform in movingTransforms)
                 { 
-                    movingTransform.Translate(Vector2.left * speed * Time.fixedDeltaTime);
+                    movingTransform.Translate(Vector2.left * speed * Time.deltaTime);
                 }
 
                 yield return null;
-            } while (tilesScrolled < screens * spriteRenderers.Length);
+            } while (screensScrolled < screens);
 
-            foreach (SpriteRenderer spriteRenderer in spriteRenderers)
-            {
-                spriteRenderer.transform.position = RoundX(spriteRenderer.transform.position);
-            }
+            transform.position = RoundX(spriteRenderer.transform.position);
 
             foreach (Transform movingTransform in movingTransforms)
             {
@@ -87,10 +80,7 @@ namespace TheBunniesOfVegetaria
         /// <param name="area">The area to set as the background.</param>
         private void SetBackground(Globals.Area area)
         {
-            foreach (SpriteRenderer spriteRenderer in spriteRenderers)
-            {
-                spriteRenderer.sprite = backgrounds[(int)area - 1];
-            }
+            spriteRenderer.sprite = backgrounds[(int)area - 1];
         }
 
         /// <summary>
