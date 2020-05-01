@@ -8,7 +8,7 @@
         {
             this.healthAmount = healthAmount;
             Target = TargetType.Bunny;
-            Description = $"Revive defeated bunnies with {healthAmount} HP";
+            Description = $"Revive fallen allies with {healthAmount} HP";
         }
 
         public override void Use(BunnyActor user, IActor[] targets)

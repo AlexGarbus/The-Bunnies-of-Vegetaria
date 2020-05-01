@@ -7,7 +7,6 @@ namespace TheBunniesOfVegetaria
     [RequireComponent(typeof(AudioSource))]
     public class CutsceneManager : MonoBehaviour
     {
-        [SerializeField] private TextAsset cutsceneJson;
         [Tooltip("The time delay after each character of a text string is typed.")]
         [SerializeField] private float charDelay;
         [Tooltip("The time delay after a text string is fully typed.")]
@@ -22,7 +21,7 @@ namespace TheBunniesOfVegetaria
 
         private void Start()
         {
-            cutscene = JsonUtility.FromJson<Cutscene>(cutsceneJson.text);
+            cutscene = JsonUtility.FromJson<Cutscene>(Resources.Load<TextAsset>("Text Assets/introduction").text);
 
             musicPlayer = GetComponent<AudioSource>();
             musicPlayer.clip = Resources.Load<AudioClip>($"Music/{cutscene.music}");
