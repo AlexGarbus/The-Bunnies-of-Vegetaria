@@ -18,7 +18,7 @@
                 if (target is BunnyActor && (BunnyActor)target != user)
                 {
                     BunnyActor targetBunny = (BunnyActor)target;
-                    targetBunny.RestoreSkill(skillAmount);
+                    targetBunny.RestoreSkillPoints(skillAmount);
                 }
             }
         }

@@ -40,13 +40,13 @@ namespace TheBunniesOfVegetaria
     
         private void Update()
         {
-            if(SceneManager.GetActiveScene().buildIndex > 0)
+            if(SceneManager.GetActiveScene().buildIndex > 1)
                 AddPlaytime();
         }
 
         private void OnApplicationQuit()
         {
-            if (SceneManager.GetActiveScene().buildIndex > 0)
+            if (SceneManager.GetActiveScene().buildIndex > 1)
                 SaveLoad.Save();
         }
 

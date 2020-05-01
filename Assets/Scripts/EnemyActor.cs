@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace TheBunniesOfVegetaria
 {
-    [RequireComponent(typeof(SpriteRenderer))]
+    [RequireComponent(typeof(AudioSource), typeof(SpriteRenderer))]
     public class EnemyActor : MonoBehaviour, IActor
     {
         [SerializeField] private float stepDistance;
-        [SerializeField] private int stepFrames;
+        [SerializeField] private int stepSpeed;
         [SerializeField] private float deathTime;
         [SerializeField] private int deathFrames;
 
@@ -20,9 +20,9 @@ namespace TheBunniesOfVegetaria
         public int Experience => Attack + Defense + Speed;
         public string FighterName => fighter.name;
         public Vector2 StartPosition => startPosition;
+        public AudioSource Sound { get; private set; }
         public BattleEffect Effect { get; private set; }
-        public BattleManager Manager { set => battleManager = value; }
-
+        public GameObject Observer { set => observer = value; }
         public Fighter FighterData 
         {
             set
@@ -36,11 +36,12 @@ namespace TheBunniesOfVegetaria
             }
         }
 
-        private enum TurnType { SingleAttack, MultiAttack, SingleHeal, MultiHeal }
+        private enum EnemyTurnType { SingleAttack, MultiAttack, SingleHeal, MultiHeal }
 
         private const int normalHealAmount = 5;
         private Vector2 startPosition;
-        private BattleManager battleManager;
+        private AudioClip attackSound, healSound, defeatSound;
+        private GameObject observer;
         private Enemy fighter;
         private SpriteRenderer spriteRenderer;
 
@@ -48,130 +49,102 @@ namespace TheBunniesOfVegetaria
         {
             Effect = GetComponentInChildren<BattleEffect>();
             spriteRenderer = GetComponent<SpriteRenderer>();
+            Sound = GetComponent<AudioSource>();
+            attackSound = Resources.Load<AudioClip>("Sounds/attack");
+            healSound = Resources.Load<AudioClip>("Sounds/heal");
+            defeatSound = Resources.Load<AudioClip>("Sounds/defeat_enemy");
         }
 
         private void Start()
         {
             startPosition = transform.position;
         }
-
-        public int CalculateDamage(IActor target)
+        
+        /// <summary>
+        /// Generate a randomly-selected turn for this enemy actor.
+        /// </summary>
+        /// <param name="bunnyActors">All bunny actors that this enemy can attack.</param>
+        /// <param name="enemyActors">All enemy actors that this enemy can heal, including itself.</param>
+        public Turn GetTurn(BunnyActor[] bunnyActors, EnemyActor[] enemyActors)
         {
-            return Mathf.CeilToInt(10 * Attack * (1 - (target.Defense - 1) * 0.2f));
-        }
+            EnemyTurnType[] availableTurnTypes = GetAvailableTurnTypes();
 
-        public void DoDamage(IActor target, float multiplier = 1)
-        {
-            int damage = CalculateDamage(target) * (int)multiplier;
-            target.TakeDamage(damage);
-            StartCoroutine(TakeStep());
-        }
-
-        public void DoDamage(IActor[] targets, float multiplier = 0.5f)
-        {
-            foreach (IActor target in targets)
+            if (availableTurnTypes.Length == 0)
             {
-                int damage = Mathf.CeilToInt(CalculateDamage(target) * multiplier);
-                target.TakeDamage(damage);
+                Debug.LogError("Enemy has no available turns!");
+                return null;
             }
-            StartCoroutine(TakeStep());
-        }
 
-        public void TakeDamage(int damage)
-        {
-            if (!IsAlive)
-                return;
+            EnemyTurnType selectedTurn = availableTurnTypes[Random.Range(0, availableTurnTypes.Length)];
 
-            Effect.PlaySlash();
-            CurrentHealth -= damage;
-            if (CurrentHealth <= 0)
+            switch(selectedTurn)
             {
-                CurrentHealth = 0;
-                Die();
+                case EnemyTurnType.SingleAttack:
+                    BunnyActor bunnyActor = bunnyActors[Random.Range(0, bunnyActors.Length)];
+                    return new Turn(this, bunnyActor, $"{FighterName} attacks {bunnyActor.FighterName}!", () => DoDamage(bunnyActor));
+                case EnemyTurnType.MultiAttack:
+                    return new Turn(this, bunnyActors, $"{FighterName} attacks the whole party!", () => DoDamage(bunnyActors));
+                case EnemyTurnType.SingleHeal:
+                    return new Turn(this, this, $"{FighterName} healed itself!", () =>
+                        {
+                            Heal(normalHealAmount * 2);
+                            Sound.PlayOneShot(attackSound);
+                        }
+                    );
+                case EnemyTurnType.MultiHeal:
+                    return new Turn(this, enemyActors, $"{FighterName} healed all enemies!", () =>
+                        {
+                            foreach (EnemyActor enemyActor in enemyActors)
+                                enemyActor.Heal(normalHealAmount);
+                            Sound.PlayOneShot(healSound);
+                        }
+                    );
+                default:
+                    return null;
             }
-        }
-
-        public void Die()
-        {
-            battleManager.InsertDeathTurn(this, () => StartCoroutine(FadeOut()));
-        }
-
-        public void Heal(int healAmount)
-        {
-            if (!IsAlive)
-                return;
-
-            CurrentHealth += healAmount;
-            if (CurrentHealth > fighter.MaxHealth)
-                CurrentHealth = fighter.MaxHealth;
-            Effect.PlayHeal();
         }
 
         public IEnumerator TakeStep()
         {
+            if (!IsAlive)
+                yield break;
+
             Vector2 startPosition = transform.position;
             Vector2 targetPosition = startPosition + Vector2.left * stepDistance;
-            float maxDistanceDelta = stepDistance / (stepFrames / 2);
 
             // Step forward
             while ((Vector2)transform.position != targetPosition)
             {
-                transform.position = Vector2.MoveTowards(transform.position, targetPosition, maxDistanceDelta);
+                transform.position = Vector2.MoveTowards(transform.position, targetPosition, stepSpeed * Time.deltaTime);
                 yield return null;
             }
 
             // Step back
             while ((Vector2)transform.position != startPosition)
             {
-                transform.position = Vector2.MoveTowards(transform.position, startPosition, maxDistanceDelta);
+                transform.position = Vector2.MoveTowards(transform.position, startPosition, stepSpeed * Time.deltaTime);
                 yield return null;
             }
         }
 
         /// <summary>
-        /// Get a randomly selected turn from the enemy.
+        /// Get an array of turn types that this enemy can use.
         /// </summary>
-        /// <param name="bunnyActors">All bunny actors that the enemy can attack.</param>
-        /// <param name="enemyActors">All enemy actors that the enemy can heal, including itself.</param>
-        public Turn GetTurn(BunnyActor[] bunnyActors, EnemyActor[] enemyActors)
+        /// <returns>An array of all turn types available to this actor.</returns>
+        private EnemyTurnType[] GetAvailableTurnTypes()
         {
-            List<TurnType> availableTurns = new List<TurnType>(4);
+            List<EnemyTurnType> availableTurns = new List<EnemyTurnType>(4);
+
             if (fighter.singleAttack)
-                availableTurns.Add(TurnType.SingleAttack);
+                availableTurns.Add(EnemyTurnType.SingleAttack);
             if (fighter.multiAttack)
-                availableTurns.Add(TurnType.MultiAttack);
+                availableTurns.Add(EnemyTurnType.MultiAttack);
             if (fighter.singleHeal)
-                availableTurns.Add(TurnType.SingleHeal);
+                availableTurns.Add(EnemyTurnType.SingleHeal);
             if (fighter.multiHeal)
-                availableTurns.Add(TurnType.MultiHeal);
+                availableTurns.Add(EnemyTurnType.MultiHeal);
 
-            if (availableTurns.Count == 0)
-            {
-                Debug.LogError("Enemy has no available turns!");
-                return null;
-            }
-
-            TurnType selectedTurn = availableTurns[Random.Range(0, availableTurns.Count)];
-
-            switch(selectedTurn)
-            {
-                case TurnType.SingleAttack:
-                    BunnyActor bunnyActor = bunnyActors[Random.Range(0, bunnyActors.Length)];
-                    return new Turn(this, bunnyActor, $"{FighterName} attacks {bunnyActor.FighterName}!", () => DoDamage(bunnyActor));
-                case TurnType.MultiAttack:
-                    return new Turn(this, bunnyActors, $"{FighterName} attacks the whole party!", () => DoDamage(bunnyActors));
-                case TurnType.SingleHeal:
-                    return new Turn(this, $"{FighterName} healed itself!", () => Heal(normalHealAmount * 2));
-                case TurnType.MultiHeal:
-                    return new Turn(this, $"{FighterName} healed all enemies!", () =>
-                        {
-                            foreach (EnemyActor enemyActor in enemyActors)
-                                enemyActor.Heal(normalHealAmount);
-                        }
-                    );
-                default:
-                    return null;
-            }
+            return availableTurns.ToArray();
         }
 
         /// <summary>
@@ -194,5 +167,73 @@ namespace TheBunniesOfVegetaria
             spriteRenderer.color = new Color(1, 1, 1, 1);
             gameObject.SetActive(false);
         }
+
+        #region Health
+
+        public int CalculateDamage(IActor target)
+        {
+            return Mathf.CeilToInt(10 * Attack * (1 - (target.Defense - 1) * 0.2f));
+        }
+
+        public void DoDamage(IActor target, float multiplier = 1)
+        {
+            if (!IsAlive)
+                return;
+
+            int damage = CalculateDamage(target) * (int)multiplier;
+            target.TakeDamage(damage);
+            Sound.PlayOneShot(attackSound);
+            StartCoroutine(TakeStep());
+        }
+
+        public void DoDamage(IActor[] targets, float multiplier = 0.5f)
+        {
+            if (!IsAlive)
+                return;
+
+            foreach (IActor target in targets)
+            {
+                int damage = Mathf.CeilToInt(CalculateDamage(target) * multiplier);
+                target.TakeDamage(damage);
+            }
+            Sound.PlayOneShot(attackSound);
+            StartCoroutine(TakeStep());
+        }
+
+        public void TakeDamage(int damage)
+        {
+            if (!IsAlive)
+                return;
+
+            Effect.PlaySlash();
+            CurrentHealth -= damage;
+            if (CurrentHealth <= 0)
+            {
+                CurrentHealth = 0;
+                observer.SendMessage("EnemyDefeat", this);
+            }
+        }
+
+        public void Defeat()
+        {
+            if (IsAlive)
+                return;
+
+            Sound.PlayOneShot(defeatSound);
+            StartCoroutine(FadeOut());
+        }
+
+        public void Heal(int healAmount)
+        {
+            if (!IsAlive)
+                return;
+
+            CurrentHealth += healAmount;
+            if (CurrentHealth > fighter.MaxHealth)
+                CurrentHealth = fighter.MaxHealth;
+            Effect.PlayHeal();
+        }
+
+        #endregion
     }
 }

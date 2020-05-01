@@ -13,7 +13,7 @@ namespace TheBunniesOfVegetaria
 
         public static EnemyRepository LoadFromJSON()
         {
-            return JsonUtility.FromJson<EnemyRepository>(Resources.Load<TextAsset>("JSON/enemies").text);
+            return JsonUtility.FromJson<EnemyRepository>(Resources.Load<TextAsset>("Text Assets/enemies").text);
         }
 
         /// <summary>
