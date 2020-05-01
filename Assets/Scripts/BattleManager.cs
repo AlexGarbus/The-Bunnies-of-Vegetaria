@@ -350,7 +350,10 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         private void FinishWave()
         {
-            foreach (BunnyActor bunnyActor in GetDefeatedBunnies())
+            BunnyActor[] defeatedBunnies = GetDefeatedBunnies();
+            if (defeatedBunnies.Length > 0)
+                defeatedBunnies[0].Sound.PlayOneShot(Resources.Load<AudioClip>("Sounds/Heal"));
+            foreach (BunnyActor bunnyActor in defeatedBunnies)
                 bunnyActor.Revive();
 
             battleMenu.SetPlayerStatText(bunnyActors);
