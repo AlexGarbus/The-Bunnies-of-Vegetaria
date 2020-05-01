@@ -36,11 +36,11 @@ namespace TheBunniesOfVegetaria
         {
             if(SaveLoad.SaveExists())
             {
-                sceneTransition.LoadScene(3);
+                sceneTransition.LoadScene(4);
             }
             else
             {
-                sceneTransition.LoadScene(1);
+                sceneTransition.LoadScene(2);
             }
         }
 
