@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace TheBunniesOfVegetaria
 {
-    [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(Animator), typeof(AudioSource))]
     public class BunnyActor : MonoBehaviour, IActor
     {
         [SerializeField] private float stepDistance;
@@ -20,6 +20,7 @@ namespace TheBunniesOfVegetaria
         public int CurrentSkillPoints { get; private set; }
         public string FighterName => fighter.name;
         public Vector2 StartPosition => startPosition;
+        public AudioSource Sound { get; private set; }
         public BattleEffect Effect { get; private set; }
         public GameObject Observer { set => observer = value; }
         public Fighter FighterData 
@@ -38,6 +39,7 @@ namespace TheBunniesOfVegetaria
         
         private Vector2 startPosition;
         private Animator animator;
+        private AudioClip attackSound, healSound, defeatSound;
         private GameObject observer;
         private Bunny fighter;
 
@@ -45,6 +47,10 @@ namespace TheBunniesOfVegetaria
         {
             Effect = GetComponentInChildren<BattleEffect>();
             animator = GetComponent<Animator>();
+            Sound = GetComponent<AudioSource>();
+            attackSound = Resources.Load<AudioClip>("Sounds/attack");
+            healSound = Resources.Load<AudioClip>("Sounds/heal");
+            defeatSound = Resources.Load<AudioClip>("Sounds/defeat_bunny");
         }
 
         private void Start()
@@ -112,6 +118,7 @@ namespace TheBunniesOfVegetaria
 
             int damage = CalculateDamage(target) * (int)multiplier;
             target.TakeDamage(damage);
+            Sound.PlayOneShot(attackSound);
             StartCoroutine(TakeStep());
         }
 
@@ -125,6 +132,7 @@ namespace TheBunniesOfVegetaria
                 int damage = Mathf.CeilToInt(CalculateDamage(target) * multiplier);
                 target.TakeDamage(damage);
             }
+            Sound.PlayOneShot(attackSound);
             StartCoroutine(TakeStep());
         }
 
@@ -149,6 +157,7 @@ namespace TheBunniesOfVegetaria
         public void Defeat()
         {
             transform.Rotate(new Vector3(0, 0, 90));
+            Sound.PlayOneShot(defeatSound);
         }
 
         public void Heal(int healAmount)
@@ -208,6 +217,9 @@ namespace TheBunniesOfVegetaria
                 return;
 
             Skill skill = fighter.Skills[skillIndex];
+
+            if (skill.Target == Skill.TargetType.Bunny)
+                Sound.PlayOneShot(healSound);
 
             CurrentSkillPoints -= skill.Cost;
             skill.Use(this, targets);

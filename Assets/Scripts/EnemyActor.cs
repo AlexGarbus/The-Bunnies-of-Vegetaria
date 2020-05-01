@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TheBunniesOfVegetaria
 {
-    [RequireComponent(typeof(SpriteRenderer))]
+    [RequireComponent(typeof(AudioSource), typeof(SpriteRenderer))]
     public class EnemyActor : MonoBehaviour, IActor
     {
         [SerializeField] private float stepDistance;
@@ -20,6 +20,7 @@ namespace TheBunniesOfVegetaria
         public int Experience => Attack + Defense + Speed;
         public string FighterName => fighter.name;
         public Vector2 StartPosition => startPosition;
+        public AudioSource Sound { get; private set; }
         public BattleEffect Effect { get; private set; }
         public GameObject Observer { set => observer = value; }
         public Fighter FighterData 
@@ -39,6 +40,7 @@ namespace TheBunniesOfVegetaria
 
         private const int normalHealAmount = 5;
         private Vector2 startPosition;
+        private AudioClip attackSound, healSound, defeatSound;
         private GameObject observer;
         private Enemy fighter;
         private SpriteRenderer spriteRenderer;
@@ -47,6 +49,10 @@ namespace TheBunniesOfVegetaria
         {
             Effect = GetComponentInChildren<BattleEffect>();
             spriteRenderer = GetComponent<SpriteRenderer>();
+            Sound = GetComponent<AudioSource>();
+            attackSound = Resources.Load<AudioClip>("Sounds/attack");
+            healSound = Resources.Load<AudioClip>("Sounds/heal");
+            defeatSound = Resources.Load<AudioClip>("Sounds/defeat_enemy");
         }
 
         private void Start()
@@ -79,12 +85,18 @@ namespace TheBunniesOfVegetaria
                 case EnemyTurnType.MultiAttack:
                     return new Turn(this, bunnyActors, $"{FighterName} attacks the whole party!", () => DoDamage(bunnyActors));
                 case EnemyTurnType.SingleHeal:
-                    return new Turn(this, this, $"{FighterName} healed itself!", () => Heal(normalHealAmount * 2));
+                    return new Turn(this, this, $"{FighterName} healed itself!", () =>
+                        {
+                            Heal(normalHealAmount * 2);
+                            Sound.PlayOneShot(attackSound);
+                        }
+                    );
                 case EnemyTurnType.MultiHeal:
                     return new Turn(this, enemyActors, $"{FighterName} healed all enemies!", () =>
                         {
                             foreach (EnemyActor enemyActor in enemyActors)
                                 enemyActor.Heal(normalHealAmount);
+                            Sound.PlayOneShot(healSound);
                         }
                     );
                 default:
@@ -170,6 +182,7 @@ namespace TheBunniesOfVegetaria
 
             int damage = CalculateDamage(target) * (int)multiplier;
             target.TakeDamage(damage);
+            Sound.PlayOneShot(attackSound);
             StartCoroutine(TakeStep());
         }
 
@@ -183,6 +196,7 @@ namespace TheBunniesOfVegetaria
                 int damage = Mathf.CeilToInt(CalculateDamage(target) * multiplier);
                 target.TakeDamage(damage);
             }
+            Sound.PlayOneShot(attackSound);
             StartCoroutine(TakeStep());
         }
 
@@ -205,6 +219,7 @@ namespace TheBunniesOfVegetaria
             if (IsAlive)
                 return;
 
+            Sound.PlayOneShot(defeatSound);
             StartCoroutine(FadeOut());
         }
 
