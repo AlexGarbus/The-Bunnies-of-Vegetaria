@@ -272,7 +272,7 @@ namespace TheBunniesOfVegetaria
                                 SaveData.current.areasUnlocked++;
                             }
                                 
-                            sceneTransition.SaveAndLoadScene(3);
+                            sceneTransition.SaveAndLoadScene(4);
                         }
                     );
                     turnList.Append(turn);
