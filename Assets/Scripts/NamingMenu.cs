@@ -35,7 +35,7 @@ namespace TheBunniesOfVegetaria
 
         private void Start()
         {
-            descriptionHolder = JsonUtility.FromJson<DescriptionHolder>(Resources.Load<TextAsset>("JSON/naming").text);
+            descriptionHolder = JsonUtility.FromJson<DescriptionHolder>(Resources.Load<TextAsset>("Text Assets/naming").text);
             gameManager = GameManager.Instance;
             PromptNextName();
         }
