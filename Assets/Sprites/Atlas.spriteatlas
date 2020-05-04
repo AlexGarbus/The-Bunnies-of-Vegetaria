@@ -44,7 +44,7 @@ SpriteAtlas:
     packables:
     - {fileID: 102900000, guid: 98f076f146d6c644eafbd6b408dfef24, type: 3}
     - {fileID: 102900000, guid: c2563b2dba9e78e4d879655dcec63f73, type: 3}
-    totalSpriteSurfaceArea: 331888
+    totalSpriteSurfaceArea: 1380464
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -68,6 +68,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 138e1314e9734f64fa1d50009ce68b99, type: 3}
   - {fileID: 21300000, guid: 17a9b814c2cb38f4c8834ba74dafa87e, type: 3}
   - {fileID: 21300000, guid: 4b243824ff75ea34b80765ab33e8f5a4, type: 3}
+  - {fileID: 21300000, guid: 634bc1c40dff0934ea63db813a5a850c, type: 3}
   - {fileID: 21300000, guid: d0b75ef4d213d314f828f65e2aaf9b7d, type: 3}
   - {fileID: -8967483991131029896, guid: 47145b9556d6f0d4a877c4c2d3822592, type: 3}
   - {fileID: 2197927836650585792, guid: 47145b9556d6f0d4a877c4c2d3822592, type: 3}
@@ -126,6 +127,7 @@ SpriteAtlas:
   - bg_lettuce fields
   - stalker
   - Square
+  - icon
   - redleaf lettuce
   - player_bunnurse_0
   - player_bunnurse_1
