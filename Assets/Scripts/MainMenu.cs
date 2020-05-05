@@ -14,19 +14,22 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private TMP_Text versionText;
 
         [Header("Settings")]
-        [SerializeField] private Slider musicSlider;
-        [SerializeField] private Slider fxSlider;
-        [SerializeField] private TMP_Dropdown qualityDropdown;
-        [SerializeField] private Toggle fullscreenToggle;
+        [SerializeField] private TMP_Text musicVolumeLabel;
+        [SerializeField] private TMP_Text fxVolumeLabel;
+        [SerializeField] private Button fullscreenButton;
         [SerializeField] private TMP_Dropdown resolutionDropdown;
 
         private Resolution[] resolutions;
+        private TMP_Text fullscreenText;
     
         void Start()
         {
-            versionText.text = $"Version {Application.version}";
             resolutions = Screen.resolutions.Select(resolution => new Resolution { width = resolution.width, height = resolution.height }).Distinct().ToArray();
-            UpdateSettings();
+            fullscreenText = fullscreenButton.GetComponentInChildren<TMP_Text>();
+
+            // Set initial UI
+            versionText.text = $"Version {Application.version}";
+            RefreshSettings();
         }
 
         /// <summary>
@@ -44,7 +47,6 @@ namespace TheBunniesOfVegetaria
             }
         }
 
-        // TODO: Implement settings menu
         #region Settings
     
         /// <summary>
@@ -52,64 +54,50 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public void SaveSettings()
         {
-            PlayerPrefs.SetFloat("MusicVolume", musicSlider.value);
-            PlayerPrefs.SetFloat("FxVolume", fxSlider.value);
-            PlayerPrefs.SetInt("Quality", qualityDropdown.value);
-
-            if(fullscreenToggle.isOn)
-                PlayerPrefs.SetInt("Fullscreen", 1);
-            else
-                PlayerPrefs.SetInt("Fullscreen", 0);
-
-            for(int i = 0; i < resolutions.Length; i++)
-                if(resolutions[i].Equals(Screen.currentResolution))
-                {
-                    PlayerPrefs.SetInt("Resolution", i);
-                    break;
-                }
-
             PlayerPrefs.Save();
             Debug.Log("SETTINGS SAVED");
         }
 
         /// <summary>
-        /// Set the volume of the game's music.
+        /// Modify the volume of the game's music.
         /// </summary>
-        /// <param name="volume"></param>
-        public void SetMusicVolume(float volume)
+        /// <param name="value">The value to increase or decrease the volume by.</param>
+        public void ModifyMusicVolume(float value)
         {
-            mixer.SetFloat("musicVolume", volume);
-            SaveSettings();
+            mixer.GetFloat("musicVolume", out float volume);
+
+            // Modify current volume
+            float modifiedVolume = Mathf.Clamp(volume + value, -80, 0);
+            mixer.SetFloat("musicVolume", modifiedVolume);
+            PlayerPrefs.SetFloat("musicVolume", modifiedVolume);
+
+            // Update UI
+            RefreshSettings();
         }
 
         /// <summary>
-        /// Set the volume of the game's sound effects.
+        /// Modify the volume of the game's sound effects.
         /// </summary>
-        /// <param name="volume"></param>
-        public void SetFXVolume(float volume)
+        /// <param name="value">The value to increase or decrease the volume by.</param>
+        public void ModifyFXVolume(float value)
         {
-            mixer.SetFloat("fxVolume", volume);
-            SaveSettings();
+            mixer.GetFloat("fxVolume", out float volume);
+
+            // Modify current volume
+            float modifiedVolume = Mathf.Clamp(volume + value, -80, 0);
+            mixer.SetFloat("fxVolume", modifiedVolume);
+            PlayerPrefs.SetFloat("fxVolume", modifiedVolume);
+
+            // Update UI
+            RefreshSettings();
         }
 
         /// <summary>
-        /// Set the game's graphics quality level.
+        /// Toggle whether the game is in fullscreen or windowed mode.
         /// </summary>
-        /// <param name="qualityLevel"></param>
-        public void SetQualityLevel(int qualityLevel)
+        public void ToggleFullscreen()
         {
-            QualitySettings.SetQualityLevel(qualityLevel);
-            SaveSettings();
-        }
-
-        /// <summary>
-        /// Set whether the game window is fullscreen.
-        /// </summary>
-        /// <param name="isFullscreen"></param>
-        public void SetFullscreen (bool isFullscreen)
-        {
-            Screen.fullScreen = isFullscreen;
-            SaveSettings();
+            Screen.fullScreen = !Screen.fullScreen;
         }
 
         /// <summary>
@@ -126,20 +114,19 @@ namespace TheBunniesOfVegetaria
         /// <summary>
         /// Update the UI to show the game's current settings.
         /// </summary>
-        private void UpdateSettings()
+        private void RefreshSettings()
         {
+            // FIXME: Music volume displaying as 99.something
             // Update volume
             mixer.GetFloat("musicVolume", out float volume);
-            musicSlider.value = volume;
+            musicVolumeLabel.text = $"MUSIC volume: {(volume + 80) * 1.25f}%";
             mixer.GetFloat("fxVolume", out volume);
-            fxSlider.value = volume;
-
-            // Update graphics quality
-            qualityDropdown.value = QualitySettings.GetQualityLevel();
+            fxVolumeLabel.text = $"EFFECTS volume: {(volume + 80) * 1.25f}%";
 
             // Update fullscreen
-            fullscreenToggle.isOn = Screen.fullScreen;
+            fullscreenText.text = Screen.fullScreen ? "Set to WINDOWED" : "Set to FULLSCREEN";
 
+            // TODO: Change resolution settings to work with buttons
             // Update resolution
             int resolutionIndex = 0;
             List<string> resolutionOptions = new List<string>();
