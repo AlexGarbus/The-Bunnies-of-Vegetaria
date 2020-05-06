@@ -3302,12 +3302,18 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1747448199}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1747448202}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1747448202 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6764464509658483424, guid: 5c2eff33af895604096bb8d22044cbb2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1747448199}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1768199521
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3861,13 +3867,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneTransition: {fileID: 780990154}
-  mixer: {fileID: 24100000, guid: 401e716db0a5fa9488c872d85fd43ce0, type: 2}
   musicVolumeLabel: {fileID: 907273350}
   fxVolumeLabel: {fileID: 1807788919}
   fullscreenButton: {fileID: 1747448201}
   resolutionText: {fileID: 4559846}
   versionText: {fileID: 1266239593}
-  standaloneSettingObjects: []
+  standaloneSettingObjects:
+  - {fileID: 353093263}
+  - {fileID: 1747448202}
 --- !u!114 &1974298575
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TheBunniesOfVegetaria
 {
-    [RequireComponent(typeof(AudioSource), typeof(SpriteRenderer))]
+    [RequireComponent(typeof(SpriteRenderer))]
     public class EnemyActor : MonoBehaviour, IActor
     {
         [SerializeField] private float stepDistance;
@@ -20,7 +20,6 @@ namespace TheBunniesOfVegetaria
         public int Experience => Attack + Defense + Speed;
         public string FighterName => fighter.name;
         public Vector2 StartPosition => startPosition;
-        public AudioSource Sound { get; private set; }
         public BattleEffect Effect { get; private set; }
         public GameObject Observer { set => observer = value; }
         public Fighter FighterData 
@@ -41,6 +40,7 @@ namespace TheBunniesOfVegetaria
         private const int normalHealAmount = 5;
         private Vector2 startPosition;
         private AudioClip attackSound, healSound, defeatSound;
+        private AudioManager audioManager;
         private GameObject observer;
         private Enemy fighter;
         private SpriteRenderer spriteRenderer;
@@ -49,10 +49,10 @@ namespace TheBunniesOfVegetaria
         {
             Effect = GetComponentInChildren<BattleEffect>();
             spriteRenderer = GetComponent<SpriteRenderer>();
-            Sound = GetComponent<AudioSource>();
             attackSound = Resources.Load<AudioClip>("Sounds/attack");
             healSound = Resources.Load<AudioClip>("Sounds/heal");
             defeatSound = Resources.Load<AudioClip>("Sounds/defeat_enemy");
+            audioManager = GameManager.Instance.AudioManager;
         }
 
         private void Start()
@@ -88,7 +88,7 @@ namespace TheBunniesOfVegetaria
                     return new Turn(this, this, $"{FighterName} healed itself!", () =>
                         {
                             Heal(normalHealAmount * 2);
-                            Sound.PlayOneShot(healSound);
+                            audioManager.PlaySoundEffect(healSound);
                         }
                     );
                 case EnemyTurnType.MultiHeal:
@@ -96,7 +96,7 @@ namespace TheBunniesOfVegetaria
                         {
                             foreach (EnemyActor enemyActor in enemyActors)
                                 enemyActor.Heal(normalHealAmount);
-                            Sound.PlayOneShot(healSound);
+                            audioManager.PlaySoundEffect(healSound);
                         }
                     );
                 default:
@@ -182,7 +182,7 @@ namespace TheBunniesOfVegetaria
 
             int damage = CalculateDamage(target) * (int)multiplier;
             target.TakeDamage(damage);
-            Sound.PlayOneShot(attackSound);
+            audioManager.PlaySoundEffect(attackSound);
             StartCoroutine(TakeStep());
         }
 
@@ -196,7 +196,7 @@ namespace TheBunniesOfVegetaria
                 int damage = Mathf.CeilToInt(CalculateDamage(target) * multiplier);
                 target.TakeDamage(damage);
             }
-            Sound.PlayOneShot(attackSound);
+            audioManager.PlaySoundEffect(attackSound);
             StartCoroutine(TakeStep());
         }
 
@@ -219,7 +219,7 @@ namespace TheBunniesOfVegetaria
             if (IsAlive)
                 return;
 
-            Sound.PlayOneShot(defeatSound);
+            audioManager.PlaySoundEffect(defeatSound);
             StartCoroutine(FadeOut());
         }
 
