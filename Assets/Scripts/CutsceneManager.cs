@@ -42,14 +42,14 @@ namespace TheBunniesOfVegetaria
                 if (textIndex > 0)
                     StartCoroutine(sceneTransition.FadeOut());
 
-                while (sceneTransition.IsFading)
+                while (sceneTransition.isFading)
                     yield return null;
 
                 cutsceneText.text = "";
 
                 StartCoroutine(sceneTransition.FadeIn());
 
-                while (sceneTransition.IsFading)
+                while (sceneTransition.isFading)
                     yield return null;
 
                 for(int i = 0; i < cutscene.text[textIndex].Length; i++)
