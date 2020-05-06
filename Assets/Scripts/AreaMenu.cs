@@ -41,7 +41,7 @@ namespace TheBunniesOfVegetaria
             if (Enum.TryParse(areaName, false, out Globals.Area area) && (int)area <= SaveData.current.areasUnlocked)
             {
                 gameManager.BattleArea = area;
-                sceneTransition.SaveAndLoadScene(5);
+                sceneTransition.SaveAndLoadScene("Battle");
             }
         }
 

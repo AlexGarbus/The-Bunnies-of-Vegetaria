@@ -240,7 +240,7 @@ namespace TheBunniesOfVegetaria
             {
                 // Battle has been lost
                 turnList.RemoveEnemyTurns();
-                turn = new Turn(bunnyActor, "The bunnies have lost! Retreat!", () => sceneTransition.SaveAndLoadScene(4));
+                turn = new Turn(bunnyActor, "The bunnies have lost! Retreat!", () => sceneTransition.SaveAndLoadScene("AreaSelect"));
                 turnList.Append(turn);
             }
         }
@@ -274,7 +274,7 @@ namespace TheBunniesOfVegetaria
                                 SaveData.current.areasUnlocked++;
                             }
                                 
-                            sceneTransition.SaveAndLoadScene(4);
+                            sceneTransition.SaveAndLoadScene("AreaSelect");
                         }
                     );
                     turnList.Append(turn);

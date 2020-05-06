@@ -40,7 +40,7 @@ namespace TheBunniesOfVegetaria
                 yield return new WaitForSeconds(creditDelay);
             }
 
-            sceneTransition.LoadScene(0);
+            sceneTransition.LoadScene("MainMenu");
         }
     }
 }
