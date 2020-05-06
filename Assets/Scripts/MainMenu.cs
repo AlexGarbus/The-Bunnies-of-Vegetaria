@@ -9,27 +9,46 @@ namespace TheBunniesOfVegetaria
 {
     public class MainMenu : MonoBehaviour
     {
-        [SerializeField] private AudioMixer mixer;
         [SerializeField] private SceneTransition sceneTransition;
-        [SerializeField] private TMP_Text versionText;
 
         [Header("Settings")]
+        [SerializeField] private AudioMixer mixer;
         [SerializeField] private TMP_Text musicVolumeLabel;
         [SerializeField] private TMP_Text fxVolumeLabel;
         [SerializeField] private Button fullscreenButton;
-        [SerializeField] private TMP_Dropdown resolutionDropdown;
+        [SerializeField] private TMP_Text resolutionText;
+        [SerializeField] private TMP_Text versionText;
+        [Tooltip("Game objects for settings that should only be visible when playing on PC, Mac, or Linux.")]
+        [SerializeField] private GameObject[] standaloneSettingObjects;
 
+#if UNITY_STANDALONE
+        private int resolutionIndex = 0;
         private Resolution[] resolutions;
         private TMP_Text fullscreenText;
-    
+#endif
+
         void Start()
         {
-            resolutions = Screen.resolutions.Select(resolution => new Resolution { width = resolution.width, height = resolution.height }).Distinct().ToArray();
+#if UNITY_STANDALONE
             fullscreenText = fullscreenButton.GetComponentInChildren<TMP_Text>();
+
+            // Set resolution array
+            resolutions = Screen.resolutions.Select(resolution => new Resolution { width = resolution.width, height = resolution.height }).Distinct().ToArray();
+            for (int i = 0; i < resolutions.Length; i++)
+            {
+                // Check for current resolution
+                if (resolutions[i].width == Screen.width && resolutions[i].height == Screen.height)
+                    resolutionIndex = i;
+            }
+#else
+            // Deactivate unused settings
+            foreach (GameObject settingObject in standaloneSettingObjects)
+                settingObject.SetActive(false);
+#endif
 
             // Set initial UI
             versionText.text = $"Version {Application.version}";
-            RefreshSettings();
+            RefreshAllSettings();
         }
 
         /// <summary>
@@ -47,7 +66,7 @@ namespace TheBunniesOfVegetaria
             }
         }
 
-        #region Settings
+#region Settings
     
         /// <summary>
         /// Save the current player prefs.
@@ -69,10 +88,10 @@ namespace TheBunniesOfVegetaria
             // Modify current volume
             float modifiedVolume = Mathf.Clamp(volume + value, -80, 0);
             mixer.SetFloat("musicVolume", modifiedVolume);
-            PlayerPrefs.SetFloat("musicVolume", modifiedVolume);
+            PlayerPrefs.SetFloat("MusicVolume", modifiedVolume);
 
             // Update UI
-            RefreshSettings();
+            RefreshMusicVolume();
         }
 
         /// <summary>
@@ -86,63 +105,116 @@ namespace TheBunniesOfVegetaria
             // Modify current volume
             float modifiedVolume = Mathf.Clamp(volume + value, -80, 0);
             mixer.SetFloat("fxVolume", modifiedVolume);
-            PlayerPrefs.SetFloat("fxVolume", modifiedVolume);
+            PlayerPrefs.SetFloat("FxVolume", modifiedVolume);
 
             // Update UI
-            RefreshSettings();
+            RefreshFXVolume();
         }
 
+#if UNITY_STANDALONE
         /// <summary>
         /// Toggle whether the game is in fullscreen or windowed mode.
         /// </summary>
         public void ToggleFullscreen()
         {
             Screen.fullScreen = !Screen.fullScreen;
+
+            // Update UI
+            RefreshFullscreen();
         }
 
         /// <summary>
-        /// Set the screen's resolution.
+        /// Increment the current resolution index by 1.
         /// </summary>
-        /// <param name="resolutionIndex"></param>
-        public void SetResolution (int resolutionIndex)
+        public void IncrementResolution()
+        {
+            // Increment index
+            resolutionIndex++;
+            if (resolutionIndex >= resolutions.Length)
+                resolutionIndex = 0;
+
+            SetResolution();
+        }
+
+        /// <summary>
+        /// Decrement the current resolution index by 1.
+        /// </summary>
+        public void DecrementResolution()
+        {
+            // Decrement index
+            resolutionIndex--;
+            if (resolutionIndex < 0)
+                resolutionIndex = resolutions.Length - 1;
+
+            SetResolution();
+        }
+
+        /// <summary>
+        /// Set the current screen resolution.
+        /// </summary>
+        private void SetResolution()
+        {
+            // Set new resolution
+            Resolution resolution = Screen.resolutions[resolutionIndex];
+            Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+            PlayerPrefs.SetInt("ScreenWidth", resolution.width);
+            PlayerPrefs.SetInt("ScreenHeight", resolution.width);
+
+            // Update UI
+            RefreshResolution();
+        }
+#endif
+
+        /// <summary>
+        /// Update the UI to show the current settings.
+        /// </summary>
+        public void RefreshAllSettings()
+        {
+            RefreshMusicVolume();
+            RefreshFXVolume();
+#if UNITY_STANDALONE
+            RefreshFullscreen();
+            RefreshResolution();
+#endif
+        }
+
+        /// <summary>
+        /// Update the UI to show the current music volume.
+        /// </summary>
+        private void RefreshMusicVolume()
+        {
+            mixer.GetFloat("musicVolume", out float volume);
+            musicVolumeLabel.text = string.Format("MUSIC volume: {0}%", (int)((volume + 80) * 1.25f));
+        }
+
+        /// <summary>
+        /// Update the UI to show the current sound effects volume.
+        /// </summary>
+        private void RefreshFXVolume()
+        {
+            mixer.GetFloat("fxVolume", out float volume);
+            fxVolumeLabel.text = string.Format("EFFECTS volume: {0}%", (int)((volume + 80) * 1.25f));
+        }
+
+#if UNITY_STANDALONE
+        /// <summary>
+        /// Update the UI to show the current screen mode.
+        /// </summary>
+        private void RefreshFullscreen()
+        {
+            fullscreenText.text = Screen.fullScreen ? "Set to WINDOWED" : "Set to FULLSCREEN";
+        }
+
+        /// <summary>
+        /// Update the UI to show the current resolution.
+        /// </summary>
+        private void RefreshResolution()
         {
             Resolution resolution = resolutions[resolutionIndex];
-            Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-            SaveSettings();
+            resolutionText.text = $"RESOLUTION: {resolution.width} x {resolution.height}";
         }
+#endif
 
-        /// <summary>
-        /// Update the UI to show the game's current settings.
-        /// </summary>
-        private void RefreshSettings()
-        {
-            // FIXME: Music volume displaying as 99.something
-            // Update volume
-            mixer.GetFloat("musicVolume", out float volume);
-            musicVolumeLabel.text = $"MUSIC volume: {(volume + 80) * 1.25f}%";
-            mixer.GetFloat("fxVolume", out volume);
-            fxVolumeLabel.text = $"EFFECTS volume: {(volume + 80) * 1.25f}%";
-
-            // Update fullscreen
-            fullscreenText.text = Screen.fullScreen ? "Set to WINDOWED" : "Set to FULLSCREEN";
-
-            // TODO: Change resolution settings to work with buttons
-            // Update resolution
-            int resolutionIndex = 0;
-            List<string> resolutionOptions = new List<string>();
-            for (int i = 0; i < resolutions.Length; i++)
-            {
-                Resolution resolution = resolutions[i];
-                resolutionOptions.Add(resolution.width + " x " + resolution.height);
-                if (resolution.width == Screen.currentResolution.width && resolution.height == Screen.currentResolution.height)
-                    resolutionIndex = i;
-            }
-            resolutionDropdown.ClearOptions();
-            resolutionDropdown.AddOptions(resolutionOptions);
-            resolutionDropdown.value = resolutionIndex;
-            resolutionDropdown.RefreshShownValue();
-        }
-
-        #endregion
+#endregion
     }
 }
