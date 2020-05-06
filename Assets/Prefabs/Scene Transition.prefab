@@ -187,5 +187,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fadeImage: {fileID: 2458523788162891523}
   alphaChangeCount: 4
-  fadeTime: 2
+  fadeTime: 1
   fadeInOnStart: 1
+  IsFading: 0
