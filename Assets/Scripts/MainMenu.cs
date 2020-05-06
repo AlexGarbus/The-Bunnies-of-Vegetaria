@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.Audio;
 using TMPro;
@@ -12,7 +11,6 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private SceneTransition sceneTransition;
 
         [Header("Settings")]
-        [SerializeField] private AudioMixer mixer;
         [SerializeField] private TMP_Text musicVolumeLabel;
         [SerializeField] private TMP_Text fxVolumeLabel;
         [SerializeField] private Button fullscreenButton;
@@ -26,6 +24,7 @@ namespace TheBunniesOfVegetaria
         private Resolution[] resolutions;
         private TMP_Text fullscreenText;
 #endif
+        private AudioMixer mixer;
 
         void Start()
         {
@@ -45,6 +44,8 @@ namespace TheBunniesOfVegetaria
             foreach (GameObject settingObject in standaloneSettingObjects)
                 settingObject.SetActive(false);
 #endif
+
+            mixer = GameManager.Instance.AudioManager.Mixer;
 
             // Set initial UI
             versionText.text = $"Version {Application.version}";

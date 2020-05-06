@@ -8,3 +8,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~M:TheBunniesOfVegetaria.BattleManager.EnemyDefeat(TheBunniesOfVegetaria.EnemyActor)")]
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~M:TheBunniesOfVegetaria.BattleManager.BunnyDefeat(TheBunniesOfVegetaria.BunnyActor)")]
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~M:TheBunniesOfVegetaria.BattleManager.LevelUp(TheBunniesOfVegetaria.BunnyActor)")]
+[assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>", Scope = "member", Target = "~M:TheBunniesOfVegetaria.BattleManager.LevelUp(TheBunniesOfVegetaria.BunnyActor)")]

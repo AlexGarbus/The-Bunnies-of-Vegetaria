@@ -8,9 +8,8 @@ namespace TheBunniesOfVegetaria
     {
         public static GameManager Instance;
 
-        [SerializeField] private AudioMixer mixer;
-
         public Globals.Area BattleArea { get; set; } = Globals.Area.LettuceFields;
+        public AudioManager AudioManager { get; private set; }
         public Bunny Bunnight { get; private set; }
         public Bunny Bunnecromancer { get; private set; }
         public Bunny Bunnurse { get; private set; }
@@ -23,7 +22,10 @@ namespace TheBunniesOfVegetaria
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
+
+                // Continue Awake functionality
                 SaveLoad.Load();
+                AudioManager = GetComponentInChildren<AudioManager>();
             }
             else if (Instance != this)
             {
@@ -54,8 +56,8 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         private void LoadSettings()
         {
-            mixer.SetFloat("musicVolume", PlayerPrefs.GetFloat("MusicVolume", 0));
-            mixer.SetFloat("fxVolume", PlayerPrefs.GetFloat("FxVolume", 0));
+            AudioManager.Mixer.SetFloat("musicVolume", PlayerPrefs.GetFloat("MusicVolume", 0));
+            AudioManager.Mixer.SetFloat("fxVolume", PlayerPrefs.GetFloat("FxVolume", 0));
             if(PlayerPrefs.HasKey("Fullscreen"))
                 Screen.fullScreen = PlayerPrefs.GetInt("Fullscreen") == 1;
             if (PlayerPrefs.HasKey("ScreenWidth") && PlayerPrefs.HasKey("ScreenHeight"))
