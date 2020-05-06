@@ -22,14 +22,13 @@ namespace TheBunniesOfVegetaria
             if (Instance == null)
             {
                 Instance = this;
+                DontDestroyOnLoad(gameObject);
                 SaveLoad.Load();
             }
             else if (Instance != this)
             {
                 Destroy(gameObject);
             }
-
-            DontDestroyOnLoad(gameObject);
         }
 
         private void Start()
@@ -55,19 +54,12 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         private void LoadSettings()
         {
-            if (PlayerPrefs.HasKey("MusicVolume"))
-                mixer.SetFloat("musicVolume", PlayerPrefs.GetFloat("MusicVolume"));
-            if (PlayerPrefs.HasKey("FxVolume"))
-                mixer.SetFloat("fxVolume", PlayerPrefs.GetFloat("FxVolume"));
-            if (PlayerPrefs.HasKey("Quality"))
-                QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("Quality"));
-            if (PlayerPrefs.HasKey("Fullscreen"))
+            mixer.SetFloat("musicVolume", PlayerPrefs.GetFloat("MusicVolume", 0));
+            mixer.SetFloat("fxVolume", PlayerPrefs.GetFloat("FxVolume", 0));
+            if(PlayerPrefs.HasKey("Fullscreen"))
                 Screen.fullScreen = PlayerPrefs.GetInt("Fullscreen") == 1;
-            if (PlayerPrefs.HasKey("Resolution"))
-            {
-                Resolution resolution = Screen.resolutions[PlayerPrefs.GetInt("Resolution")];
-                Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-            }
+            if (PlayerPrefs.HasKey("ScreenWidth") && PlayerPrefs.HasKey("ScreenHeight"))
+                Screen.SetResolution(PlayerPrefs.GetInt("ScreenWidth"), PlayerPrefs.GetInt("ScreenHeight"), Screen.fullScreen);
         }
 
         /// <summary>
