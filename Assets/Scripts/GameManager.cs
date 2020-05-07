@@ -8,6 +8,8 @@ namespace TheBunniesOfVegetaria
     {
         public static GameManager Instance;
 
+        [SerializeField] private GameObject cursorPrefab;
+
         public Globals.Area BattleArea { get; set; } = Globals.Area.LettuceFields;
         public AudioManager AudioManager { get; private set; }
         public Bunny Bunnight { get; private set; }
@@ -33,6 +35,20 @@ namespace TheBunniesOfVegetaria
             }
         }
 
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+#if UNITY_STANDALONE
+            // Instantiate custom cursor object
+            GameObject cursorObject = Instantiate(cursorPrefab);
+            cursorObject.name = "Cursor";
+#endif
+        }
+
         private void Start()
         {
             LoadSettings();
@@ -43,6 +59,11 @@ namespace TheBunniesOfVegetaria
         {
             if(SceneManager.GetActiveScene().buildIndex > 1)
                 AddPlaytime();
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
         private void OnApplicationQuit()

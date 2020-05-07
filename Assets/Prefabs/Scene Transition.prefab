@@ -127,12 +127,12 @@ Canvas:
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 0
+  m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: -1511703515
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!114 &3575042690353566572
 MonoBehaviour:
@@ -189,4 +189,4 @@ MonoBehaviour:
   alphaChangeCount: 4
   fadeTime: 1
   fadeInOnStart: 1
-  IsFading: 0
+  isFading: 0
