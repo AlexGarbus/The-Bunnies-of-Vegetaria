@@ -21,8 +21,6 @@ namespace TheBunniesOfVegetaria
 
         Vector2 StartPosition { get; }
 
-        AudioSource Sound { get; }
-
         BattleEffect Effect { get; }
 
         GameObject Observer { set; }

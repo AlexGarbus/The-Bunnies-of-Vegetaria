@@ -44,7 +44,7 @@ SpriteAtlas:
     packables:
     - {fileID: 102900000, guid: 98f076f146d6c644eafbd6b408dfef24, type: 3}
     - {fileID: 102900000, guid: c2563b2dba9e78e4d879655dcec63f73, type: 3}
-    totalSpriteSurfaceArea: 331888
+    totalSpriteSurfaceArea: 333168
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -57,6 +57,7 @@ SpriteAtlas:
   - {fileID: 827538889749247048, guid: 578919f1fd253d840b991551bbecd79a, type: 3}
   - {fileID: -5010287565412364656, guid: 578919f1fd253d840b991551bbecd79a, type: 3}
   - {fileID: 21300000, guid: b54098128b2c5b64bbdd6027a7edc270, type: 3}
+  - {fileID: 21300000, guid: cabd86133e9055345bc8d6ba2ef4d335, type: 3}
   - {fileID: 21300000, guid: aa3c8a137c6150a46977f0c57d776661, type: 3}
   - {fileID: 21300000, guid: f4f842339cb7b9641a993df3aff44f94, type: 3}
   - {fileID: -1049461823314036041, guid: c19ff573b0ca3a6419c4f5f68ab45387, type: 3}
@@ -68,6 +69,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 138e1314e9734f64fa1d50009ce68b99, type: 3}
   - {fileID: 21300000, guid: 17a9b814c2cb38f4c8834ba74dafa87e, type: 3}
   - {fileID: 21300000, guid: 4b243824ff75ea34b80765ab33e8f5a4, type: 3}
+  - {fileID: 21300000, guid: 634bc1c40dff0934ea63db813a5a850c, type: 3}
   - {fileID: 21300000, guid: d0b75ef4d213d314f828f65e2aaf9b7d, type: 3}
   - {fileID: -8967483991131029896, guid: 47145b9556d6f0d4a877c4c2d3822592, type: 3}
   - {fileID: 2197927836650585792, guid: 47145b9556d6f0d4a877c4c2d3822592, type: 3}
@@ -115,6 +117,7 @@ SpriteAtlas:
   - attack_0
   - attack_1
   - armored choy
+  - cursor
   - salad bowl
   - bg_final
   - heal_0
@@ -126,6 +129,7 @@ SpriteAtlas:
   - bg_lettuce fields
   - stalker
   - Square
+  - icon
   - redleaf lettuce
   - player_bunnurse_0
   - player_bunnurse_1

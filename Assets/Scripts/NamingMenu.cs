@@ -57,7 +57,7 @@ namespace TheBunniesOfVegetaria
                 yield break;
 
             StartCoroutine(sceneTransition.FadeOut());
-            while (sceneTransition.IsFading)
+            while (sceneTransition.isFading)
                 yield return null;
 
             if (confirmationPanel.activeSelf)
@@ -65,7 +65,7 @@ namespace TheBunniesOfVegetaria
             PromptNextName();
 
             StartCoroutine(sceneTransition.FadeIn());
-            while (sceneTransition.IsFading)
+            while (sceneTransition.isFading)
                 yield return null;
         }
 

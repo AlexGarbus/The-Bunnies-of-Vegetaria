@@ -240,7 +240,7 @@ namespace TheBunniesOfVegetaria
             {
                 // Battle has been lost
                 turnList.RemoveEnemyTurns();
-                turn = new Turn(bunnyActor, "The bunnies have lost! Retreat!", () => sceneTransition.SaveAndLoadScene(4));
+                turn = new Turn(bunnyActor, "The bunnies have lost! Retreat!", () => sceneTransition.SaveAndLoadScene("AreaSelect"));
                 turnList.Append(turn);
             }
         }
@@ -274,7 +274,7 @@ namespace TheBunniesOfVegetaria
                                 SaveData.current.areasUnlocked++;
                             }
                                 
-                            sceneTransition.SaveAndLoadScene(4);
+                            sceneTransition.SaveAndLoadScene("AreaSelect");
                         }
                     );
                     turnList.Append(turn);
@@ -292,7 +292,7 @@ namespace TheBunniesOfVegetaria
                 {
                     bunnyActor.Heal(100);
                     bunnyActor.RestoreSkillPoints(100);
-                    bunnyActor.Sound.PlayOneShot(healSound);
+                    gameManager.AudioManager.PlaySoundEffect(healSound);
                 }
             );
             turnList.Push(turn);
@@ -355,7 +355,7 @@ namespace TheBunniesOfVegetaria
         {
             BunnyActor[] defeatedBunnies = GetDefeatedBunnies();
             if (defeatedBunnies.Length > 0)
-                defeatedBunnies[0].Sound.PlayOneShot(healSound);
+                gameManager.AudioManager.PlaySoundEffect(healSound);
             foreach (BunnyActor bunnyActor in defeatedBunnies)
                 bunnyActor.Revive();
 

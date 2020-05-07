@@ -26,7 +26,7 @@ namespace TheBunniesOfVegetaria
                 if (i > 0)
                     StartCoroutine(sceneTransition.FadeOut());
 
-                while (sceneTransition.IsFading)
+                while (sceneTransition.isFading)
                     yield return null;
 
                 string[] currentLine = lines[i].Split(',');
@@ -34,13 +34,13 @@ namespace TheBunniesOfVegetaria
 
                 StartCoroutine(sceneTransition.FadeIn());
 
-                while (sceneTransition.IsFading)
+                while (sceneTransition.isFading)
                     yield return null;
 
                 yield return new WaitForSeconds(creditDelay);
             }
 
-            sceneTransition.LoadScene(0);
+            sceneTransition.LoadScene("MainMenu");
         }
     }
 }
