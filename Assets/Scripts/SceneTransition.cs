@@ -13,7 +13,8 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private float fadeTime;
         [SerializeField] private bool fadeInOnStart = true;
 
-        public bool IsFading = false;
+        [HideInInspector] public bool isFading = false;
+
         public float GetFadeTime() => fadeTime;
 
         private GameObject fadeImageObject;
@@ -34,10 +35,10 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public IEnumerator FadeIn()
         {
-            if (IsFading)
+            if (isFading)
                 yield break;
 
-            IsFading = true;
+            isFading = true;
             if (!fadeImageObject.activeSelf)
                 fadeImageObject.SetActive(true);
             SetFadeAlpha(1);
@@ -53,7 +54,7 @@ namespace TheBunniesOfVegetaria
             }
 
             fadeImageObject.SetActive(false);
-            IsFading = false;
+            isFading = false;
         }
 
         /// <summary>
@@ -61,10 +62,10 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public IEnumerator FadeOut()
         {
-            if (IsFading)
+            if (isFading)
                 yield break;
 
-            IsFading = true;
+            isFading = true;
             if (!fadeImageObject.activeSelf)
                 fadeImageObject.SetActive(true);
             SetFadeAlpha(0);
@@ -79,39 +80,39 @@ namespace TheBunniesOfVegetaria
                 yield return new WaitForSeconds(waitTime);
             }
 
-            IsFading = false;
+            isFading = false;
         }
 
         /// <summary>
         /// Start the FadeOutToScene coroutine.
         /// </summary>
-        /// <param name="sceneIndex">The build index of the scene to load.</param>
-        public void LoadScene(int sceneIndex)
+        /// <param name="sceneName">The name of the scene to load.</param>
+        public void LoadScene(string sceneName)
         {
-            StartCoroutine(FadeOutToScene(sceneIndex));
+            StartCoroutine(FadeOutToScene(sceneName));
         }
 
         /// <summary>
         /// Save the player's data and then start the FadeOutToScene coroutine.
         /// </summary>
-        /// <param name="sceneIndex">The build index of the scene to load.</param>
-        public void SaveAndLoadScene(int sceneIndex)
+        /// <param name="sceneName">The name of the scene to load.</param>
+        public void SaveAndLoadScene(string sceneName)
         {
             SaveLoad.Save();
-            StartCoroutine(FadeOutToScene(sceneIndex));
+            StartCoroutine(FadeOutToScene(sceneName));
         }
 
         /// <summary>
         /// Fade out to a solid color, then load a new scene.
         /// </summary>
-        /// <param name="sceneIndex">The build index of the scene to load.</param>
-        private IEnumerator FadeOutToScene(int sceneIndex)
+        /// <param name="sceneName">The name of the scene to load.</param>
+        private IEnumerator FadeOutToScene(string sceneName)
         {
             StartCoroutine(FadeOut());
-            while (IsFading)
+            while (isFading)
                 yield return null;
 
-            SceneManager.LoadScene(sceneIndex);
+            SceneManager.LoadScene(sceneName);
         }
 
         /// <summary>
@@ -128,7 +129,7 @@ namespace TheBunniesOfVegetaria
         private IEnumerator FadeOutQuit()
         {
             StartCoroutine(FadeOut());
-            while (IsFading)
+            while (isFading)
                 yield return null;
 
             Application.Quit();
@@ -150,13 +151,13 @@ namespace TheBunniesOfVegetaria
         private IEnumerator FadeGameObject(GameObject objectToFade)
         {
             StartCoroutine(FadeOut());
-            while (IsFading)
+            while (isFading)
                 yield return null;
 
             objectToFade.SetActive(!objectToFade.activeSelf);
 
             StartCoroutine(FadeIn());
-            while (IsFading)
+            while (isFading)
                 yield return null;
         }
 

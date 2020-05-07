@@ -8,9 +8,10 @@ namespace TheBunniesOfVegetaria
     {
         public static GameManager Instance;
 
-        [SerializeField] private AudioMixer mixer;
+        [SerializeField] private GameObject cursorPrefab;
 
         public Globals.Area BattleArea { get; set; } = Globals.Area.LettuceFields;
+        public AudioManager AudioManager { get; private set; }
         public Bunny Bunnight { get; private set; }
         public Bunny Bunnecromancer { get; private set; }
         public Bunny Bunnurse { get; private set; }
@@ -22,14 +23,30 @@ namespace TheBunniesOfVegetaria
             if (Instance == null)
             {
                 Instance = this;
+                DontDestroyOnLoad(gameObject);
+
+                // Continue Awake functionality
                 SaveLoad.Load();
+                AudioManager = GetComponentInChildren<AudioManager>();
             }
             else if (Instance != this)
             {
                 Destroy(gameObject);
             }
+        }
 
-            DontDestroyOnLoad(gameObject);
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+#if UNITY_STANDALONE
+            // Instantiate custom cursor object
+            GameObject cursorObject = Instantiate(cursorPrefab);
+            cursorObject.name = "Cursor";
+#endif
         }
 
         private void Start()
@@ -44,6 +61,11 @@ namespace TheBunniesOfVegetaria
                 AddPlaytime();
         }
 
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
         private void OnApplicationQuit()
         {
             if (SceneManager.GetActiveScene().buildIndex > 1)
@@ -55,19 +77,12 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         private void LoadSettings()
         {
-            if (PlayerPrefs.HasKey("MusicVolume"))
-                mixer.SetFloat("musicVolume", PlayerPrefs.GetFloat("MusicVolume"));
-            if (PlayerPrefs.HasKey("FxVolume"))
-                mixer.SetFloat("fxVolume", PlayerPrefs.GetFloat("FxVolume"));
-            if (PlayerPrefs.HasKey("Quality"))
-                QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("Quality"));
-            if (PlayerPrefs.HasKey("Fullscreen"))
+            AudioManager.Mixer.SetFloat("musicVolume", PlayerPrefs.GetFloat("MusicVolume", 0));
+            AudioManager.Mixer.SetFloat("fxVolume", PlayerPrefs.GetFloat("FxVolume", 0));
+            if(PlayerPrefs.HasKey("Fullscreen"))
                 Screen.fullScreen = PlayerPrefs.GetInt("Fullscreen") == 1;
-            if (PlayerPrefs.HasKey("Resolution"))
-            {
-                Resolution resolution = Screen.resolutions[PlayerPrefs.GetInt("Resolution")];
-                Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-            }
+            if (PlayerPrefs.HasKey("ScreenWidth") && PlayerPrefs.HasKey("ScreenHeight"))
+                Screen.SetResolution(PlayerPrefs.GetInt("ScreenWidth"), PlayerPrefs.GetInt("ScreenHeight"), Screen.fullScreen);
         }
 
         /// <summary>
