@@ -29,6 +29,7 @@ namespace TheBunniesOfVegetaria
                 if(value is Enemy)
                 {
                     fighter = value as Enemy;
+                    // FIXME: Load using Addressables rather than Resources
                     spriteRenderer.sprite = Resources.Load<Sprite>($"Sprites/Enemies/{fighter.spriteFileName}");
                     CurrentHealth = 100;
                 }

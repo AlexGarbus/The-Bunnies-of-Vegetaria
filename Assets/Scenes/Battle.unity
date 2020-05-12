@@ -1576,6 +1576,8 @@ MonoBehaviour:
   battleBackground: {fileID: 1604408059}
   battleMenu: {fileID: 1974298574}
   sceneTransition: {fileID: 1318449200}
+  enemyData:
+    m_AssetGUID: 7cf40bbbcc22ad142b4c40951d972f1a
   maxWaves: 5
   turnTime: 1
   travelSpeed: 5

@@ -11,11 +11,6 @@ namespace TheBunniesOfVegetaria
         public Enemy[] enemies;
         public Enemy[] bosses;
 
-        public static EnemyRepository LoadFromJSON()
-        {
-            return JsonUtility.FromJson<EnemyRepository>(Resources.Load<TextAsset>("Text Assets/enemies").text);
-        }
-
         /// <summary>
         /// Get every regular enemy from an area.
         /// </summary>

@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.AddressableAssets.GUI;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace TheBunniesOfVegetaria
 {
@@ -12,6 +15,9 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private BattleBackground battleBackground;
         [SerializeField] private BattleMenu battleMenu;
         [SerializeField] private SceneTransition sceneTransition;
+
+        [Header("Addressables")]
+        [SerializeField] private AssetReference enemyData;
 
         [Header("Battle Flow")]
         [SerializeField] private int maxWaves = 5;
@@ -41,23 +47,15 @@ namespace TheBunniesOfVegetaria
         private int wave = 0;
         private BattleState battleState;
         private AudioClip healSound;
-        private GameManager gameManager;
         private Enemy[] enemies;
         private Enemy boss;
+        private GameManager gameManager;
         private TurnList turnList = new TurnList(8);
 
         private void Start()
         {
             healSound = Resources.Load<AudioClip>("Sounds/heal");
             gameManager = GameManager.Instance;
-
-            // Get area
-            Globals.Area area = gameManager.BattleArea;
-
-            // Load enemies
-            EnemyRepository enemyRepository = EnemyRepository.LoadFromJSON();
-            enemies = enemyRepository.GetEnemiesFromArea(area).ToArray();
-            boss = enemyRepository.GetBossFromArea(area);
 
             // Set up bunny actors
             foreach (BunnyActor actor in bunnyActors)
@@ -72,8 +70,8 @@ namespace TheBunniesOfVegetaria
             foreach (EnemyActor actor in enemyActors)
                 actor.Observer = gameObject;
 
-            SetNextWave();
-            StartTravel();
+            // Load enemies
+            enemyData.LoadAssetAsync<TextAsset>().Completed += EnemyDataLoaded;
         }
 
         private void Update()
@@ -133,6 +131,21 @@ namespace TheBunniesOfVegetaria
             }
         }
         
+        private void EnemyDataLoaded(AsyncOperationHandle<TextAsset> handle)
+        {
+            // Store the loaded enemy data
+            EnemyRepository enemyRepository = JsonUtility.FromJson<EnemyRepository>(handle.Result.text);
+            Globals.Area area = GameManager.Instance.BattleArea;
+            enemies = enemyRepository.GetEnemiesFromArea(area).ToArray();
+            boss = enemyRepository.GetBossFromArea(area);
+
+            // Start battle
+            SetNextWave();
+            StartTravel();
+
+            Addressables.Release(handle);
+        }
+
         /// <summary>
         /// Perform each turn in the turn list.
         /// </summary>
