@@ -44,7 +44,7 @@ SpriteAtlas:
     packables:
     - {fileID: 102900000, guid: 98f076f146d6c644eafbd6b408dfef24, type: 3}
     - {fileID: 102900000, guid: c2563b2dba9e78e4d879655dcec63f73, type: 3}
-    totalSpriteSurfaceArea: 333168
+    totalSpriteSurfaceArea: 338544
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -60,15 +60,18 @@ SpriteAtlas:
   - {fileID: 21300000, guid: cabd86133e9055345bc8d6ba2ef4d335, type: 3}
   - {fileID: 21300000, guid: aa3c8a137c6150a46977f0c57d776661, type: 3}
   - {fileID: 21300000, guid: f4f842339cb7b9641a993df3aff44f94, type: 3}
+  - {fileID: 21300000, guid: 6ce5884381d0d7c4bb1d249721a10d16, type: 3}
   - {fileID: -1049461823314036041, guid: c19ff573b0ca3a6419c4f5f68ab45387, type: 3}
   - {fileID: -2480101461718692971, guid: c19ff573b0ca3a6419c4f5f68ab45387, type: 3}
   - {fileID: -1250687572758538602, guid: c19ff573b0ca3a6419c4f5f68ab45387, type: 3}
   - {fileID: 21300000, guid: 19823493fd0f028479c7b8b18a3020ce, type: 3}
   - {fileID: 21300000, guid: 4263a2c347f9f8549b0e2e257b063f15, type: 3}
+  - {fileID: 21300000, guid: 9b1ac5c3b8553e446a0bc409eb378e96, type: 3}
   - {fileID: 21300000, guid: 6ff0d9c374cc6e0449990e00d3391d07, type: 3}
   - {fileID: 21300000, guid: 138e1314e9734f64fa1d50009ce68b99, type: 3}
   - {fileID: 21300000, guid: 17a9b814c2cb38f4c8834ba74dafa87e, type: 3}
   - {fileID: 21300000, guid: 4b243824ff75ea34b80765ab33e8f5a4, type: 3}
+  - {fileID: 21300000, guid: 126cc684002bb024b8bdd1bc46c264d2, type: 3}
   - {fileID: 21300000, guid: 634bc1c40dff0934ea63db813a5a850c, type: 3}
   - {fileID: 21300000, guid: d0b75ef4d213d314f828f65e2aaf9b7d, type: 3}
   - {fileID: -8967483991131029896, guid: 47145b9556d6f0d4a877c4c2d3822592, type: 3}
@@ -87,18 +90,21 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 337f1039451bcd748b051f1a2098aab0, type: 3}
   - {fileID: 21300000, guid: 38cf0f797f5a1804a95d72a581601bce, type: 3}
   - {fileID: 21300000, guid: 96cb9c99df66ed7448fd5a18299e34c9, type: 3}
+  - {fileID: 21300000, guid: ed67d2a9fca041c4289052df0e2bf561, type: 3}
   - {fileID: 21300000, guid: 5859755ab5f15b44390db273f457bbb5, type: 3}
   - {fileID: 21300000, guid: 1379f65a6f073af4e81dedb51f9e8056, type: 3}
   - {fileID: 5190752405921958872, guid: 9d28bc7a8333c2341911630ff2a0c221, type: 3}
   - {fileID: 4982551920430869430, guid: 9d28bc7a8333c2341911630ff2a0c221, type: 3}
   - {fileID: 21300000, guid: 0b600d9ae61e5264d8ff8d4dc07b47b7, type: 3}
   - {fileID: 21300000, guid: c8000baa7d88961409057201c15a8179, type: 3}
+  - {fileID: 21300000, guid: 9f379deaca82daf48b55cd4eca248dfa, type: 3}
   - {fileID: 21300000, guid: 96c42e8b513a0484bb43a21770c7b631, type: 3}
   - {fileID: 21300000, guid: db47033c1593328458a591ba84bf9c76, type: 3}
   - {fileID: 21300000, guid: 0d61a5cca72731d40b48cc010b068f5f, type: 3}
   - {fileID: 21300000, guid: 484cb68dfb9976f47bb216826296cfe6, type: 3}
   - {fileID: 8944981333966925485, guid: 860c7cddf2414ad49a715aefee66aaba, type: 3}
   - {fileID: 5338821147244000220, guid: 860c7cddf2414ad49a715aefee66aaba, type: 3}
+  - {fileID: 21300000, guid: ae22933e5572cb1419fbe61cf46fbbeb, type: 3}
   - {fileID: -7632031996456188614, guid: 8768d2be22ad45e41b6163584d3b6a9a, type: 3}
   - {fileID: 6403080533550428526, guid: 8768d2be22ad45e41b6163584d3b6a9a, type: 3}
   - {fileID: 21300000, guid: 1fafe2ce90ba45d4885a63e9f269edb7, type: 3}
@@ -117,18 +123,21 @@ SpriteAtlas:
   - attack_0
   - attack_1
   - armored choy
-  - cursor
+  - player cursor
   - salad bowl
   - bg_final
+  - enemy cursor
   - heal_0
   - heal_1
   - heal_2
   - celeryhead shark
   - broccarmy
+  - steamed broccoli
   - carrot cake
   - bg_lettuce fields
   - stalker
   - Square
+  - burger
   - icon
   - redleaf lettuce
   - player_bunnurse_0
@@ -147,18 +156,21 @@ SpriteAtlas:
   - romaine soldier
   - sweet carrot
   - clawery
+  - ants in a log
   - bg_celery woods
   - ui_window
   - player_bunnight_1
   - player_bunnight_0
   - broccoltree
   - carrot dragon
+  - stalk figure
   - ui_map
   - bg_bok choy bluff
   - caulifaker
   - broccoflower
   - player_bunnecromancer_0
   - player_bunnecromancer_1
+  - roasted carrot
   - player_bunneerdowell_0
   - player_bunneerdowell_1
   - bok chew
