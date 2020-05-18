@@ -6,5 +6,6 @@
         public string sceneToLoad;
         public string music;
         public string[] text;
+        public string[] spriteFileNames;
     }
 }
