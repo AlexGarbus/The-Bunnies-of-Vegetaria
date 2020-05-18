@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace TheBunniesOfVegetaria
 {
@@ -8,11 +9,12 @@ namespace TheBunniesOfVegetaria
     public class CutsceneManager : MonoBehaviour
     {
         [Tooltip("The time delay after each character of a text string is typed.")]
-        [SerializeField] private float charDelay;
-        [Tooltip("The time delay after a text string is fully typed.")]
-        [SerializeField] private float textDelay;
+        [SerializeField] private float charDelayTime;
+        [Tooltip("The time to display a still after text has finished typing.")]
+        [SerializeField] private float stillTime;
 
         [Header("UI Components")]
+        [SerializeField] private Image cutsceneImage;
         [SerializeField] private TMP_Text cutsceneText;
         [SerializeField] private SceneTransition sceneTransition;
 
@@ -21,46 +23,51 @@ namespace TheBunniesOfVegetaria
 
         private void Start()
         {
-            cutscene = JsonUtility.FromJson<Cutscene>(Resources.Load<TextAsset>("Text Assets/introduction").text);
+            // TODO: Load from game manager
+            cutscene = JsonUtility.FromJson<Cutscene>(Resources.Load<TextAsset>("Text Assets/cutscene_introduction").text);
 
+            // Start music
             musicPlayer = GetComponent<AudioSource>();
             musicPlayer.clip = Resources.Load<AudioClip>($"Music/{cutscene.music}");
             musicPlayer.Play();
 
-            StartCoroutine(TypeText());
+            StartCoroutine(Play());
         }
 
         /// <summary>
-        /// Type out each line of cutscene text character-by-character.
+        /// Play a cutscene, displaying stills with images and text.
         /// </summary>
-        private IEnumerator TypeText()
+        private IEnumerator Play()
         {
-            int textIndex = 0;
+            WaitForSeconds charDelay = new WaitForSeconds(charDelayTime);
+            WaitForSeconds stillDelay = new WaitForSeconds(stillTime);
 
-            while(textIndex < cutscene.text.Length)
+            for (int i = 0; i < cutscene.text.Length; i++)
             {
-                if (textIndex > 0)
+                // Fade out from previous still
+                if (i > 0)
                     StartCoroutine(sceneTransition.FadeOut());
-
                 while (sceneTransition.isFading)
                     yield return null;
 
+                // Set next still
+                if(i < cutscene.spriteFileNames.Length)
+                    cutsceneImage.sprite = Resources.Load<Sprite>($"Sprites/Cutscenes/{cutscene.spriteFileNames[i]}");
                 cutsceneText.text = "";
 
+                // Fade in to next still
                 StartCoroutine(sceneTransition.FadeIn());
-
                 while (sceneTransition.isFading)
                     yield return null;
 
-                for(int i = 0; i < cutscene.text[textIndex].Length; i++)
+                // Type out text character-by-character
+                for(int j = 0; j <= cutscene.text[i].Length; j++)
                 {
-                    cutsceneText.text += cutscene.text[textIndex][i];
-                    yield return new WaitForSeconds(charDelay);
+                    cutsceneText.text = cutscene.text[i].Insert(j, "<color=#00000000>") + "</color>";
+                    yield return charDelay;
                 }
 
-                yield return new WaitForSeconds(textDelay);
-
-                textIndex++;
+                yield return stillDelay;
             }
 
             sceneTransition.LoadScene(cutscene.sceneToLoad);

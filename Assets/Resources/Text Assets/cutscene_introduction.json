@@ -1,0 +1,16 @@
+{
+	"sceneToLoad":"Naming",
+	"music":"mainTheme",
+	"text":[
+		"VEGETARIA - a land of sentient bunnies and plentiful vegetables. The bunnies of VEGETARIA lived in peace,\nuntil one day...",
+		"It all happened so fast! CARROT TOP - the highest point in Vegetaria - emitted a dark aura. Then, farmers' crops sprouted monstrous faces and limbs.",
+		"Uprooting themselves as feral monsters, these vicious veggies drove the bunnies out of VEGETARIA, claiming it as their own.",
+		"Now, the bunnies of VEGETARIA entrust 4 brave bunnies with reclaiming their land.\nGo, bunnies! Save VEGETARIA!"
+	],
+	"spriteFileNames":[
+		"introduction_welcome",
+		"introduction_carrot top",
+		"introduction_monsters",
+		"introduction_bunnies"
+	]
+}
