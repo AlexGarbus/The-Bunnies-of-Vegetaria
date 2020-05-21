@@ -1,26 +1,36 @@
 ﻿using UnityEngine;
-using UnityEngine.Audio;
 
 namespace TheBunniesOfVegetaria
 {
     [RequireComponent(typeof(AudioSource))]
-    public class AudioManager : MonoBehaviour
+    public class GlobalAudioSource : MonoSingleton<GlobalAudioSource>
     {
-        [SerializeField] private AudioMixer mixer;
         [SerializeField] private AudioSource musicSource;
         [SerializeField] private AudioSource fxSource;
 
-        public AudioMixer Mixer => mixer;
-
         public void PlayMusic(AudioClip musicClip)
         {
-            // TODO: Use this instead of individual music source objects in each scene
+            if (musicSource == null)
+                return;
+
             musicSource.clip = musicClip;
             musicSource.Play();
         }
 
         public void PlaySoundEffect(AudioClip soundClip)
         {
+            if (fxSource == null)
+                return;
+
+            fxSource.clip = soundClip;
+            fxSource.Play();
+        }
+
+        public void PlaySoundEffectOneShot(AudioClip soundClip)
+        {
+            if (fxSource == null)
+                return;
+
             fxSource.PlayOneShot(soundClip);
         }
     }

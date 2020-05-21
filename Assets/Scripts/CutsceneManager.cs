@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 namespace TheBunniesOfVegetaria
 {
-    [RequireComponent(typeof(AudioSource))]
     public class CutsceneManager : MonoBehaviour
     {
         [Tooltip("The time delay after each character of a text string is typed.")]
@@ -18,7 +17,6 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private TMP_Text cutsceneText;
         [SerializeField] private SceneTransition sceneTransition;
 
-        private AudioSource musicPlayer;
         private Cutscene cutscene;
 
         private void Start()
@@ -27,9 +25,7 @@ namespace TheBunniesOfVegetaria
             cutscene = JsonUtility.FromJson<Cutscene>(Resources.Load<TextAsset>("Text Assets/cutscene_introduction").text);
 
             // Start music
-            musicPlayer = GetComponent<AudioSource>();
-            musicPlayer.clip = Resources.Load<AudioClip>($"Music/{cutscene.music}");
-            musicPlayer.Play();
+            GlobalAudioSource.Instance.PlayMusic(Resources.Load<AudioClip>($"Music/{cutscene.music}"));
 
             StartCoroutine(Play());
         }

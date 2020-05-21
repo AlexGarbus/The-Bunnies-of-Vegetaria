@@ -4,35 +4,23 @@ using UnityEngine.SceneManagement;
 
 namespace TheBunniesOfVegetaria
 {
-    public class GameManager : MonoBehaviour
+    public class GameManager : MonoSingleton<GameManager>
     {
-        public static GameManager Instance;
-
         [SerializeField] private GameObject cursorPrefab;
+        [SerializeField] private AudioMixer mainMixer;
 
         public Globals.Area BattleArea { get; set; } = Globals.Area.LettuceFields;
-        public AudioManager AudioManager { get; private set; }
         public Bunny Bunnight { get; private set; }
         public Bunny Bunnecromancer { get; private set; }
         public Bunny Bunnurse { get; private set; }
         public Bunny Bunneerdowell { get; private set; }
+        
+        private bool isPlaying = false;
 
-        private void Awake()
+        protected override void Initialize()
         {
-            // Set singleton
-            if (Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-
-                // Continue Awake functionality
-                SaveLoad.Load();
-                AudioManager = GetComponentInChildren<AudioManager>();
-            }
-            else if (Instance != this)
-            {
-                Destroy(gameObject);
-            }
+            DontDestroyOnLoad(gameObject);
+            SaveLoad.Load();
         }
 
         private void OnEnable()
@@ -40,36 +28,39 @@ namespace TheBunniesOfVegetaria
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-#if UNITY_STANDALONE
-            // Instantiate custom cursor object
-            GameObject cursorObject = Instantiate(cursorPrefab);
-            cursorObject.name = "Cursor";
-#endif
-        }
-
         private void Start()
         {
             LoadSettings();
             CreateBunnies();
-        }
-    
-        private void Update()
-        {
-            if(SceneManager.GetActiveScene().buildIndex > 1)
-                AddPlaytime();
         }
 
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
+    
+        private void Update()
+        {
+            if(isPlaying)
+                AddPlaytime();
+        }
 
         private void OnApplicationQuit()
         {
-            if (SceneManager.GetActiveScene().buildIndex > 1)
+            if (isPlaying)
                 SaveLoad.Save();
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+#if (UNITY_STANDALONE || UNITY_EDITOR)
+            // Instantiate custom cursor object
+            GameObject cursorObject = Instantiate(cursorPrefab);
+            cursorObject.name = "Cursor";
+#endif
+
+            // Set whether the game is actually being played
+            isPlaying = scene.name == "AreaSelect" || scene.name == "Battle";
         }
 
         /// <summary>
@@ -77,8 +68,8 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         private void LoadSettings()
         {
-            AudioManager.Mixer.SetFloat("musicVolume", PlayerPrefs.GetFloat("MusicVolume", 0));
-            AudioManager.Mixer.SetFloat("fxVolume", PlayerPrefs.GetFloat("FxVolume", 0));
+            mainMixer.SetFloat("musicVolume", PlayerPrefs.GetFloat("MusicVolume", 0));
+            mainMixer.SetFloat("fxVolume", PlayerPrefs.GetFloat("FxVolume", 0));
             if(PlayerPrefs.HasKey("Fullscreen"))
                 Screen.fullScreen = PlayerPrefs.GetInt("Fullscreen") == 1;
             if (PlayerPrefs.HasKey("ScreenWidth") && PlayerPrefs.HasKey("ScreenHeight"))

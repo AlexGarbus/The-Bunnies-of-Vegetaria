@@ -40,7 +40,7 @@ namespace TheBunniesOfVegetaria
         private const int normalHealAmount = 5;
         private Vector2 startPosition;
         private AudioClip attackSound, healSound, defeatSound;
-        private AudioManager audioManager;
+        private GlobalAudioSource audioSource;
         private GameObject observer;
         private Enemy fighter;
         private SpriteRenderer spriteRenderer;
@@ -52,7 +52,7 @@ namespace TheBunniesOfVegetaria
             attackSound = Resources.Load<AudioClip>("Sounds/attack");
             healSound = Resources.Load<AudioClip>("Sounds/heal");
             defeatSound = Resources.Load<AudioClip>("Sounds/defeat_enemy");
-            audioManager = GameManager.Instance.AudioManager;
+            audioSource = GlobalAudioSource.Instance;
         }
 
         private void Start()
@@ -88,7 +88,7 @@ namespace TheBunniesOfVegetaria
                     return new Turn(this, this, $"{FighterName} healed itself!", () =>
                         {
                             Heal(normalHealAmount * 2);
-                            audioManager.PlaySoundEffect(healSound);
+                            audioSource.PlaySoundEffect(healSound);
                         }
                     );
                 case EnemyTurnType.MultiHeal:
@@ -96,7 +96,7 @@ namespace TheBunniesOfVegetaria
                         {
                             foreach (EnemyActor enemyActor in enemyActors)
                                 enemyActor.Heal(normalHealAmount);
-                            audioManager.PlaySoundEffect(healSound);
+                            audioSource.PlaySoundEffect(healSound);
                         }
                     );
                 default:
@@ -182,7 +182,7 @@ namespace TheBunniesOfVegetaria
 
             int damage = CalculateDamage(target) * (int)multiplier;
             target.TakeDamage(damage);
-            audioManager.PlaySoundEffect(attackSound);
+            audioSource.PlaySoundEffect(attackSound);
             StartCoroutine(TakeStep());
         }
 
@@ -196,7 +196,7 @@ namespace TheBunniesOfVegetaria
                 int damage = Mathf.CeilToInt(CalculateDamage(target) * multiplier);
                 target.TakeDamage(damage);
             }
-            audioManager.PlaySoundEffect(attackSound);
+            audioSource.PlaySoundEffect(attackSound);
             StartCoroutine(TakeStep());
         }
 
@@ -219,7 +219,7 @@ namespace TheBunniesOfVegetaria
             if (IsAlive)
                 return;
 
-            audioManager.PlaySoundEffect(defeatSound);
+            audioSource.PlaySoundEffect(defeatSound);
             StartCoroutine(FadeOut());
         }
 
