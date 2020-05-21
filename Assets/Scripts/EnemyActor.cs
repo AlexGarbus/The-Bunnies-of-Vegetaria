@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,9 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private float deathTime;
         [SerializeField] private int deathFrames;
 
+        public event Action<IActor> OnHealthZero;
+        public event Action<IActor> OnDefeat;
+
         public bool IsAlive => CurrentHealth > 0;
         public int CurrentHealth { get; private set; }
         public int Attack => fighter.attack;
@@ -21,7 +25,6 @@ namespace TheBunniesOfVegetaria
         public string FighterName => fighter.name;
         public Vector2 StartPosition => startPosition;
         public BattleEffect Effect { get; private set; }
-        public GameObject Observer { set => observer = value; }
         public Fighter FighterData 
         {
             set
@@ -41,7 +44,6 @@ namespace TheBunniesOfVegetaria
         private Vector2 startPosition;
         private AudioClip attackSound, healSound, defeatSound;
         private GlobalAudioSource audioSource;
-        private GameObject observer;
         private Enemy fighter;
         private SpriteRenderer spriteRenderer;
 
@@ -75,12 +77,12 @@ namespace TheBunniesOfVegetaria
                 return null;
             }
 
-            EnemyTurnType selectedTurn = availableTurnTypes[Random.Range(0, availableTurnTypes.Length)];
+            EnemyTurnType selectedTurn = availableTurnTypes[UnityEngine.Random.Range(0, availableTurnTypes.Length)];
 
             switch(selectedTurn)
             {
                 case EnemyTurnType.SingleAttack:
-                    BunnyActor bunnyActor = bunnyActors[Random.Range(0, bunnyActors.Length)];
+                    BunnyActor bunnyActor = bunnyActors[UnityEngine.Random.Range(0, bunnyActors.Length)];
                     return new Turn(this, bunnyActor, $"{FighterName} attacks {bunnyActor.FighterName}!", () => DoDamage(bunnyActor));
                 case EnemyTurnType.MultiAttack:
                     return new Turn(this, bunnyActors, $"{FighterName} attacks the whole party!", () => DoDamage(bunnyActors));
@@ -210,7 +212,7 @@ namespace TheBunniesOfVegetaria
             if (CurrentHealth <= 0)
             {
                 CurrentHealth = 0;
-                observer.SendMessage("EnemyDefeat", this);
+                OnHealthZero?.Invoke(this);
             }
         }
 
@@ -219,6 +221,7 @@ namespace TheBunniesOfVegetaria
             if (IsAlive)
                 return;
 
+            OnDefeat?.Invoke(this);
             audioSource.PlaySoundEffect(defeatSound);
             StartCoroutine(FadeOut());
         }

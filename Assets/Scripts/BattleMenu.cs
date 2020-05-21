@@ -37,6 +37,7 @@ namespace TheBunniesOfVegetaria
             skillButtons = skillPanel.GetComponentsInChildren<Button>();
             enemyButtons = enemyPanel.GetComponentsInChildren<Button>();
 
+            // Hide all menus
             playerStatPanel.SetActive(false);
             playerInputPanel.SetActive(false);
             backButton.SetActive(false);
@@ -53,15 +54,23 @@ namespace TheBunniesOfVegetaria
             playerStatPanel.SetActive(isActive);
         }
 
+        /// <summary>
+        /// Set the player stat text to display the current stats of the party.
+        /// </summary>
+        /// <param name="bunnyActors">The bunny actors to display stats for.</param>
         public void SetPlayerStatText(BunnyActor[] bunnyActors)
         {
             string stats = string.Empty;
+
             for(int i = 0; i < bunnyActors.Length; i++)
             {
-                stats += string.Format("{0, -16} HP:{1, 3} SP:{2, 3}", bunnyActors[i].FighterName, bunnyActors[i].CurrentHealth, bunnyActors[i].CurrentSkillPoints);
+                // Add a new line of stat text
+                BunnyActor bunnyActor = bunnyActors[i];
+                stats += string.Format("{0, -16} HP:{1, 3} SP:{2, 3}", bunnyActor.FighterName, bunnyActor.CurrentHealth, bunnyActor.CurrentSkillPoints);
                 if (i < bunnyActors.Length - 1)
                     stats += "\n\n";
             }
+
             playerStatText.text = stats;
         }
 
@@ -74,6 +83,9 @@ namespace TheBunniesOfVegetaria
             playerInputPanel.SetActive(isActive);
         }
 
+        /// <summary>
+        /// Prompt the player to input their turn.
+        /// </summary>
         public void PromptPlayerInput()
         {
             inputPromptText.text = $"What will {SelectedBunny.FighterName} do?";
@@ -127,15 +139,16 @@ namespace TheBunniesOfVegetaria
                 Button button = enemyButtons[i];
                 EnemyActor actor = enemyActors[i];
 
-                if (actor.gameObject.activeSelf && actor.IsAlive)
+                if (actor.IsAlive)
                 {
+                    // Activate button
                     button.GetComponentInChildren<TMP_Text>().text = actor.FighterName;
-
                     if (!button.gameObject.activeSelf)
                         button.gameObject.SetActive(true);
                 }
-                else if(button.gameObject.activeSelf)
+                else if (button.gameObject.activeSelf)
                 {
+                    // Hide button
                     button.gameObject.SetActive(false);
                 }
             }
@@ -153,13 +166,18 @@ namespace TheBunniesOfVegetaria
             
             for (int i = 0; i < skillButtons.Length; i++)
             {
+                Button button = skillButtons[i];
+
                 if (i < availableSkills.Length)
                 {
-                    skillButtons[i].gameObject.SetActive(true);
-                    skillButtons[i].GetComponentInChildren<TMP_Text>().text = availableSkills[i];
+                    // Activate button
+                    button.GetComponentInChildren<TMP_Text>().text = availableSkills[i];
+                    if (!button.gameObject.activeSelf)
+                        skillButtons[i].gameObject.SetActive(true);
                 }
-                else
+                else if (button.gameObject.activeSelf)
                 {
+                    // Hide button
                     skillButtons[i].gameObject.SetActive(false);
                 }
             }
@@ -174,6 +192,10 @@ namespace TheBunniesOfVegetaria
             turnPanel.SetActive(isActive);
         }
 
+        /// <summary>
+        /// Display a message to the player describing the current turn.
+        /// </summary>
+        /// <param name="message">The message that describes the current turn.</param>
         public void SetTurnText(string message)
         {
             turnText.text = message;

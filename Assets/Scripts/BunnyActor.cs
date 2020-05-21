@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace TheBunniesOfVegetaria
@@ -11,6 +12,10 @@ namespace TheBunniesOfVegetaria
 
         [HideInInspector] public bool isDefending = false;
 
+        public event Action<IActor> OnHealthZero;
+        public event Action<IActor> OnDefeat;
+        public event Action<BunnyActor> OnLevelUp;
+
         public bool IsAlive => CurrentHealth > 0;
         public int Attack => fighter.attack;
         public int Defense => fighter.defense;
@@ -21,7 +26,6 @@ namespace TheBunniesOfVegetaria
         public string FighterName => fighter.name;
         public Vector2 StartPosition => startPosition;
         public BattleEffect Effect { get; private set; }
-        public GameObject Observer { set => observer = value; }
         public Fighter FighterData 
         {
             set
@@ -40,7 +44,6 @@ namespace TheBunniesOfVegetaria
         private Animator animator;
         private AudioClip attackSound, healSound, defeatSound;
         private GlobalAudioSource audioSource;
-        private GameObject observer;
         private Bunny fighter;
 
         private void Awake()
@@ -89,7 +92,7 @@ namespace TheBunniesOfVegetaria
             fighter.AddExperience(experience);
 
             if (fighter.Level != previousLevel)
-                observer.SendMessage("LevelUp", this);
+                OnLevelUp?.Invoke(this);
         }
     
         /// <summary>
@@ -148,7 +151,7 @@ namespace TheBunniesOfVegetaria
             if (CurrentHealth <= 0)
             {
                 CurrentHealth = 0;
-                observer.SendMessage("BunnyDefeat", this);
+                OnHealthZero?.Invoke(this);
             }
             
             Effect.PlaySlash();
@@ -156,6 +159,10 @@ namespace TheBunniesOfVegetaria
 
         public void Defeat()
         {
+            if (IsAlive)
+                return;
+
+            OnDefeat?.Invoke(this);
             transform.Rotate(new Vector3(0, 0, 90));
             audioSource.PlaySoundEffect(defeatSound);
         }
