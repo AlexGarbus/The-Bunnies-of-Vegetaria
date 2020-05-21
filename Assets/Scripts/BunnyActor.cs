@@ -39,7 +39,7 @@ namespace TheBunniesOfVegetaria
         private Vector2 startPosition;
         private Animator animator;
         private AudioClip attackSound, healSound, defeatSound;
-        private AudioManager audioManager;
+        private GlobalAudioSource audioSource;
         private GameObject observer;
         private Bunny fighter;
 
@@ -50,7 +50,7 @@ namespace TheBunniesOfVegetaria
             attackSound = Resources.Load<AudioClip>("Sounds/attack");
             healSound = Resources.Load<AudioClip>("Sounds/heal");
             defeatSound = Resources.Load<AudioClip>("Sounds/defeat_bunny");
-            audioManager = GameManager.Instance.AudioManager;
+            audioSource = GlobalAudioSource.Instance;
         }
 
         private void Start()
@@ -118,7 +118,7 @@ namespace TheBunniesOfVegetaria
 
             int damage = CalculateDamage(target) * (int)multiplier;
             target.TakeDamage(damage);
-            audioManager.PlaySoundEffect(attackSound);
+            audioSource.PlaySoundEffect(attackSound);
             StartCoroutine(TakeStep());
         }
 
@@ -132,7 +132,7 @@ namespace TheBunniesOfVegetaria
                 int damage = Mathf.CeilToInt(CalculateDamage(target) * multiplier);
                 target.TakeDamage(damage);
             }
-            audioManager.PlaySoundEffect(attackSound);
+            audioSource.PlaySoundEffect(attackSound);
             StartCoroutine(TakeStep());
         }
 
@@ -157,7 +157,7 @@ namespace TheBunniesOfVegetaria
         public void Defeat()
         {
             transform.Rotate(new Vector3(0, 0, 90));
-            audioManager.PlaySoundEffect(defeatSound);
+            audioSource.PlaySoundEffect(defeatSound);
         }
 
         public void Heal(int healAmount)
@@ -219,7 +219,7 @@ namespace TheBunniesOfVegetaria
             Skill skill = fighter.Skills[skillIndex];
 
             if (skill.Target == Skill.TargetType.Bunny)
-                audioManager.PlaySoundEffect(healSound);
+                audioSource.PlaySoundEffect(healSound);
 
             CurrentSkillPoints -= skill.Cost;
             skill.Use(this, targets);

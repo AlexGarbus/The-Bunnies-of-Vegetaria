@@ -11,6 +11,7 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private SceneTransition sceneTransition;
 
         [Header("Settings")]
+        [SerializeField] private AudioMixer mainMixer;
         [SerializeField] private TMP_Text musicVolumeLabel;
         [SerializeField] private TMP_Text fxVolumeLabel;
         [SerializeField] private Button fullscreenButton;
@@ -24,7 +25,6 @@ namespace TheBunniesOfVegetaria
         private Resolution[] resolutions;
         private TMP_Text fullscreenText;
 #endif
-        private AudioMixer mixer;
 
         void Start()
         {
@@ -44,8 +44,6 @@ namespace TheBunniesOfVegetaria
             foreach (GameObject settingObject in standaloneSettingObjects)
                 settingObject.SetActive(false);
 #endif
-
-            mixer = GameManager.Instance.AudioManager.Mixer;
 
             // Set initial UI
             versionText.text = $"Version {Application.version}";
@@ -84,11 +82,11 @@ namespace TheBunniesOfVegetaria
         /// <param name="value">The value to increase or decrease the volume by.</param>
         public void ModifyMusicVolume(float value)
         {
-            mixer.GetFloat("musicVolume", out float volume);
+            mainMixer.GetFloat("musicVolume", out float volume);
 
             // Modify current volume
             float modifiedVolume = Mathf.Clamp(volume + value, -80, 0);
-            mixer.SetFloat("musicVolume", modifiedVolume);
+            mainMixer.SetFloat("musicVolume", modifiedVolume);
             PlayerPrefs.SetFloat("MusicVolume", modifiedVolume);
 
             // Update UI
@@ -101,11 +99,11 @@ namespace TheBunniesOfVegetaria
         /// <param name="value">The value to increase or decrease the volume by.</param>
         public void ModifyFXVolume(float value)
         {
-            mixer.GetFloat("fxVolume", out float volume);
+            mainMixer.GetFloat("fxVolume", out float volume);
 
             // Modify current volume
             float modifiedVolume = Mathf.Clamp(volume + value, -80, 0);
-            mixer.SetFloat("fxVolume", modifiedVolume);
+            mainMixer.SetFloat("fxVolume", modifiedVolume);
             PlayerPrefs.SetFloat("FxVolume", modifiedVolume);
 
             // Update UI
@@ -184,7 +182,7 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         private void RefreshMusicVolume()
         {
-            mixer.GetFloat("musicVolume", out float volume);
+            mainMixer.GetFloat("musicVolume", out float volume);
             musicVolumeLabel.text = string.Format("MUSIC volume: {0}%", (int)((volume + 80) * 1.25f));
         }
 
@@ -193,7 +191,7 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         private void RefreshFXVolume()
         {
-            mixer.GetFloat("fxVolume", out float volume);
+            mainMixer.GetFloat("fxVolume", out float volume);
             fxVolumeLabel.text = string.Format("EFFECTS volume: {0}%", (int)((volume + 80) * 1.25f));
         }
 

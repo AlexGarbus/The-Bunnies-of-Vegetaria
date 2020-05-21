@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace TheBunniesOfVegetaria
@@ -6,23 +7,33 @@ namespace TheBunniesOfVegetaria
     public class ButtonSoundController : MonoBehaviour
     {
         private AudioClip clickSound;
-        private AudioManager audioManager;
+        private Button button;
+        private GlobalAudioSource audioSource;
+        private UnityAction clickAction;
+
+        private void Awake()
+        {
+            clickSound = Resources.Load<AudioClip>("Sounds/button_click");
+            button = GetComponent<Button>();
+
+            // Play sound on click
+            clickAction = () => PlayClickSound();
+            button.onClick.AddListener(clickAction);
+        }
 
         private void Start()
         {
-            clickSound = Resources.Load<AudioClip>("Sounds/button_click");
-            audioManager = GameManager.Instance.AudioManager;
-            GetComponent<Button>().onClick.AddListener(() => PlayClickSound());
+            audioSource = GlobalAudioSource.Instance;
         }
 
         private void OnDestroy()
         {
-            GetComponent<Button>().onClick.RemoveListener(() => PlayClickSound());
+            button.onClick.RemoveListener(clickAction);
         }
 
         private void PlayClickSound()
         {
-            audioManager.PlaySoundEffect(clickSound);
+            audioSource.PlaySoundEffectOneShot(clickSound);
         }
     }
 }

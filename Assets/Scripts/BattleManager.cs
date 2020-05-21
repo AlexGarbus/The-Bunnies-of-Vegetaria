@@ -292,7 +292,7 @@ namespace TheBunniesOfVegetaria
                 {
                     bunnyActor.Heal(100);
                     bunnyActor.RestoreSkillPoints(100);
-                    gameManager.AudioManager.PlaySoundEffect(healSound);
+                    GlobalAudioSource.Instance.PlaySoundEffect(healSound);
                 }
             );
             turnList.Push(turn);
@@ -355,7 +355,7 @@ namespace TheBunniesOfVegetaria
         {
             BunnyActor[] defeatedBunnies = GetDefeatedBunnies();
             if (defeatedBunnies.Length > 0)
-                gameManager.AudioManager.PlaySoundEffect(healSound);
+                GlobalAudioSource.Instance.PlaySoundEffect(healSound);
             foreach (BunnyActor bunnyActor in defeatedBunnies)
                 bunnyActor.Revive();
 
