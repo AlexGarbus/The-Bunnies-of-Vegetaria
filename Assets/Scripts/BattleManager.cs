@@ -16,6 +16,12 @@ namespace TheBunniesOfVegetaria
         [Tooltip("The enemyobjects in the scene. These should be in ascending order by spawn position.")]
         [SerializeField] private EnemyActor[] enemyActors;
 
+        [Header("Enemy Positioning")]
+        [Tooltip("The start point of the line that enemies are positioned along.")]
+        [SerializeField] private Vector2 enemySpawnPointA;
+        [Tooltip("The end point of the line that enemies are positioned along.")]
+        [SerializeField] private Vector2 enemySpawnPointB;
+
         [Header("Battle Flow")]
         [SerializeField] private int maxWaves = 5;
         [SerializeField] private float turnTime = 1f;
@@ -24,6 +30,13 @@ namespace TheBunniesOfVegetaria
         [Header("User Interface")]
         [SerializeField] private BattleMenu battleMenu;
         [SerializeField] private SceneTransition sceneTransition;
+
+        private void OnDrawGizmosSelected()
+        {
+            // Draw enemy spawn line
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(enemySpawnPointA, enemySpawnPointB);
+        }
 
         private BunnyActor SelectedBunny 
         {
@@ -458,25 +471,37 @@ namespace TheBunniesOfVegetaria
             if (wave == maxWaves)
                 return;
 
-            int i = 0;
             wave++;
+            int i = 0;
 
             if (wave == maxWaves)
             {
                 // Boss wave
                 enemyActors[i].gameObject.SetActive(true);
                 enemyActors[i].FighterData = boss;
+                enemyActors[i].transform.position = Vector2.Lerp(enemySpawnPointA, enemySpawnPointB, 0.5f);
                 GlobalAudioSource.Instance.PlayMusic(bossMusic);
                 i++;
             }
             else
             {
                 // Regular enemy wave
+                bool penultimateWave = wave == maxWaves - 1;
+
                 for(i = 0; i < wave && i < enemyActors.Length; i++)
                 {
-                    int enemyIndex = UnityEngine.Random.Range(0, enemies.Length);
+                    // Set random enemies
+                    int enemyIndex = Random.Range(0, enemies.Length);
                     enemyActors[i].gameObject.SetActive(true);
                     enemyActors[i].FighterData = enemies[enemyIndex];
+
+                    // Set enemy position
+                    float interpolant;
+                    if (penultimateWave)
+                        interpolant = (float) i / (wave - 1);
+                    else
+                        interpolant = (float)(i + 1) / (wave + 1);
+                    enemyActors[i].transform.position = Vector2.Lerp(enemySpawnPointA, enemySpawnPointB, interpolant);
                 }
             }
 

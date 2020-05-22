@@ -64,12 +64,8 @@ namespace TheBunniesOfVegetaria
                 yield return null;
             } while (screensScrolled < screens);
 
+            // Make sure background is centered
             transform.position = RoundX(spriteRenderer.transform.position);
-
-            foreach (Transform movingTransform in movingTransforms)
-            {
-                movingTransform.position = RoundX(movingTransform.position);
-            }
 
             IsScrolling = false;
         }
