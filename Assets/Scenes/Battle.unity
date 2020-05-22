@@ -517,6 +517,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6764464509658483424, guid: 5c2eff33af895604096bb8d22044cbb2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8169818093293861662, guid: 5c2eff33af895604096bb8d22044cbb2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -691,8 +696,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 20}
-  m_SizeDelta: {x: 426, y: 112}
+  m_AnchoredPosition: {x: 0, y: 25}
+  m_SizeDelta: {x: 426, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &290353288
 MonoBehaviour:
@@ -711,10 +716,10 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 1
-  m_Spacing: 4
+  m_ChildAlignment: 4
+  m_Spacing: 0
   m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 0
+  m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
@@ -800,6 +805,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enemy 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6764464509658483424, guid: 5c2eff33af895604096bb8d22044cbb2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8169818093293861662, guid: 5c2eff33af895604096bb8d22044cbb2,
         type: 3}
@@ -1055,6 +1065,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Skill 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6764464509658483424, guid: 5c2eff33af895604096bb8d22044cbb2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8169818093293861662, guid: 5c2eff33af895604096bb8d22044cbb2,
         type: 3}
@@ -1339,7 +1354,7 @@ PrefabInstance:
     - target: {fileID: 8169818093293861662, guid: 5c2eff33af895604096bb8d22044cbb2,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 100
+      value: 102
       objectReference: {fileID: 0}
     - target: {fileID: 8169818093293861662, guid: 5c2eff33af895604096bb8d22044cbb2,
         type: 3}
@@ -1557,6 +1572,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enemy 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6764464509658483424, guid: 5c2eff33af895604096bb8d22044cbb2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8169818093293861662, guid: 5c2eff33af895604096bb8d22044cbb2,
         type: 3}
@@ -2029,6 +2049,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Skill 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6764464509658483424, guid: 5c2eff33af895604096bb8d22044cbb2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8169818093293861662, guid: 5c2eff33af895604096bb8d22044cbb2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2438,7 +2463,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 19}
+  m_AnchoredPosition: {x: 0, y: 20}
   m_SizeDelta: {x: 144, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1147752420
@@ -2458,10 +2483,10 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 1
+  m_ChildAlignment: 4
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 0
+  m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
@@ -2876,7 +2901,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 100}
+  m_AnchoredPosition: {x: 0, y: 102}
   m_SizeDelta: {x: 368, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1527965527
@@ -4006,6 +4031,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enemy 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6764464509658483424, guid: 5c2eff33af895604096bb8d22044cbb2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8169818093293861662, guid: 5c2eff33af895604096bb8d22044cbb2,
         type: 3}
@@ -5612,7 +5642,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 100}
+  m_AnchoredPosition: {x: 0, y: 102}
   m_SizeDelta: {x: 256, y: 32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &9146347260003461331
