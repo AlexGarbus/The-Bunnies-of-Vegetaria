@@ -154,7 +154,7 @@ namespace TheBunniesOfVegetaria
                 OnHealthZero?.Invoke(this);
             }
             
-            Effect.PlaySlash();
+            Effect.PlaySlash(damage);
         }
 
         public void Defeat()
@@ -176,7 +176,7 @@ namespace TheBunniesOfVegetaria
             if (CurrentHealth > fighter.MaxHealth)
                 CurrentHealth = fighter.MaxHealth;
             
-            Effect.PlayHeal();
+            Effect.PlayHeal(healAmount);
         }
         
         /// <summary>
@@ -190,7 +190,7 @@ namespace TheBunniesOfVegetaria
 
             CurrentHealth = Mathf.Clamp(healthAmount, 0, fighter.MaxHealth);
             transform.Rotate(new Vector3(0, 0, -90));
-            Effect.PlayHeal();
+            Effect.PlayHeal(healthAmount);
         }
 
         #endregion
@@ -240,7 +240,7 @@ namespace TheBunniesOfVegetaria
             CurrentSkillPoints += skillAmount;
             if (CurrentSkillPoints > fighter.MaxSkillPoints)
                 CurrentSkillPoints = fighter.MaxSkillPoints;
-            Effect.PlayHeal();
+            Effect.PlayHeal(skillAmount);
         }
 
         #endregion
