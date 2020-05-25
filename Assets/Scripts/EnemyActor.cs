@@ -207,13 +207,14 @@ namespace TheBunniesOfVegetaria
             if (!IsAlive)
                 return;
 
-            Effect.PlaySlash();
             CurrentHealth -= damage;
             if (CurrentHealth <= 0)
             {
                 CurrentHealth = 0;
                 OnHealthZero?.Invoke(this);
             }
+
+            Effect.PlaySlash(damage);
         }
 
         public void Defeat()
@@ -234,7 +235,7 @@ namespace TheBunniesOfVegetaria
             CurrentHealth += healAmount;
             if (CurrentHealth > fighter.MaxHealth)
                 CurrentHealth = fighter.MaxHealth;
-            Effect.PlayHeal();
+            Effect.PlayHeal(healAmount);
         }
 
         #endregion
