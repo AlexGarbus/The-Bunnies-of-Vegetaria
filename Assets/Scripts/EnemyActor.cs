@@ -141,9 +141,9 @@ namespace TheBunniesOfVegetaria
                 availableTurns.Add(EnemyTurnType.SingleAttack);
             if (fighter.multiAttack)
                 availableTurns.Add(EnemyTurnType.MultiAttack);
-            if (fighter.singleHeal)
+            if (fighter.singleHeal && CurrentHealth < fighter.MaxHealth)
                 availableTurns.Add(EnemyTurnType.SingleHeal);
-            if (fighter.multiHeal)
+            if (fighter.multiHeal && CurrentHealth < fighter.MaxHealth)
                 availableTurns.Add(EnemyTurnType.MultiHeal);
 
             return availableTurns.ToArray();
