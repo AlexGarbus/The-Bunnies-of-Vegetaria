@@ -38,6 +38,7 @@ namespace TheBunniesOfVegetaria
             Gizmos.DrawLine(enemySpawnPointA, enemySpawnPointB);
         }
 
+        private bool IsBossWave => wave == maxWaves;
         private BunnyActor SelectedBunny 
         {
             get 
@@ -276,11 +277,23 @@ namespace TheBunniesOfVegetaria
             BunnyActor[] aliveBunnies = GetAliveBunnies();
             EnemyActor[] aliveEnemies = GetAliveEnemies();
 
-            // Insert turns
-            foreach (EnemyActor enemyActor in aliveEnemies)
+            if (IsBossWave)
             {
-                Turn turn = enemyActor.GetTurn(aliveBunnies, aliveEnemies);
-                turnList.Insert(turn);
+                // Insert 2 turns for the single boss enemy
+                for (int i = 0; i < 2; i++)
+                {
+                    Turn turn = aliveEnemies[0].GetTurn(aliveBunnies, aliveEnemies);
+                    turnList.Insert(turn);
+                }
+            }
+            else
+            {
+                // Insert 1 turn for each regular enemy
+                foreach (EnemyActor enemyActor in aliveEnemies)
+                {
+                    Turn turn = enemyActor.GetTurn(aliveBunnies, aliveEnemies);
+                    turnList.Insert(turn);
+                }
             }
         }
 
@@ -352,7 +365,7 @@ namespace TheBunniesOfVegetaria
                 // Enemies have lost
                 turnList.RemoveNonemptyTargetTurns();
 
-                if (wave == maxWaves)
+                if (IsBossWave)
                 {
                     // Boss has been defeated
                     Turn turn = new Turn(actor, "This area is clear!", () =>
@@ -452,7 +465,7 @@ namespace TheBunniesOfVegetaria
 
             battleMenu.SetPlayerStatText(bunnyActors);
 
-            if(wave == maxWaves)
+            if(IsBossWave)
             {
                 battleState = BattleState.Idle;
             }
@@ -468,13 +481,13 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         private void SetNextWave()
         {
-            if (wave == maxWaves)
+            if (IsBossWave)
                 return;
 
             wave++;
             int i = 0;
 
-            if (wave == maxWaves)
+            if (IsBossWave)
             {
                 // Boss wave
                 enemyActors[i].gameObject.SetActive(true);
