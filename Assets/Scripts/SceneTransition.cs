@@ -18,10 +18,12 @@ namespace TheBunniesOfVegetaria
         public float GetFadeTime() => fadeTime;
 
         private GameObject fadeImageObject;
+        private WaitForSeconds fadeDelay;
 
         private void Awake()
         {
             fadeImageObject = fadeImage.gameObject;
+            fadeDelay = new WaitForSeconds(fadeTime / alphaChangeCount);
         }
 
         private void Start()
@@ -39,18 +41,17 @@ namespace TheBunniesOfVegetaria
                 yield break;
 
             isFading = true;
+
+            // Set to opaque
             if (!fadeImageObject.activeSelf)
                 fadeImageObject.SetActive(true);
             SetFadeAlpha(1);
 
-            int alphaChanges = 0;
-            float waitTime = fadeTime / alphaChangeCount;
-
-            while (alphaChanges < alphaChangeCount)
+            // Fade to transparent
+            for (int i = 0; i < alphaChangeCount; i++)
             {
-                SetFadeAlpha(1f - (float)alphaChanges / alphaChangeCount);
-                alphaChanges++;
-                yield return new WaitForSeconds(waitTime);
+                SetFadeAlpha(1f - (float)i / alphaChangeCount);
+                yield return fadeDelay;
             }
 
             fadeImageObject.SetActive(false);
@@ -66,18 +67,17 @@ namespace TheBunniesOfVegetaria
                 yield break;
 
             isFading = true;
+
+            // Set to transparent
             if (!fadeImageObject.activeSelf)
                 fadeImageObject.SetActive(true);
             SetFadeAlpha(0);
 
-            int alphaChanges = 0;
-            float waitTime = fadeTime / alphaChangeCount;
-
-            while (alphaChanges < alphaChangeCount)
+            // Fade to opaque
+            for (int i = 1; i <= alphaChangeCount; i++)
             {
-                alphaChanges++;
-                SetFadeAlpha((float)alphaChanges / alphaChangeCount);
-                yield return new WaitForSeconds(waitTime);
+                SetFadeAlpha((float)i / alphaChangeCount);
+                yield return fadeDelay;
             }
 
             isFading = false;
@@ -161,6 +161,10 @@ namespace TheBunniesOfVegetaria
                 yield return null;
         }
 
+        /// <summary>
+        /// Set the alpha value of the fade image.
+        /// </summary>
+        /// <param name="alpha">The alpha value of the fade image's color.</param>
         private void SetFadeAlpha(float alpha)
         {
             Color c = fadeImage.color;

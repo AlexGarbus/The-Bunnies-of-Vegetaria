@@ -37,6 +37,8 @@ namespace TheBunniesOfVegetaria
         {
             descriptionHolder = JsonUtility.FromJson<DescriptionHolder>(Resources.Load<TextAsset>("Text Assets/naming").text);
             gameManager = GameManager.Instance;
+
+            // Start prompting for names
             PromptNextName();
         }
 
@@ -56,14 +58,25 @@ namespace TheBunniesOfVegetaria
             if (nameInput.text.Length == 0)
                 yield break;
 
+            // Fade out from previous screen
             StartCoroutine(sceneTransition.FadeOut());
             while (sceneTransition.isFading)
                 yield return null;
 
+            // Reset name input if at confirmation screen
             if (confirmationPanel.activeSelf)
+            {
                 confirmationPanel.SetActive(false);
-            PromptNextName();
+                namesInput = 0;
+            }
 
+            // Set up either the name input or confirmation screen
+            if (namesInput < 4)
+                PromptNextName();
+            else
+                ConfirmNames();
+
+            // Fade in to next screen
             StartCoroutine(sceneTransition.FadeIn());
             while (sceneTransition.isFading)
                 yield return null;
@@ -74,6 +87,7 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         private void PromptNextName()
         {
+            // Save previous name and set next name text
             switch (namesInput)
             {
                 case 0:
@@ -93,13 +107,15 @@ namespace TheBunniesOfVegetaria
                     break;
                 case 4:
                     gameManager.Bunneerdowell.name = nameInput.text;
-                    ConfirmNames();
-                    namesInput = 0;
+                    return;
+                default:
                     return;
             }
 
+            // Set next description and image
             descriptionText.text = descriptionHolder.descriptions[namesInput];
             bunnyImage.sprite = bunnySprites[namesInput];
+
             namesInput++;
         }
 

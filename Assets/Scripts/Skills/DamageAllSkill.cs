@@ -13,6 +13,7 @@
 
         public override void Use(BunnyActor user, IActor[] targets)
         {
+            // Damage all targets
             user.DoDamage(targets, multiplier);
         }
     }

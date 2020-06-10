@@ -135,12 +135,14 @@ namespace TheBunniesOfVegetaria
                     {
                         foreach (BunnyActor bunnyActor in bunnyActors)
                             bunnyActor.SetMoving(false);
-                        battleMenu.ShowPlayerStatPanel(true);
                         battleState = BattleState.SettingUpInput;
                     }
                     break;
                 case BattleState.SettingUpInput:
-                    // Prepare to receive input for the next bunny
+                    // Prepare to receive input
+                    battleMenu.SetCanvasEnabled(true);
+                    battleMenu.ShowPlayerInputPanel();
+                    battleMenu.SetEnemyButtons(GetAliveEnemies());
                     NextInput();
                     battleState = BattleState.HandlingInput;
                     break;
@@ -149,14 +151,13 @@ namespace TheBunniesOfVegetaria
                     {
                         // Input for all bunnies received
                         inputsReceived = -1;
+                        battleMenu.ShowTurnPanel();
                         battleState = BattleState.SettingUpTurns;
                     }
                     break;
                 case BattleState.SettingUpTurns:
                     // Prepare to handle turns
                     InsertEnemyTurns();
-                    battleMenu.ShowPlayerInputPanel(false);
-                    battleMenu.ShowTurnPanel(true);
                     StartCoroutine(HandleTurns());
                     battleState = BattleState.HandlingTurns;
                     break;
@@ -182,6 +183,24 @@ namespace TheBunniesOfVegetaria
                         battleState = BattleState.SettingUpInput;
                     }
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Count the input for the current bunny as received and prompt for the next bunny's input if possible.
+        /// </summary>
+        private void NextInput()
+        {
+            do
+            {
+                inputsReceived++;
+            }
+            while (inputsReceived < bunnyActors.Length && !SelectedBunny.IsAlive);
+
+            // Set up next input
+            if(inputsReceived < bunnyActors.Length)
+            {
+                battleMenu.SetOptions(SelectedBunny);
             }
         }
         
@@ -221,9 +240,8 @@ namespace TheBunniesOfVegetaria
             Turn turn = new Turn(user, target, $"{user.FighterName} attacks {target.FighterName}!", () => user.DoDamage(target));
             turnList.Insert(turn);
 
-            // Prepare for next input
-            battleMenu.ShowEnemyPanel(false);
-            battleState = BattleState.SettingUpInput;
+            // Move to next input
+            NextInput();
         }
 
         /// <summary>
@@ -238,8 +256,8 @@ namespace TheBunniesOfVegetaria
             Turn turn = new Turn(user, user, $"{user.FighterName} is defending!", null);
             turnList.Insert(turn);
 
-            // Prepare for next input
-            battleState = BattleState.SettingUpInput;
+            // Move to next input
+            NextInput();
         }
 
         /// <summary>
@@ -264,9 +282,8 @@ namespace TheBunniesOfVegetaria
             Turn turn = new Turn(user, targets, $"{user.FighterName} used {user.GetSkillName(skillIndex)}!", () => user.UseSkill(skillIndex, targets));
             turnList.Insert(turn);
 
-            // Prepare for next input
-            battleMenu.ShowSkillPanel(false);
-            battleState = BattleState.SettingUpInput;
+            // Move to next input
+            NextInput();
         }
 
         /// <summary>
@@ -453,24 +470,30 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Finish the current wave of enemies and determine what to do next.
+        /// Finish battling the current wave of enemies and determine what to do next.
         /// </summary>
         private void FinishWave()
         {
+            // Revive defeated bunnies
             BunnyActor[] defeatedBunnies = GetDefeatedBunnies();
             if (defeatedBunnies.Length > 0)
+            {
                 GlobalAudioSource.Instance.PlaySoundEffect(healSound);
-            foreach (BunnyActor bunnyActor in defeatedBunnies)
-                bunnyActor.Revive();
+                foreach (BunnyActor bunnyActor in defeatedBunnies)
+                    bunnyActor.Revive();
+            }
 
+            // Update stat text
             battleMenu.SetPlayerStatText(bunnyActors);
 
             if(IsBossWave)
             {
+                // Area cleared
                 battleState = BattleState.Idle;
             }
             else
             {
+                // Move to next wave
                 SetNextWave();
                 StartTravel();
             }
@@ -499,7 +522,7 @@ namespace TheBunniesOfVegetaria
             else
             {
                 // Regular enemy wave
-                bool penultimateWave = wave == maxWaves - 1;
+                bool isPenultimateWave = wave == maxWaves - 1;
 
                 for(i = 0; i < wave && i < enemyActors.Length; i++)
                 {
@@ -510,7 +533,7 @@ namespace TheBunniesOfVegetaria
 
                     // Set enemy position
                     float interpolant;
-                    if (penultimateWave)
+                    if (isPenultimateWave)
                         interpolant = (float) i / (wave - 1);
                     else
                         interpolant = (float)(i + 1) / (wave + 1);
@@ -533,59 +556,29 @@ namespace TheBunniesOfVegetaria
         {
             battleState = BattleState.Traveling;
 
-            battleMenu.ShowPlayerStatPanel(false);
-            battleMenu.ShowTurnPanel(false);
+            // Hide UI
+            battleMenu.SetCanvasEnabled(false);
 
+            // Set bunny actors to move
             foreach (BunnyActor bunnyActor in bunnyActors)
                 bunnyActor.SetMoving(true);
 
+            // Get active enemy transforms
             List<Transform> enemyTransforms = new List<Transform>();
-
             foreach(EnemyActor enemyActor in enemyActors)
             {
                 if (enemyActor.gameObject.activeSelf)
                     enemyTransforms.Add(enemyActor.transform);
             }
 
+            // Move enemies off screen
             foreach (Transform enemyTransform in enemyTransforms)
             {
                 enemyTransform.Translate(Vector2.right * battleBackground.ScreenWidth);
             }
 
+            // Start scroll coroutine
             StartCoroutine(battleBackground.ScrollBackground(1, travelSpeed, enemyTransforms.ToArray()));
-        }
-
-        #endregion
-
-        #region Player Input
-
-        /// <summary>
-        /// Count the input for the current bunny as received and prepare to either receive the next input or begin handling turns.
-        /// </summary>
-        private void NextInput()
-        {
-            do
-            {
-                inputsReceived++;
-            }
-            while (inputsReceived < bunnyActors.Length && !SelectedBunny.IsAlive);
-
-            if(inputsReceived < bunnyActors.Length)
-                PromptInput();
-        }
-
-        /// <summary>
-        /// Set up the input menu and prompt the user to input their turn for the current bunny.
-        /// </summary>
-        private void PromptInput()
-        {
-            battleMenu.SelectedBunny = SelectedBunny;
-            battleMenu.ShowPlayerInputPanel(true);
-            battleMenu.ShowOptionPanel(true);
-            battleMenu.ShowTurnPanel(false);
-            battleMenu.SetEnemyButtons(enemyActors); 
-            battleMenu.SetSkillButtons();
-            battleMenu.PromptPlayerInput();
         }
 
         #endregion

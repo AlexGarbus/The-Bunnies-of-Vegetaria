@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 namespace TheBunniesOfVegetaria
 {
+    [RequireComponent(typeof(Canvas))]
     public class BattleMenu : MonoBehaviour
     {
         [Header("Player Stats")]
@@ -25,39 +26,55 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private GameObject turnPanel;
         [SerializeField] private TMP_Text turnText;
 
-        public BunnyActor SelectedBunny { private get; set; }
+        [Header("Messages")]
+        [Tooltip("The message that will display when a user is selecting an option. Use {0} in place of a bunny's name.")]
+        [SerializeField] private string optionMessage;
+        [Tooltip("The message that will display when a user is selecting an enemy to attack. Use {0} in place of a bunny's name.")]
+        [SerializeField] private string attackMessage;
+        [Tooltip("The message that will display when a user is selecting a skill. Use {0} in place of a bunny's name.")]
+        [SerializeField] private string skillMessage;
 
-        private bool ShowSkills => SelectedBunny != null && SelectedBunny.AvailableSkillStrings.Length != 0;
-
+        private string bunnyName;
         private Button[] skillButtons;
         private Button[] enemyButtons;
+        private Canvas canvas;
 
         private void Awake()
         {
+            // Get buttons from panels
             skillButtons = skillPanel.GetComponentsInChildren<Button>();
             enemyButtons = enemyPanel.GetComponentsInChildren<Button>();
 
-            // Hide all menus
-            playerStatPanel.SetActive(false);
-            playerInputPanel.SetActive(false);
+            // Disable canvas
+            canvas = GetComponent<Canvas>();
+            canvas.enabled = false;
+
+            // Prepare panels for player input
             backButton.SetActive(false);
-            optionPanel.SetActive(false);
+            optionPanel.SetActive(true);
             skillPanel.SetActive(false);
             enemyPanel.SetActive(false);
             turnPanel.SetActive(false);
         }
 
-        #region Player Stats
+        public void SetCanvasEnabled(bool isEnabled) => canvas.enabled = isEnabled;
 
-        public void ShowPlayerStatPanel(bool isActive)
+        public void ShowPlayerInputPanel()
         {
-            playerStatPanel.SetActive(isActive);
+            playerInputPanel.SetActive(true);
+            turnPanel.SetActive(false);
+        }
+
+        public void ShowTurnPanel()
+        {
+            turnPanel.SetActive(true);
+            playerInputPanel.SetActive(false);
         }
 
         /// <summary>
-        /// Set the player stat text to display the current stats of the party.
+        /// Set and display the stats of multiple bunnies.
         /// </summary>
-        /// <param name="bunnyActors">The bunny actors to display stats for.</param>
+        /// <param name="bunnyActors">The bunnies to display stats for.</param>
         public void SetPlayerStatText(BunnyActor[] bunnyActors)
         {
             string stats = string.Empty;
@@ -74,95 +91,72 @@ namespace TheBunniesOfVegetaria
             playerStatText.text = stats;
         }
 
-        #endregion
-
-        #region Player Input
-
-        public void ShowPlayerInputPanel(bool isActive)
-        {
-            playerInputPanel.SetActive(isActive);
-        }
-
         /// <summary>
-        /// Prompt the player to input their turn.
+        /// Set and display the options for a specific bunny.
         /// </summary>
-        public void PromptPlayerInput()
+        /// <param name="bunnyActor">The bunny to set options for.</param>
+        public void SetOptions(BunnyActor bunnyActor)
         {
-            inputPromptText.text = $"What will {SelectedBunny.FighterName} do?";
-        }
+            bunnyName = bunnyActor.FighterName;
+            DisplayOptionPrompt();
 
-        public void ShowBackButton(bool isActive)
-        {
-            backButton.SetActive(isActive);
-        }
-
-        /// <summary>
-        /// Go back to a previous menu.
-        /// </summary>
-        public void GoBack()
-        {
-            optionPanel.SetActive(true);
-            PromptPlayerInput();
-
-            if (enemyPanel.activeSelf)
-                ShowEnemyPanel(false);
-            if (skillPanel.activeSelf)
-                ShowSkillPanel(false);
-        }
-
-        public void ShowOptionPanel(bool isActive)
-        {
-            optionPanel.SetActive(isActive);
-            skillOptionButton.SetActive(ShowSkills);
-        }
-
-        public void ShowSkillPanel(bool isActive)
-        {
-            skillPanel.SetActive(isActive);
-            backButton.SetActive(isActive);
-        }
-
-        public void ShowEnemyPanel(bool isActive)
-        {
-            enemyPanel.SetActive(isActive);
-            backButton.SetActive(isActive);
+            // Set skills
+            if (bunnyActor.AvailableSkillStrings.Length == 0)
+            {
+                skillOptionButton.SetActive(false);
+            }
+            else
+            {
+                skillOptionButton.SetActive(true);
+                SetSkillButtons(bunnyActor);
+            }
         }
 
         /// <summary>
         /// Set the number of active enemy buttons and the enemy names on each button.
         /// </summary>
-        /// <param name="enemyActors">The enemy actors to set buttons for.</param>
+        /// <param name="enemyActors">The enemies to set buttons for.</param>
         public void SetEnemyButtons(EnemyActor[] enemyActors)
         {
-            for (int i = 0; i < enemyActors.Length && i < enemyButtons.Length; i++)
+            int i;
+
+            // Set a button for each enemy
+            for (i = 0; i < enemyActors.Length && i < enemyButtons.Length; i++)
             {
                 Button button = enemyButtons[i];
                 EnemyActor actor = enemyActors[i];
 
-                if (actor.IsAlive)
-                {
-                    // Activate button
-                    button.GetComponentInChildren<TMP_Text>().text = actor.FighterName;
-                    if (!button.gameObject.activeSelf)
-                        button.gameObject.SetActive(true);
-                }
-                else if (button.gameObject.activeSelf)
-                {
-                    // Hide button
-                    button.gameObject.SetActive(false);
-                }
+                // Set text and show button
+                button.GetComponentInChildren<TMP_Text>().text = actor.FighterName;
+                if (!button.gameObject.activeSelf)
+                    button.gameObject.SetActive(true);
             }
+
+            // Hide remaining buttons
+            for (int j = i; j < enemyButtons.Length; j++)
+            {
+                Button button = enemyButtons[j];
+                if (button.gameObject.activeSelf)
+                    button.gameObject.SetActive(false);
+            }
+        }
+
+        /// <summary>
+        /// Display a message to the player describing the current turn.
+        /// </summary>
+        /// <param name="message">The message that describes the current turn.</param>
+        public void SetTurnText(string message)
+        {
+            turnText.text = message;
         }
 
         /// <summary>
         /// Set the number of active skill buttons and the text on each button.
         /// </summary>
-        public void SetSkillButtons()
+        /// <param name="bunnyActor">The bunny to set skill buttons for.</param>
+        private void SetSkillButtons(BunnyActor bunnyActor)
         {
-            if (!ShowSkills)
-                return;
-
-            string[] availableSkills = SelectedBunny.AvailableSkillStrings;
+            string[] availableSkills = bunnyActor.AvailableSkillStrings;
             
             for (int i = 0; i < skillButtons.Length; i++)
             {
@@ -183,23 +177,11 @@ namespace TheBunniesOfVegetaria
             }
         }
 
-        #endregion
+        #region Input Prompt Messages
 
-        #region Turns
-
-        public void ShowTurnPanel(bool isActive)
-        {
-            turnPanel.SetActive(isActive);
-        }
-
-        /// <summary>
-        /// Display a message to the player describing the current turn.
-        /// </summary>
-        /// <param name="message">The message that describes the current turn.</param>
-        public void SetTurnText(string message)
-        {
-            turnText.text = message;
-        }
+        public void DisplayOptionPrompt() => inputPromptText.text = string.Format(optionMessage, bunnyName);
+        public void DisplayAttackPrompt() => inputPromptText.text = string.Format(attackMessage, bunnyName);
+        public void DisplaySkillPrompt() => inputPromptText.text = string.Format(skillMessage, bunnyName);
 
         #endregion
     }

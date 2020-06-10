@@ -6,14 +6,14 @@ namespace TheBunniesOfVegetaria
 {
     public class ButtonSoundController : MonoBehaviour
     {
-        private AudioClip clickSound;
+        [SerializeField] private AudioClip clickSound;
+        
         private Button button;
         private GlobalAudioSource audioSource;
         private UnityAction clickAction;
 
         private void Awake()
         {
-            clickSound = Resources.Load<AudioClip>("Sounds/button_click");
             button = GetComponent<Button>();
 
             // Play sound on click
@@ -31,9 +31,6 @@ namespace TheBunniesOfVegetaria
             button.onClick.RemoveListener(clickAction);
         }
 
-        private void PlayClickSound()
-        {
-            audioSource.PlaySoundEffectOneShot(clickSound);
-        }
+        private void PlayClickSound() => audioSource.PlaySoundEffectOneShot(clickSound);
     }
 }

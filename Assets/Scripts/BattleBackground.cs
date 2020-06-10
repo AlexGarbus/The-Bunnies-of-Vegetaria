@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.U2D;
 
 namespace TheBunniesOfVegetaria
 {
@@ -14,12 +15,18 @@ namespace TheBunniesOfVegetaria
 
         private float spriteWidth;
         private Vector2 startPosition;
+        private PixelPerfectCamera pixelPerfectCamera;
         private SpriteRenderer spriteRenderer;
 
         private void Awake()
         {
+            pixelPerfectCamera = Camera.main.GetComponent<PixelPerfectCamera>();
+
+            // Get sprite renderer values
             spriteRenderer = GetComponent<SpriteRenderer>();
             spriteWidth = spriteRenderer.bounds.size.x;
+
+            // Set start position so that the background extends to the right
             startPosition = Vector2.right * spriteWidth / 4f;
             transform.position = startPosition;
         }
@@ -34,7 +41,7 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         /// <param name="screens">The number of screens to scroll left.</param>
         /// <param name="speed">The speed at which to scroll the background.</param>
-        /// <param name="movingTransforms">An array of the transform components for objects that should move with the background.</param>
+        /// <param name="movingTransforms">An array of transforms that should move with the background.</param>
         public IEnumerator ScrollBackground(int screens, float speed, Transform[] movingTransforms)
         {
             if (screens <= 0)
@@ -47,6 +54,8 @@ namespace TheBunniesOfVegetaria
             {
                 // Move background
                 transform.Translate(Vector2.left * speed * Time.deltaTime);
+
+                // Loop background when it passes the start position
                 if (transform.position.x < -startPosition.x)
                 {
                     Vector2 newPosition = startPosition;
@@ -64,8 +73,8 @@ namespace TheBunniesOfVegetaria
                 yield return null;
             } while (screensScrolled < screens);
 
-            // Make sure background is centered
-            transform.position = RoundX(spriteRenderer.transform.position);
+            // Make sure background is pixel perfect
+            transform.position = pixelPerfectCamera.RoundToPixel(transform.position);
 
             IsScrolling = false;
         }
@@ -77,17 +86,6 @@ namespace TheBunniesOfVegetaria
         private void SetBackground(Globals.Area area)
         {
             spriteRenderer.sprite = backgrounds[(int)area - 1];
-        }
-
-        /// <summary>
-        /// Round a 2D vector's X component to the nearest integer.
-        /// </summary>
-        /// <param name="vector">The 2D vector to round.</param>
-        /// <returns>A 2D vector with the X component rounded to an integer.</returns>
-        private Vector2 RoundX(Vector2 vector)
-        {
-            vector.x = Mathf.Round(vector.x);
-            return vector;
         }
     }
 }

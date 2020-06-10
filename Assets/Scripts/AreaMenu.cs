@@ -36,8 +36,10 @@ namespace TheBunniesOfVegetaria
         /// <param name="areaName">The name of the area to load.</param>
         public void LoadArea(string areaName)
         {
+            // Remove spaces from the area name
             areaName = areaName.Replace(" ", string.Empty);
 
+            // Load area if unlocked
             if (Enum.TryParse(areaName, false, out Globals.Area area) && (int)area <= SaveData.current.areasUnlocked)
             {
                 gameManager.BattleArea = area;
@@ -55,6 +57,7 @@ namespace TheBunniesOfVegetaria
             Bunny bunny = null;
             string typeString = "";
 
+            // Set bunny and type string
             switch (type)
             {
                 case Globals.BunnyType.Bunnight:
@@ -75,6 +78,7 @@ namespace TheBunniesOfVegetaria
                     break;
             }
 
+            // Set stat text
             string stats = $"{bunny.name} the {typeString}" + "\n\n"
                 + $"LEVEL: {bunny.Level}" + spacer + $"EXPERIENCE: {bunny.Experience}" + "\n\n"
                 + $"HEALTH: {bunny.MaxHealth}" + spacer + $"SKILL: {bunny.MaxSkillPoints}" + "\n\n"

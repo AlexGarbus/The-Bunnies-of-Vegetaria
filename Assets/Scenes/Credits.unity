@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d247f803e48eec4cacaaa7a848fae6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  creditDelay: 2
+  creditDisplayTime: 2
   sceneTransition: {fileID: 2075910142}
   creditsText: {fileID: 912538271}
 --- !u!114 &514597135

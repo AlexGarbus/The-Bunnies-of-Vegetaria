@@ -41,12 +41,13 @@ namespace TheBunniesOfVegetaria
     
         private void Update()
         {
-            if(isPlaying)
+            if (isPlaying)
                 AddPlaytime();
         }
 
         private void OnApplicationQuit()
         {
+            // Auto-save when the game is quit while playing
             if (isPlaying)
                 SaveLoad.Save();
         }
@@ -59,7 +60,7 @@ namespace TheBunniesOfVegetaria
             cursorObject.name = "Cursor";
 #endif
 
-            // Set whether the game is actually being played
+            // Set whether the game is being played
             isPlaying = scene.name == "AreaSelect" || scene.name == "Battle";
         }
 
@@ -68,16 +69,21 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         private void LoadSettings()
         {
+            // Load volume
             mainMixer.SetFloat("musicVolume", PlayerPrefs.GetFloat("MusicVolume", 0));
             mainMixer.SetFloat("fxVolume", PlayerPrefs.GetFloat("FxVolume", 0));
+
+            // Load fullscreen mode
             if(PlayerPrefs.HasKey("Fullscreen"))
                 Screen.fullScreen = PlayerPrefs.GetInt("Fullscreen") == 1;
+
+            // Load screen resolution
             if (PlayerPrefs.HasKey("ScreenWidth") && PlayerPrefs.HasKey("ScreenHeight"))
                 Screen.SetResolution(PlayerPrefs.GetInt("ScreenWidth"), PlayerPrefs.GetInt("ScreenHeight"), Screen.fullScreen);
         }
 
         /// <summary>
-        /// Create bunny objects using save data.
+        /// Create bunny objects from save data.
         /// </summary>
         private void CreateBunnies()
         {

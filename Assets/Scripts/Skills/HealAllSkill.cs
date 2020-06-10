@@ -13,6 +13,7 @@
 
         public override void Use(BunnyActor user, IActor[] targets)
         {
+            // Heal each target
             foreach (IActor target in targets)
             {
                 target.Heal(healAmount);
