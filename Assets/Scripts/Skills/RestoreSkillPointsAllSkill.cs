@@ -13,6 +13,7 @@
 
         public override void Use(BunnyActor user, IActor[] targets)
         {
+            // Restore each target's skill points
             foreach (IActor target in targets)
             {
                 if (target is BunnyActor && (BunnyActor)target != user)

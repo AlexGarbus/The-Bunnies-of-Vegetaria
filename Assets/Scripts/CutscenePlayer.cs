@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace TheBunniesOfVegetaria
 {
-    public class CutsceneManager : MonoBehaviour
+    public class CutscenePlayer : MonoBehaviour
     {
         [Tooltip("The time delay after each character of a text string is typed.")]
         [SerializeField] private float charDelayTime;
@@ -27,6 +27,7 @@ namespace TheBunniesOfVegetaria
             // Start music
             GlobalAudioSource.Instance.PlayMusic(Resources.Load<AudioClip>($"Music/{cutscene.music}"));
 
+            // Start cutscene
             StartCoroutine(Play());
         }
 

@@ -15,8 +15,7 @@
         // Play time
         public float hours, minutes, seconds;
 
-        // Unused progression variables
-        // Will be implemented in future versions
+        // TODO: Implement unused progression variables
         public bool[] enemiesSeen;
         public bool[] achievements;
         public bool[] tutorials;

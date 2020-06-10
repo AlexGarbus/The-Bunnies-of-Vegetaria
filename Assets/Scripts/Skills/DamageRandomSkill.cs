@@ -15,6 +15,7 @@ namespace TheBunniesOfVegetaria
 
         public override void Use(BunnyActor user, IActor[] targets)
         {
+            // Select a random enemy to damage
             int targetIndex = Random.Range(0, targets.Length);
             user.DoDamage(targets[targetIndex], multiplier);
         }

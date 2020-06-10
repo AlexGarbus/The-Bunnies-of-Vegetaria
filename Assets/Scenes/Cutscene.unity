@@ -296,7 +296,7 @@ GameObject:
   - component: {fileID: 143466837}
   - component: {fileID: 143466836}
   m_Layer: 0
-  m_Name: Cutscene Manager
+  m_Name: Cutscene Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

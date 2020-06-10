@@ -13,6 +13,7 @@
 
         public override void Use(BunnyActor user, IActor[] targets)
         {
+            // Revive all defeated targets
             foreach (IActor target in targets)
             {
                 if (!target.IsAlive && target is BunnyActor)

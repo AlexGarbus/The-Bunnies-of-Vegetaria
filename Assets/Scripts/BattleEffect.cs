@@ -10,11 +10,15 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private Canvas healthCanvas;
         [SerializeField] private TMP_Text healthText;
 
+        private int animSlash, animHeal;
         private Animator animator;
 
         private void Start()
         {
+            // Get animator values
             animator = GetComponent<Animator>();
+            animSlash = Animator.StringToHash("Slash");
+            animHeal = Animator.StringToHash("Heal");
 
             // Hide health canvas on start
             HideHealthCanvas();
@@ -26,7 +30,7 @@ namespace TheBunniesOfVegetaria
         /// <param name="damage">The amount of damage taken.</param>
         public void PlaySlash(int damage)
         {
-            animator.SetTrigger("Slash");
+            animator.SetTrigger(animSlash);
             ShowHealthCanvas($"-{damage}");
         }
 
@@ -36,7 +40,7 @@ namespace TheBunniesOfVegetaria
         /// <param name="damage">The amount of health healed.</param>
         public void PlayHeal(int healAmount)
         {
-            animator.SetTrigger("Heal");
+            animator.SetTrigger(animHeal);
             ShowHealthCanvas($"+{healAmount}");
         }
 
@@ -53,9 +57,6 @@ namespace TheBunniesOfVegetaria
             Invoke("HideHealthCanvas", healthTime);
         }
 
-        private void HideHealthCanvas()
-        {
-            healthCanvas.enabled = false;
-        }
+        private void HideHealthCanvas() => healthCanvas.enabled = false;
     }
 }

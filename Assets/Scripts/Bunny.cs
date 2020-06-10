@@ -24,6 +24,7 @@ namespace TheBunniesOfVegetaria
             MaxSkillPoints = CalculateMaxSkillPoints();
             maxExperience = 5050;
 
+            // Set stats and skills based on type
             switch(Type)
             {
                 case Globals.BunnyType.Bunnight:
@@ -72,6 +73,7 @@ namespace TheBunniesOfVegetaria
             if (Experience > maxExperience)
                 Experience = maxExperience;
 
+            // Adjust variables
             Level = CalculateLevel();
             MaxHealth = CalculateMaxHealth();
             MaxSkillPoints = CalculateMaxSkillPoints();
@@ -81,7 +83,7 @@ namespace TheBunniesOfVegetaria
         /// Get the skill stored at a specific index.
         /// </summary>
         /// <param name="skillIndex"></param>
-        /// <returns>The skill stored at skill index.</returns>
+        /// <returns>The skill stored at the specific skill index.</returns>
         public Skill GetSkill(int skillIndex)
         {
             if (skillIndex >= Skills.Length)
@@ -98,6 +100,7 @@ namespace TheBunniesOfVegetaria
         {
             List<Skill> availableSkills = new List<Skill>();
             
+            // Check whether each skill is available
             foreach(Skill skill in Skills)
             {
                 if (Level >= skill.MinimumLevel)
@@ -115,6 +118,7 @@ namespace TheBunniesOfVegetaria
         {
             List<string> availableSkills = new List<string>();
 
+            // Check whether each skill is available
             foreach (Skill skill in Skills)
             {
                 if (Level >= skill.MinimumLevel)
@@ -126,11 +130,6 @@ namespace TheBunniesOfVegetaria
 
         #region Stat Formulas
 
-        private int CalculateMaxHealth()
-        {
-            return Mathf.FloorToInt(10 + 0.9f * CalculateLevel());
-        }
-
         private int CalculateLevel()
         {
             int n = 0;
@@ -139,10 +138,8 @@ namespace TheBunniesOfVegetaria
             return n;
         }
 
-        private int CalculateMaxSkillPoints()
-        {
-            return Level / 5 * 10;
-        }
+        private int CalculateMaxHealth() => Mathf.FloorToInt(10 + 0.9f * Level);
+        private int CalculateMaxSkillPoints() => Level / 5 * 10;
 
         #endregion
     }

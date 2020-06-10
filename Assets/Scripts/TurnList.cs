@@ -19,7 +19,7 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Insert a new turn into the list. The turn's order will be determined based on its user speed.
+        /// Insert a new turn into the list. The turn's index will be determined based on its user speed.
         /// </summary>
         /// <param name="turn">The turn to insert into the list.</param>
         public void Insert(Turn turn)
@@ -58,9 +58,9 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Remove and return the first turn in the list. This turn will have the fastest user in the list.
+        /// Remove and return the first turn in the list.
         /// </summary>
-        /// <returns>The turn with the fastest user in the list.</returns>
+        /// <returns>The first turn in the list.</returns>
         public Turn Pop()
         {
             if (IsEmpty)
@@ -81,12 +81,12 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Remove all turns in the list that only target one specific actor.
+        /// Remove all single-target turns in the list that target a specific actor.
         /// </summary>
-        /// <param name="user">The actor whose targeted turns should be removed.</param>
-        public void RemoveTargetTurns(IActor user)
+        /// <param name="target">The actor whose targeted turns should be removed.</param>
+        public void RemoveTargetTurns(IActor target)
         {
-            turns.RemoveAll(turn => turn.Targets.Length == 1 && turn.Targets[0] == user);
+            turns.RemoveAll(turn => turn.Targets.Length == 1 && turn.Targets[0] == target);
         }
 
         /// <summary>

@@ -23,6 +23,11 @@
             return $"{Name} ({Cost} SP): {Description}";
         }
 
+        /// <summary>
+        /// Perform this skill.
+        /// </summary>
+        /// <param name="user">The bunny that will use this skill.</param>
+        /// <param name="targets">The targets that will be affected by this skill.</param>
         public abstract void Use(BunnyActor user, IActor[] targets);
     }
 }
