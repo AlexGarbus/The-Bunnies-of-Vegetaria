@@ -44,7 +44,7 @@ SpriteAtlas:
     packables:
     - {fileID: 102900000, guid: 98f076f146d6c644eafbd6b408dfef24, type: 3}
     - {fileID: 102900000, guid: c2563b2dba9e78e4d879655dcec63f73, type: 3}
-    totalSpriteSurfaceArea: 462448
+    totalSpriteSurfaceArea: 467568
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -87,13 +87,16 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 652d5aa6f096d0845817e4dcd98c8298, type: 3}
   - {fileID: 21300000, guid: b87bc4b6885e2624ca864dd5c27fc1a1, type: 3}
   - {fileID: 21300000, guid: 561e9617ac45710418bbf1f206abedd3, type: 3}
+  - {fileID: 21300000, guid: ccf55047c21042444bc7a82c0f406aa0, type: 3}
   - {fileID: 21300000, guid: 6dc5bde7fb62c6b4e9695e4edb8524d8, type: 3}
   - {fileID: 21300000, guid: b30f499854228db488e5ba7303b16ac3, type: 3}
   - {fileID: 21300000, guid: 857bd6a87bb02554eb54bdb94aa017d8, type: 3}
   - {fileID: 21300000, guid: 337f1039451bcd748b051f1a2098aab0, type: 3}
+  - {fileID: 21300000, guid: d41ef439268f9484d9b831a3b4abf218, type: 3}
   - {fileID: 21300000, guid: 38cf0f797f5a1804a95d72a581601bce, type: 3}
   - {fileID: 21300000, guid: 96cb9c99df66ed7448fd5a18299e34c9, type: 3}
   - {fileID: 21300000, guid: ed67d2a9fca041c4289052df0e2bf561, type: 3}
+  - {fileID: 21300000, guid: 0339d51a7efc5194092b387f500dd1fe, type: 3}
   - {fileID: 21300000, guid: 5859755ab5f15b44390db273f457bbb5, type: 3}
   - {fileID: 21300000, guid: 1379f65a6f073af4e81dedb51f9e8056, type: 3}
   - {fileID: 5190752405921958872, guid: 9d28bc7a8333c2341911630ff2a0c221, type: 3}
@@ -103,6 +106,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 9f379deaca82daf48b55cd4eca248dfa, type: 3}
   - {fileID: 21300000, guid: 96c42e8b513a0484bb43a21770c7b631, type: 3}
   - {fileID: 21300000, guid: db47033c1593328458a591ba84bf9c76, type: 3}
+  - {fileID: 21300000, guid: 3dce896c0cc270c42a90a083c3d30c63, type: 3}
   - {fileID: 21300000, guid: 0d61a5cca72731d40b48cc010b068f5f, type: 3}
   - {fileID: 21300000, guid: 484cb68dfb9976f47bb216826296cfe6, type: 3}
   - {fileID: 8944981333966925485, guid: 860c7cddf2414ad49a715aefee66aaba, type: 3}
@@ -113,6 +117,7 @@ SpriteAtlas:
   - {fileID: 6403080533550428526, guid: 8768d2be22ad45e41b6163584d3b6a9a, type: 3}
   - {fileID: 21300000, guid: 1fafe2ce90ba45d4885a63e9f269edb7, type: 3}
   - {fileID: 21300000, guid: d45d2ece8e23cf047aa3a88e665e3348, type: 3}
+  - {fileID: 21300000, guid: fa13d1deecb7bc240996ca594d011499, type: 3}
   - {fileID: 21300000, guid: 068cdddec7181264abbeb66ad65fa6f1, type: 3}
   - {fileID: 21300000, guid: 1ae2c1fe81d2b1f469030e31d0a52e29, type: 3}
   - {fileID: 21300000, guid: af1a072f5cd5f3749bd6e86e444af3e5, type: 3}
@@ -157,13 +162,16 @@ SpriteAtlas:
   - lettuce fields
   - big chokus
   - bg_carrot top
+  - lettweed
   - bok o clock
   - soul choy
   - brockey
   - romaine soldier
+  - appetizer
   - sweet carrot
   - clawery
   - ants in a log
+  - astrocarrot
   - bg_celery woods
   - ui_window
   - player_bunnight_1
@@ -173,6 +181,7 @@ SpriteAtlas:
   - stalk figure
   - ui_map
   - bg_bok choy bluff
+  - sleepoli
   - caulifaker
   - broccoflower
   - player_bunnecromancer_0
@@ -183,6 +192,7 @@ SpriteAtlas:
   - player_bunneerdowell_1
   - bok chew
   - carrot top
+  - bok toy
   - celery woods
   - broccoli forest
   - baby lettuce
