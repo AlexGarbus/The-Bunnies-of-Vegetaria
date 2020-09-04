@@ -25,5 +25,14 @@
             Bunnurse, 
             Bunneerdowell 
         }
+
+        /// <summary>
+        /// The type of a fighter.
+        /// </summary>
+        public enum FighterType
+        {
+            Bunny,
+            Enemy
+        }
     }
 }

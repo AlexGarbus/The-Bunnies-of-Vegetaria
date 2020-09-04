@@ -1,17 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TheBunniesOfVegetaria
 {
     public class Bunny : Fighter
     {
-        public Globals.BunnyType Type { get; private set; }
-        public int MaxSkillPoints { get; private set; }
-        public int Level { get; private set; }
-        public int Experience { get; private set; }
-        public Skill[] Skills { get; private set; } = new Skill[3];
+        public EventHandler OnLevelUp;
+        public EventHandler<PointEventArgs> OnSkillPointsChange;
 
-        private int maxExperience;
+        public override Globals.FighterType FighterType => Globals.FighterType.Bunny;
+        public bool IsDefending { protected get; set; } = false;
+        public int CurrentSkillPoints { get; private set; }
+        public int MaxSkillPoints => Level / 5 * 10;
+        public Globals.BunnyType Type { get; private set; }
+        public Skill[] Skills { get; private set; } = new Skill[3];
 
         // TODO: Construct from JSON instead
         public Bunny(Globals.BunnyType bunnyType, string name, int experience)
@@ -20,9 +23,6 @@ namespace TheBunniesOfVegetaria
             Type = bunnyType;
             Experience = experience;
             Level = CalculateLevel();
-            MaxHealth = CalculateMaxHealth();
-            MaxSkillPoints = CalculateMaxSkillPoints();
-            maxExperience = 5050;
 
             // Set stats and skills based on type
             switch(Type)
@@ -62,34 +62,72 @@ namespace TheBunniesOfVegetaria
             }
         }
 
-        /// <summary>
-        /// Add to the current experience and adjust related variables.
-        /// </summary>
-        /// <param name="value"></param>
-        public void AddExperience(int value)
+        public override void Initialize()
         {
-            Experience += value;
+            base.Initialize();
+            CurrentSkillPoints = MaxSkillPoints;
+        }
 
-            if (Experience > maxExperience)
-                Experience = maxExperience;
+        public override int CalculateDamage(Fighter target)
+        {
+            return Mathf.CeilToInt((attack * 5 + Level * (1 - attack * 5f / 100f)) * (1 - (target.Defense - 1) * 0.2f));
+        }
 
-            // Adjust variables
-            Level = CalculateLevel();
-            MaxHealth = CalculateMaxHealth();
-            MaxSkillPoints = CalculateMaxSkillPoints();
+        public override void TakeDamage(int damage)
+        {
+            if (IsDefending)
+                damage = Mathf.CeilToInt(damage / 2f);
+
+            base.TakeDamage(damage);
         }
 
         /// <summary>
-        /// Get the skill stored at a specific index.
+        /// Reverse the effects of defeat and restore this actor's health.
         /// </summary>
-        /// <param name="skillIndex"></param>
-        /// <returns>The skill stored at the specific skill index.</returns>
-        public Skill GetSkill(int skillIndex)
+        /// <param name="healthAmount">The amount of health that this actor should have upon revival.</param>
+        public void Revive(int healthAmount = 10)
         {
-            if (skillIndex >= Skills.Length)
-                return null;
-            else
-                return Skills[skillIndex];
+            if (IsAlive)
+                return;
+
+            CurrentHealth = Mathf.Clamp(healthAmount, 0, MaxHealth);
+            InvokeOnHealthChange(0);
+        }
+
+        /// <summary>
+        /// Add to the current experience and adjust the level.
+        /// </summary>
+        /// <param name="experience">The amount of experience to add.</param>
+        public void AddExperience(int experience)
+        {
+            Experience += experience;
+
+            // Clamp experience
+            if (Experience > MAX_EXPERIENCE)
+                Experience = MAX_EXPERIENCE;
+
+            // Set level
+            int previousLevel = Level;
+            Level = CalculateLevel();
+
+            // Check for level up
+            if (Level != previousLevel)
+                OnLevelUp?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Use a skill.
+        /// </summary>
+        /// <param name="skillIndex">The index of the skill to use.</param>
+        /// <param name="targets">The fighters that this skill should target.</param>
+        public void UseSkill(int skillIndex, Fighter[] targets)
+        {
+            if (!CanUseSkill(skillIndex))
+                return;
+
+            Skill skill = Skills[skillIndex];
+            CurrentSkillPoints -= skill.Cost;
+            skill.Use(this, targets);
         }
 
         /// <summary>
@@ -128,19 +166,26 @@ namespace TheBunniesOfVegetaria
             return availableSkills.ToArray();
         }
 
-        #region Stat Formulas
-
-        private int CalculateLevel()
+        public bool CanUseSkill(int skillIndex)
         {
-            int n = 0;
-            while ((n * (n + 1) / 2f) <= Experience)
-                n++;
-            return n;
+            Skill skill = Skills[skillIndex];
+            return CurrentSkillPoints >= skill.Cost && Level >= skill.MinimumLevel;
         }
 
-        private int CalculateMaxHealth() => Mathf.FloorToInt(10 + 0.9f * Level);
-        private int CalculateMaxSkillPoints() => Level / 5 * 10;
+        public void RestoreSkillPoints(int skillAmount)
+        {
+            if (!IsAlive)
+                return;
 
-        #endregion
+            int previousSkillPoints = CurrentSkillPoints;
+            CurrentSkillPoints += skillAmount;
+
+            // Clamp skill points
+            if (CurrentSkillPoints > MaxSkillPoints)
+                CurrentSkillPoints = MaxSkillPoints;
+
+            PointEventArgs args = new PointEventArgs(previousSkillPoints, CurrentSkillPoints);
+            OnSkillPointsChange?.Invoke(this, args);
+        }
     }
 }

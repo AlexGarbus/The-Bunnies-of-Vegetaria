@@ -70,11 +70,9 @@ namespace TheBunniesOfVegetaria
                 namesInput = 0;
             }
 
-            // Set up either the name input or confirmation screen
-            if (namesInput < 4)
+            // Set up the next input prompt
+            if (namesInput <= 4)
                 PromptNextName();
-            else
-                ConfirmNames();
 
             // Fade in to next screen
             StartCoroutine(sceneTransition.FadeIn());
@@ -83,7 +81,7 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Prompt the user to input the next bunny's name based on the number of names already input.
+        /// Prompt the user for the next name input based on the number of names already input.
         /// </summary>
         private void PromptNextName()
         {
@@ -107,6 +105,7 @@ namespace TheBunniesOfVegetaria
                     break;
                 case 4:
                     gameManager.Bunneerdowell.name = nameInput.text;
+                    ConfirmNames();
                     return;
                 default:
                     return;

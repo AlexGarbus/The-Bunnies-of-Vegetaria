@@ -25,23 +25,21 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Play a slash animation and display the damage taken.
+        /// Play a health effect.
         /// </summary>
-        /// <param name="damage">The amount of damage taken.</param>
-        public void PlaySlash(int damage)
+        /// <param name="deltaHealth">The change in a fighter's health.</param>
+        public void PlayHealthEffect(int deltaHealth)
         {
-            animator.SetTrigger(animSlash);
-            ShowHealthCanvas($"-{damage}");
-        }
-
-        /// <summary>
-        /// Play a heal animation and display the amount of health healed.
-        /// </summary>
-        /// <param name="damage">The amount of health healed.</param>
-        public void PlayHeal(int healAmount)
-        {
-            animator.SetTrigger(animHeal);
-            ShowHealthCanvas($"+{healAmount}");
+            if (deltaHealth < 0)
+            {
+                animator.SetTrigger(animSlash);
+                ShowHealthCanvas(deltaHealth.ToString());
+            }
+            else
+            {
+                animator.SetTrigger(animHeal);
+                ShowHealthCanvas($"+{deltaHealth}");
+            }
         }
 
         /// <summary>

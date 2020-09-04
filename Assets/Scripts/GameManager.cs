@@ -14,6 +14,7 @@ namespace TheBunniesOfVegetaria
         public Bunny Bunnecromancer { get; private set; }
         public Bunny Bunnurse { get; private set; }
         public Bunny Bunneerdowell { get; private set; }
+        public Bunny[] Party { get; private set; }
         
         private bool isPlaying = false;
 
@@ -88,10 +89,19 @@ namespace TheBunniesOfVegetaria
         private void CreateBunnies()
         {
             SaveData save = SaveData.current;
+            Party = new Bunny[4];
+
+            // Create bunny objects
             Bunnight = new Bunny(Globals.BunnyType.Bunnight, save.bunnightName, save.bunnightExp);
             Bunnecromancer = new Bunny(Globals.BunnyType.Bunnecromancer, save.bunnecromancerName, save.bunnecromancerExp);
             Bunnurse = new Bunny(Globals.BunnyType.Bunnurse, save.bunnurseName, save.bunnurseExp);
             Bunneerdowell = new Bunny(Globals.BunnyType.Bunneerdowell, save.bunneerdowellName, save.bunneerdowellExp);
+
+            // Store bunnies in array
+            Party[(int)Globals.BunnyType.Bunnight] = Bunnight;
+            Party[(int)Globals.BunnyType.Bunnecromancer] = Bunnecromancer;
+            Party[(int)Globals.BunnyType.Bunnurse] = Bunnurse;
+            Party[(int)Globals.BunnyType.Bunneerdowell] = Bunneerdowell;
         }
 
         /// <summary>
