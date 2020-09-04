@@ -4,8 +4,8 @@ namespace TheBunniesOfVegetaria
 {
     public class Turn
     {
-        public IActor User { get; private set; }
-        public IActor[] Targets { get; private set; }
+        public Fighter User { get; private set; }
+        public Fighter[] Targets { get; private set; }
         public string Message { get; private set; }
         public Action TurnAction { get; private set; }
 
@@ -15,10 +15,10 @@ namespace TheBunniesOfVegetaria
         /// <param name="user"></param>
         /// <param name="message"></param>
         /// <param name="turnAction"></param>
-        public Turn(IActor user, string message, Action turnAction)
+        public Turn(Fighter user, string message, Action turnAction)
         {
             User = user;
-            Targets = new IActor[0];
+            Targets = new Fighter[0];
             Message = message;
             TurnAction = turnAction;
         }
@@ -30,10 +30,10 @@ namespace TheBunniesOfVegetaria
         /// <param name="target"></param>
         /// <param name="message"></param>
         /// <param name="turnAction"></param>
-        public Turn(IActor user, IActor target, string message, Action turnAction)
+        public Turn(Fighter user, Fighter target, string message, Action turnAction)
         {
             User = user;
-            Targets = new IActor[] { target };
+            Targets = new Fighter[] { target };
             Message = message;
             TurnAction = turnAction;
         }
@@ -45,7 +45,7 @@ namespace TheBunniesOfVegetaria
         /// <param name="targets"></param>
         /// <param name="message"></param>
         /// <param name="turnAction"></param>
-        public Turn(IActor user, IActor[] targets, string message, Action turnAction)
+        public Turn(Fighter user, Fighter[] targets, string message, Action turnAction)
         {
             User = user;
             Targets = targets;

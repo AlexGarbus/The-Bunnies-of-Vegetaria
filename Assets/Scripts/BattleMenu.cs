@@ -57,6 +57,67 @@ namespace TheBunniesOfVegetaria
             turnPanel.SetActive(false);
         }
 
+        private void OnEnable()
+        {
+            BattleHandler.OnBunniesInitialized += BattleHandler_OnBunniesInitialized;
+            BattleHandler.OnSettingUpInput += BattleHandler_OnSettingUpInput;
+            BattleHandler.OnTurnPerformed += BattleHandler_OnTurnPerformed;
+            BattleHandler.OnWaveWon += BattleHandler_OnWaveWon;
+            BattleHandler.OnWaveLost += BattleHandler_OnWaveLost;
+            BattleHandler.OnSelectedBunnyChanged += BattleHandler_OnSelectedBunnyChanged;
+        }
+
+        private void OnDisable()
+        {
+            BattleHandler.OnBunniesInitialized -= BattleHandler_OnBunniesInitialized;
+            BattleHandler.OnSettingUpInput -= BattleHandler_OnSettingUpInput;
+            BattleHandler.OnTurnPerformed -= BattleHandler_OnTurnPerformed;
+            BattleHandler.OnWaveWon -= BattleHandler_OnWaveWon;
+            BattleHandler.OnWaveLost -= BattleHandler_OnWaveLost;
+            BattleHandler.OnSelectedBunnyChanged -= BattleHandler_OnSelectedBunnyChanged;
+        }
+
+        #region Event Handlers
+
+        private void BattleHandler_OnBunniesInitialized(object sender, BattleEventArgs e)
+        {
+            SetPlayerStatText(e.Bunnies);
+        }
+
+        private void BattleHandler_OnSettingUpInput(object sender, BattleEventArgs e)
+        {
+            SetCanvasEnabled(true);
+            ShowPlayerInputPanel();
+            SetEnemyButtons(e.Enemies);
+        }
+
+        private void BattleHandler_OnTurnPerformed(object sender, BattleEventArgs e)
+        {
+            SetTurnText(e.CurrentTurn.Message);
+            SetPlayerStatText(e.Bunnies);
+        }
+
+        private void BattleHandler_OnWaveWon(object sender, BattleEventArgs e)
+        {
+            SetCanvasEnabled(false);
+            SetPlayerStatText(e.Bunnies);
+        }
+
+        private void BattleHandler_OnWaveLost(object sender, BattleEventArgs e)
+        {
+            SetCanvasEnabled(false);
+        }
+
+        private void BattleHandler_OnSelectedBunnyChanged(object sender, BattleEventArgs e)
+        {
+            if (e.SelectedBunny == null)
+                ShowTurnPanel();
+            else
+                SetOptions(e.SelectedBunny);
+        }
+
+        #endregion
+
         public void SetCanvasEnabled(bool isEnabled) => canvas.enabled = isEnabled;
 
         public void ShowPlayerInputPanel()
@@ -74,17 +135,17 @@ namespace TheBunniesOfVegetaria
         /// <summary>
         /// Set and display the stats of multiple bunnies.
         /// </summary>
-        /// <param name="bunnyActors">The bunnies to display stats for.</param>
-        public void SetPlayerStatText(BunnyActor[] bunnyActors)
+        /// <param name="bunnies">The bunnies to display stats for.</param>
+        public void SetPlayerStatText(Bunny[] bunnies)
         {
             string stats = string.Empty;
 
-            for(int i = 0; i < bunnyActors.Length; i++)
+            for(int i = 0; i < bunnies.Length; i++)
             {
                 // Add a new line of stat text
-                BunnyActor bunnyActor = bunnyActors[i];
-                stats += string.Format("{0, -16} HP:{1, 3} SP:{2, 3}", bunnyActor.FighterName, bunnyActor.CurrentHealth, bunnyActor.CurrentSkillPoints);
-                if (i < bunnyActors.Length - 1)
+                Bunny bunny = bunnies[i];
+                stats += string.Format("{0, -16} HP:{1, 3} SP:{2, 3}", bunny.name, bunny.CurrentHealth, bunny.CurrentSkillPoints);
+                if (i < bunnies.Length - 1)
                     stats += "\n\n";
             }
 
@@ -94,50 +155,46 @@ namespace TheBunniesOfVegetaria
         /// <summary>
         /// Set and display the options for a specific bunny.
         /// </summary>
-        /// <param name="bunnyActor">The bunny to set options for.</param>
-        public void SetOptions(BunnyActor bunnyActor)
+        /// <param name="bunny">The bunny to set options for.</param>
+        public void SetOptions(Bunny bunny)
         {
-            bunnyName = bunnyActor.FighterName;
+            bunnyName = bunny.name;
             DisplayOptionPrompt();
 
             // Set skills
-            if (bunnyActor.AvailableSkillStrings.Length == 0)
+            if (bunny.GetAvailableSkillStrings().Length == 0)
             {
                 skillOptionButton.SetActive(false);
             }
             else
             {
                 skillOptionButton.SetActive(true);
-                SetSkillButtons(bunnyActor);
+                SetSkillButtons(bunny);
             }
         }
 
         /// <summary>
         /// Set the number of active enemy buttons and the enemy names on each button.
         /// </summary>
-        /// <param name="enemyActors">The enemies to set buttons for.</param>
-        public void SetEnemyButtons(EnemyActor[] enemyActors)
+        /// <param name="enemies">The enemies to set buttons for.</param>
+        public void SetEnemyButtons(Enemy[] enemies)
         {
-            int i;
-
-            // Set a button for each enemy
-            for (i = 0; i < enemyActors.Length && i < enemyButtons.Length; i++)
+            for (int i = 0; i < enemyButtons.Length; i++)
             {
                 Button button = enemyButtons[i];
-                EnemyActor actor = enemyActors[i];
 
-                // Set text and show button
-                button.GetComponentInChildren<TMP_Text>().text = actor.FighterName;
-                if (!button.gameObject.activeSelf)
-                    button.gameObject.SetActive(true);
-            }
-
-            // Hide remaining buttons
-            for (int j = i; j < enemyButtons.Length; j++)
-            {
-                Button button = enemyButtons[j];
-                if (button.gameObject.activeSelf)
+                if (i < enemies.Length && enemies[i].IsAlive)
+                {
+                    // Display button for active enemy
+                    button.GetComponentInChildren<TMP_Text>().text = enemies[i].name;
+                    if (!button.gameObject.activeSelf)
+                        button.gameObject.SetActive(true);
+                }
+                else if (button.gameObject.activeSelf)
+                {
+                    // Hide button for inactive enemy
                     button.gameObject.SetActive(false);
+                }
             }
         }
 
@@ -153,10 +210,10 @@ namespace TheBunniesOfVegetaria
         /// <summary>
         /// Set the number of active skill buttons and the text on each button.
         /// </summary>
-        /// <param name="bunnyActor">The bunny to set skill buttons for.</param>
-        private void SetSkillButtons(BunnyActor bunnyActor)
+        /// <param name="bunny">The bunny to set skill buttons for.</param>
+        private void SetSkillButtons(Bunny bunny)
         {
-            string[] availableSkills = bunnyActor.AvailableSkillStrings;
+            string[] availableSkills = bunny.GetAvailableSkillStrings();
             
             for (int i = 0; i < skillButtons.Length; i++)
             {
@@ -168,6 +225,7 @@ namespace TheBunniesOfVegetaria
                     button.GetComponentInChildren<TMP_Text>().text = availableSkills[i];
                     if (!button.gameObject.activeSelf)
                         skillButtons[i].gameObject.SetActive(true);
+                    button.interactable = bunny.CanUseSkill(i);
                 }
                 else if (button.gameObject.activeSelf)
                 {

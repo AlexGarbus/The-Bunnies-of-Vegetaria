@@ -82,9 +82,9 @@ namespace TheBunniesOfVegetaria
             string stats = $"{bunny.name} the {typeString}" + "\n\n"
                 + $"LEVEL: {bunny.Level}" + spacer + $"EXPERIENCE: {bunny.Experience}" + "\n\n"
                 + $"HEALTH: {bunny.MaxHealth}" + spacer + $"SKILL: {bunny.MaxSkillPoints}" + "\n\n"
-                + $"ATTACK: {new string('*', bunny.attack)}" + spacer 
-                + $"DEFENSE: {new string('*', bunny.defense)}" + spacer
-                + $"SPEED: {new string('*', bunny.speed)}";
+                + $"ATTACK: {new string('*', bunny.Attack)}" + spacer 
+                + $"DEFENSE: {new string('*', bunny.Defense)}" + spacer
+                + $"SPEED: {new string('*', bunny.Speed)}";
             statText.text = stats;
         }
     }

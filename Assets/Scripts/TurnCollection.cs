@@ -1,19 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace TheBunniesOfVegetaria
 {
-    public class TurnList
+    // TODO: Possibly implement additional or further-derived interfaces?
+    public class TurnCollection : ICollection, IEnumerable, IEnumerable<Turn>, IReadOnlyCollection<Turn>
     {
         private List<Turn> turns;
 
         public bool IsEmpty => turns.Count == 0;
+        public bool IsSynchronized => ((ICollection)turns).IsSynchronized;
+        public int Count => turns.Count;
+        public object SyncRoot => ((ICollection)turns).SyncRoot;
 
-        public TurnList()
+        public void Clear() => turns.Clear();
+        public void CopyTo(Array array, int index) => ((ICollection)turns).CopyTo(array, index);
+        public IEnumerator GetEnumerator() => ((ICollection)turns).GetEnumerator();
+        IEnumerator<Turn> IEnumerable<Turn>.GetEnumerator() => ((ICollection<Turn>)turns).GetEnumerator();
+
+        public TurnCollection()
         {
             turns = new List<Turn>();
         }
 
-        public TurnList(int capacity)
+        public TurnCollection(int capacity)
         {
             turns = new List<Turn>(capacity);
         }
@@ -74,17 +85,17 @@ namespace TheBunniesOfVegetaria
         /// <summary>
         /// Remove all turns in the list that belong to a specific user.
         /// </summary>
-        /// <param name="user">The actor whose turns should be removed.</param>
-        public void RemoveUserTurns(IActor user)
+        /// <param name="user">The fighter whose turns should be removed.</param>
+        public void RemoveUserTurns(Fighter user)
         {
             turns.RemoveAll(turn => turn.User == user);
         }
 
         /// <summary>
-        /// Remove all single-target turns in the list that target a specific actor.
+        /// Remove all single-target turns in the list that target a specific fighter.
         /// </summary>
-        /// <param name="target">The actor whose targeted turns should be removed.</param>
-        public void RemoveTargetTurns(IActor target)
+        /// <param name="target">The fighter whose targeted turns should be removed.</param>
+        public void RemoveTargetTurns(Fighter target)
         {
             turns.RemoveAll(turn => turn.Targets.Length == 1 && turn.Targets[0] == target);
         }
@@ -102,7 +113,7 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public void RemoveBunnyTurns()
         {
-            turns.RemoveAll(turn => turn.User is BunnyActor);
+            turns.RemoveAll(turn => turn.User is Bunny);
         }
 
         /// <summary>
@@ -110,15 +121,7 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public void RemoveEnemyTurns()
         {
-            turns.RemoveAll(turn => turn.User is EnemyActor);
-        }
-
-        /// <summary>
-        /// Clear the turn list.
-        /// </summary>
-        public void Clear()
-        {
-            turns.Clear();
+            turns.RemoveAll(turn => turn.User is Enemy);
         }
     }
 }
