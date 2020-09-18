@@ -9,6 +9,8 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private float stepDistance;
         [SerializeField] private float stepSpeed;
 
+        public static event EventHandler OnDefeat;
+
         public Vector2 StartPosition { get; protected set; }
         public T Fighter 
         {
@@ -69,7 +71,10 @@ namespace TheBunniesOfVegetaria
         /// <summary>
         /// Perform this actor's defeat behavior.
         /// </summary>
-        public abstract void Defeat();
+        public virtual void Defeat()
+        {
+            OnDefeat?.Invoke(this, EventArgs.Empty);
+        }
 
         /// <summary>
         /// Quickly step forward and back in a desired direction.

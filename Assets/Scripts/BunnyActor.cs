@@ -9,9 +9,6 @@ namespace TheBunniesOfVegetaria
         protected override Vector2 StepDirection { get => Vector2.right; }
 
         private Animator animator;
-        // TODO: Move audio playing to separate class
-        private AudioClip attackSound, healSound, defeatSound;
-        private GlobalAudioSource audioSource;
 
         private void OnEnable()
         {
@@ -22,10 +19,6 @@ namespace TheBunniesOfVegetaria
         private void Awake()
         {
             animator = GetComponent<Animator>();
-            attackSound = Resources.Load<AudioClip>("Sounds/attack");
-            healSound = Resources.Load<AudioClip>("Sounds/heal");
-            defeatSound = Resources.Load<AudioClip>("Sounds/defeat_bunny");
-            audioSource = GlobalAudioSource.Instance;
         }
 
         protected override void Initialize()
@@ -71,8 +64,8 @@ namespace TheBunniesOfVegetaria
         
         public override void Defeat()
         {
+            base.Defeat();
             transform.Rotate(new Vector3(0, 0, 90));
-            audioSource.PlaySoundEffect(defeatSound);
         }
     }
 }
