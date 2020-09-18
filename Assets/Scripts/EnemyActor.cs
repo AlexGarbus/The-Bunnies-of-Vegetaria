@@ -11,9 +11,6 @@ namespace TheBunniesOfVegetaria
 
         protected override Vector2 StepDirection { get => Vector2.left; }
 
-        // TODO: Move audio playing to separate class
-        private AudioClip attackSound, healSound, defeatSound;
-        private GlobalAudioSource audioSource;
         private SpriteRenderer spriteRenderer;
 
         protected override void Initialize()
@@ -26,15 +23,11 @@ namespace TheBunniesOfVegetaria
         private void Awake()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
-            attackSound = Resources.Load<AudioClip>("Sounds/attack");
-            healSound = Resources.Load<AudioClip>("Sounds/heal");
-            defeatSound = Resources.Load<AudioClip>("Sounds/defeat_enemy");
-            audioSource = GlobalAudioSource.Instance;
         }
 
         public override void Defeat()
         {
-            audioSource.PlaySoundEffect(defeatSound);
+            base.Defeat();
             StartCoroutine(FadeOut());
         }
 

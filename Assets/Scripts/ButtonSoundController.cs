@@ -4,33 +4,27 @@ using UnityEngine.UI;
 
 namespace TheBunniesOfVegetaria
 {
+    [RequireComponent(typeof(AudioSource))]
     public class ButtonSoundController : MonoBehaviour
     {
-        [SerializeField] private AudioClip clickSound;
-        
+        private AudioSource audioSource;
         private Button button;
-        private GlobalAudioSource audioSource;
         private UnityAction clickAction;
 
         private void Awake()
         {
+            audioSource = GetComponent<AudioSource>();
             button = GetComponent<Button>();
 
+            // FIXME: Can not play a disabled audio source
             // Play sound on click
-            clickAction = () => PlayClickSound();
+            clickAction = () => audioSource.Play();
             button.onClick.AddListener(clickAction);
-        }
-
-        private void Start()
-        {
-            audioSource = GlobalAudioSource.Instance;
         }
 
         private void OnDestroy()
         {
             button.onClick.RemoveListener(clickAction);
         }
-
-        private void PlayClickSound() => audioSource.PlaySoundEffectOneShot(clickSound);
     }
 }

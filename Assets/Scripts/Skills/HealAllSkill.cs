@@ -13,11 +13,8 @@
 
         public override void Use(Bunny user, Fighter[] targets)
         {
-            // Heal each target
-            foreach (Fighter target in targets)
-            {
-                target.Heal(healAmount);
-            }
+            foreach (Fighter fighter in targets)
+                fighter.Heal(healAmount);
         }
     }
 }

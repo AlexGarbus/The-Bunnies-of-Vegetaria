@@ -11,6 +11,7 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private float charDelayTime;
         [Tooltip("The time to display a still after text has finished typing.")]
         [SerializeField] private float stillTime;
+        [SerializeField] private AudioSource musicPlayer;
 
         [Header("UI Components")]
         [SerializeField] private Image cutsceneImage;
@@ -25,7 +26,8 @@ namespace TheBunniesOfVegetaria
             cutscene = JsonUtility.FromJson<Cutscene>(Resources.Load<TextAsset>("Text Assets/cutscene_introduction").text);
 
             // Start music
-            GlobalAudioSource.Instance.PlayMusic(Resources.Load<AudioClip>($"Music/{cutscene.music}"));
+            musicPlayer.clip = Resources.Load<AudioClip>($"Music/{cutscene.music}");
+            musicPlayer.Play();
 
             // Start cutscene
             StartCoroutine(Play());

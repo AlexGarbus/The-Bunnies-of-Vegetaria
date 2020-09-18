@@ -6,8 +6,8 @@ namespace TheBunniesOfVegetaria
 {
     public class Bunny : Fighter
     {
-        public EventHandler OnLevelUp;
-        public EventHandler<PointEventArgs> OnSkillPointsChange;
+        public event EventHandler OnLevelUp;
+        public event EventHandler<PointEventArgs> OnSkillPointsChange;
 
         public override Globals.FighterType FighterType => Globals.FighterType.Bunny;
         public bool IsDefending { protected get; set; } = false;
