@@ -16,7 +16,6 @@ namespace TheBunniesOfVegetaria
         public Globals.BunnyType Type { get; private set; }
         public Skill[] Skills { get; private set; } = new Skill[3];
 
-        // TODO: Construct from JSON instead
         public Bunny(Globals.BunnyType bunnyType, string name, int experience)
         {
             base.name = name;

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace TheBunniesOfVegetaria
 {
-    // TODO: Possibly implement additional or further-derived interfaces?
     public class TurnCollection : ICollection, IEnumerable, IEnumerable<Turn>, IReadOnlyCollection<Turn>
     {
         private List<Turn> turns;
