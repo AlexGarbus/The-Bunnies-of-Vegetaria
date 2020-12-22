@@ -73,7 +73,7 @@ namespace TheBunniesOfVegetaria
 
         private void Bunny_OnHealthChange(object sender, PointEventArgs e)
         {
-            // FIMXE: Called for each Bunny
+            // FIXME: Called for each Bunny
             if (e.DeltaPoints >= 0)
                 audioSource.PlayOneShot(healSound);
         }
@@ -99,7 +99,7 @@ namespace TheBunniesOfVegetaria
 
         private void Enemy_OnHealthChange(object sender, PointEventArgs e)
         {
-            // FIMXE: Called for each Enemy
+            // FIXME: Called for each Enemy
             if (e.DeltaPoints >= 0)
                 audioSource.PlayOneShot(healSound);
         }

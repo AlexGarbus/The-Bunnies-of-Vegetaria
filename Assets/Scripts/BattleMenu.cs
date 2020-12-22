@@ -126,6 +126,7 @@ namespace TheBunniesOfVegetaria
 
         public void ShowTurnPanel()
         {
+            // FIXME: Player input panel still selectable for a single frame; causes issues
             turnPanel.enabled = true;
             playerInputPanel.enabled = false;
         }
