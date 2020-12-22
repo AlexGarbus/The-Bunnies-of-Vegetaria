@@ -43,7 +43,7 @@ namespace TheBunniesOfVegetaria
 
         private void Fighter_OnDoDamage(object sender, EventArgs e)
         {
-            TakeStep(StepDirection);
+            StartCoroutine(TakeStep(StepDirection));
         }
 
         private void Fighter_OnHealthChange(object sender, PointEventArgs e)
