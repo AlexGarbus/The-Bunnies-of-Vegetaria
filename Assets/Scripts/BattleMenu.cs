@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,20 +8,20 @@ namespace TheBunniesOfVegetaria
     public class BattleMenu : MonoBehaviour
     {
         [Header("Player Stats")]
-        [SerializeField] private GameObject playerStatPanel;
+        [SerializeField] private Canvas playerStatPanel;
         [SerializeField] private TMP_Text playerStatText;
 
         [Header("Player Input")]
-        [SerializeField] private GameObject playerInputPanel;
+        [SerializeField] private Canvas playerInputPanel;
         [SerializeField] private TMP_Text inputPromptText;
-        [SerializeField] private GameObject backButton;
-        [SerializeField] private GameObject optionPanel;
+        [SerializeField] private Canvas backPanel;
+        [SerializeField] private Canvas optionPanel;
         [SerializeField] private GameObject skillOptionButton;
-        [SerializeField] private GameObject skillPanel;
-        [SerializeField] private GameObject enemyPanel;
+        [SerializeField] private Canvas skillPanel;
+        [SerializeField] private Canvas enemyPanel;
 
         [Header("Turns")]
-        [SerializeField] private GameObject turnPanel;
+        [SerializeField] private Canvas turnPanel;
         [SerializeField] private TMP_Text turnText;
 
         [Header("Messages")]
@@ -45,16 +43,16 @@ namespace TheBunniesOfVegetaria
             skillButtons = skillPanel.GetComponentsInChildren<Button>();
             enemyButtons = enemyPanel.GetComponentsInChildren<Button>();
 
-            // Disable canvas
+            // Disable main canvas
             canvas = GetComponent<Canvas>();
             canvas.enabled = false;
 
-            // Prepare panels for player input
-            backButton.SetActive(false);
-            optionPanel.SetActive(true);
-            skillPanel.SetActive(false);
-            enemyPanel.SetActive(false);
-            turnPanel.SetActive(false);
+            // Prepare sub-canvases for player input
+            backPanel.enabled = false;
+            optionPanel.enabled = true;
+            skillPanel.enabled = false;
+            enemyPanel.enabled = false;
+            turnPanel.enabled = false;
         }
 
         private void OnEnable()
@@ -122,14 +120,14 @@ namespace TheBunniesOfVegetaria
 
         public void ShowPlayerInputPanel()
         {
-            playerInputPanel.SetActive(true);
-            turnPanel.SetActive(false);
+            playerInputPanel.enabled = true;
+            turnPanel.enabled = false;
         }
 
         public void ShowTurnPanel()
         {
-            turnPanel.SetActive(true);
-            playerInputPanel.SetActive(false);
+            turnPanel.enabled = true;
+            playerInputPanel.enabled = false;
         }
 
         /// <summary>
