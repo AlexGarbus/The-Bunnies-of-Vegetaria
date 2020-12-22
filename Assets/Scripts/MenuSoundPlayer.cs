@@ -42,6 +42,9 @@ namespace TheBunniesOfVegetaria
         private void TargetChildButtons()
         {
             targetButtons = GetComponentsInChildren<Button>();
+#if UNITY_EDITOR
+            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(gameObject.scene);
+#endif
         }
     }
 }
