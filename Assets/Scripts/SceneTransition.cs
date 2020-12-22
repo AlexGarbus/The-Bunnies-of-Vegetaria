@@ -147,7 +147,7 @@ namespace TheBunniesOfVegetaria
         /// <summary>
         /// Fade out to a solid color, toggle a game object's active state, and then fade back in.
         /// </summary>
-        /// <param name="objToFade">The game object to fade.</param>
+        /// <param name="objectToFade">The game object to fade.</param>
         private IEnumerator FadeGameObject(GameObject objectToFade)
         {
             StartCoroutine(FadeOut());
@@ -155,6 +155,32 @@ namespace TheBunniesOfVegetaria
                 yield return null;
 
             objectToFade.SetActive(!objectToFade.activeSelf);
+
+            StartCoroutine(FadeIn());
+            while (isFading)
+                yield return null;
+        }
+
+        /// <summary>
+        /// Start the Fade Canvas coroutine.
+        /// </summary>
+        /// <param name="canvasToFade"></param>
+        public void StartFadeCanvas(Canvas canvasToFade)
+        {
+            StartCoroutine(FadeCanvas(canvasToFade));
+        }
+
+        /// <summary>
+        /// Fade out to a solid color, toggle a canvas's enabled state, and then fade back in.
+        /// </summary>
+        /// <param name="canvasToFade">The game object to fade.</param>
+        private IEnumerator FadeCanvas(Canvas canvasToFade)
+        {
+            StartCoroutine(FadeOut());
+            while (isFading)
+                yield return null;
+
+            canvasToFade.enabled = !canvasToFade.enabled;
 
             StartCoroutine(FadeIn());
             while (isFading)
