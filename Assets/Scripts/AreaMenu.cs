@@ -64,6 +64,15 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
+        /// Set the next cutscene to play without loading it.
+        /// </summary>
+        /// <param name="cutsceneName">The cutscene to play.</param>
+        public void SetCutscene(string cutsceneName)
+        {
+            gameManager.CutsceneFile = cutsceneName;
+        }
+
+        /// <summary>
         /// Load the given cutscene.
         /// </summary>
         /// <param name="cutsceneName">The name of the cutscene to load.</param>

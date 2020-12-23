@@ -32,6 +32,12 @@ namespace TheBunniesOfVegetaria
 
             // Start cutscene
             StartCoroutine(Play());
+
+            // Set values for next scene
+            GameManager gameManager = GameManager.Instance;
+            gameManager.StartBattleAtBoss = cutscene.startAtBoss;
+            gameManager.BattleArea = cutscene.nextArea;
+            gameManager.CutsceneFile = cutscene.nextCutscene;
         }
 
         /// <summary>
