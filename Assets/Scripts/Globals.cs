@@ -12,7 +12,8 @@
             BroccoliForest,
             BokChoyBluff,
             CarrotTop,
-            Final
+            Final1,
+            Final2
         }
 
         /// <summary>

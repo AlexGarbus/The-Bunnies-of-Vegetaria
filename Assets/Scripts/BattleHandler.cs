@@ -61,7 +61,7 @@ namespace TheBunniesOfVegetaria
         private enum BattleState { Idle, SettingUpInput, HandlingInput, HandlingTurns }
 
         private int inputCount = 0;
-        private int wave = 0;
+        private int wave = 1;
         private BattleState battleState;
         private AudioClip healSound;
         private Bunny[] currentBunnies;
@@ -78,8 +78,19 @@ namespace TheBunniesOfVegetaria
 
             LoadEnemies(gameManager.BattleArea);
             InitializeBunnies(gameManager.Party);
-            SetNextWave();
-            StartTravel();
+
+            if (gameManager.StartBattleAtBoss)
+            {
+                gameManager.StartBattleAtBoss = false;
+                wave = maxWaves;
+                InitializeWave();
+                battleState = BattleState.SettingUpInput;
+            }
+            else
+            {
+                InitializeWave();
+                StartTravel();
+            }
         }
 
         private void OnDisable()
@@ -155,18 +166,16 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Set the next wave of enemies.
+        /// Initialize the current wave of enemies.
         /// </summary>
-        private void SetNextWave()
+        private void InitializeWave()
         {
-            wave++;
-
             if (IsBossWave)
             {
                 // Boss wave
                 InitializeEnemies(new Enemy[] { areaBoss });
                 GlobalAudioSource.Instance.PlayMusic(bossMusic);
-                enemyActors[0].transform.position = Vector2.Lerp(enemySpawnPointA, enemySpawnPointB, 0.5f);
+                enemyActors[0].transform.position = Vector2.Lerp(enemySpawnPointA, enemySpawnPointB, 0.5f); // TODO: Move transform functionality to StartTravel()
             }
             else
             {
@@ -186,7 +195,7 @@ namespace TheBunniesOfVegetaria
                         interpolant = (float)i / (wave - 1);
                     else
                         interpolant = (float)(i + 1) / (wave + 1);
-                    enemyActors[i].transform.position = Vector2.Lerp(enemySpawnPointA, enemySpawnPointB, interpolant);
+                    enemyActors[i].transform.position = Vector2.Lerp(enemySpawnPointA, enemySpawnPointB, interpolant); // TODO: Move transform functionality to StartTravel()
                 }
                 InitializeEnemies(randomEnemies);
             }
@@ -229,20 +238,24 @@ namespace TheBunniesOfVegetaria
                 }
 
                 // Area is clear
-                sceneTransition.SaveAndLoadScene("AreaSelect");
+                if (gameManager.IsCutsceneReady)
+                    sceneTransition.SaveAndLoadScene("Cutscene");
+                else
+                    sceneTransition.SaveAndLoadScene("AreaSelect");
             }
             else
             {
                 // Revive defeated bunnies
                 Bunny[] defeatedBunnies = GetDefeatedBunnies();
-                if (defeatedBunnies.Length > 0)
-                {
-                    foreach (Bunny bunny in defeatedBunnies)
-                        bunny.Revive();
-                }
+                foreach (Bunny bunny in defeatedBunnies)
+                    bunny.Revive();
 
                 // Move to next wave
-                SetNextWave();
+                wave++;
+                if (IsBossWave && gameManager.IsCutsceneReady)
+                    sceneTransition.SaveAndLoadScene("Cutscene");
+                else
+                    InitializeWave();
                 StartTravel();
             }
 
