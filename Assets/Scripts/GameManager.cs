@@ -9,6 +9,7 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private GameObject cursorPrefab;
         [SerializeField] private AudioMixer mainMixer;
 
+        public string CutsceneFile { get; set; } = "cutscene_introduction";
         public Globals.Area BattleArea { get; set; } = Globals.Area.LettuceFields;
         public Bunny Bunnight { get; private set; }
         public Bunny Bunnecromancer { get; private set; }

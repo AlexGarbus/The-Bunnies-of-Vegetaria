@@ -61,6 +61,7 @@ namespace TheBunniesOfVegetaria
             }
             else
             {
+                GameManager.Instance.CutsceneFile = "cutscene_introduction";
                 sceneTransition.LoadScene("Cutscene");
             }
         }
