@@ -52,7 +52,8 @@ namespace TheBunniesOfVegetaria
             healthText.text = text;
 
             // Hide canvas after time has passed
-            Invoke("HideHealthCanvas", healthTime);
+            CancelInvoke("HideHealthCanvas");
+            Invoke("HideHealthCanvas", healthTime + 0.01f); // TODO: Use coroutine instead.
         }
 
         private void HideHealthCanvas() => healthCanvas.enabled = false;
