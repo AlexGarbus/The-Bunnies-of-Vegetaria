@@ -31,6 +31,22 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
+        /// Set the selected area without loading it if unlocked.
+        /// </summary>
+        /// <param name="areaName">The name of the area to load.</param>
+        public void SetArea(string areaName)
+        {
+            // Remove spaces from the area name
+            areaName = areaName.Replace(" ", string.Empty);
+
+            // Set area if unlocked
+            if (Enum.TryParse(areaName, false, out Globals.Area area) && (int)area <= SaveData.current.areasUnlocked)
+            {
+                gameManager.BattleArea = area;
+            }
+        }
+
+        /// <summary>
         /// Load the selected area if it is unlocked.
         /// </summary>
         /// <param name="areaName">The name of the area to load.</param>
@@ -45,6 +61,16 @@ namespace TheBunniesOfVegetaria
                 gameManager.BattleArea = area;
                 sceneTransition.SaveAndLoadScene("Battle");
             }
+        }
+
+        /// <summary>
+        /// Load the given cutscene.
+        /// </summary>
+        /// <param name="cutsceneName">The name of the cutscene to load.</param>
+        public void LoadCutscene(string cutsceneName)
+        {
+            gameManager.CutsceneFile = cutsceneName;
+            sceneTransition.SaveAndLoadScene("Cutscene");
         }
 
         /// <summary>

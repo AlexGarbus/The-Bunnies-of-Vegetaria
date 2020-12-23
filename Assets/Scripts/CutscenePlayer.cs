@@ -22,8 +22,9 @@ namespace TheBunniesOfVegetaria
 
         private void Start()
         {
-            // TODO: Load from game manager
-            cutscene = JsonUtility.FromJson<Cutscene>(Resources.Load<TextAsset>("Text Assets/cutscene_introduction").text);
+            // Load cutscene from file
+            string cutsceneFile = GameManager.Instance.CutsceneFile;
+            cutscene = JsonUtility.FromJson<Cutscene>(Resources.Load<TextAsset>($"Text Assets/{cutsceneFile}").text);
 
             // Start music
             musicPlayer.clip = Resources.Load<AudioClip>($"Music/{cutscene.music}");
