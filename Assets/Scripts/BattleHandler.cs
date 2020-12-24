@@ -53,7 +53,7 @@ namespace TheBunniesOfVegetaria
             Gizmos.DrawLine(enemySpawnPointA, enemySpawnPointB);
         }
 
-        public static event EventHandler<BattleEventArgs> OnBunniesInitialized, OnEnemiesInitialized, OnSettingUpInput, OnSelectedBunnyChanged, OnTurnPerformed, OnWaveWon, OnWaveLost;
+        public static event EventHandler<BattleEventArgs> OnBunniesInitialized, OnEnemiesInitialized, OnSettingUpInput, OnSelectedBunnyChanged, OnTurnPerformed, OnWaveWon, OnWaveLost, OnBattleEnd;
 
         private bool IsBossWave => wave >= maxWaves;
         private Bunny SelectedBunny
@@ -240,6 +240,9 @@ namespace TheBunniesOfVegetaria
         {
             battleState = BattleState.Idle;
 
+            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null);
+            OnWaveWon?.Invoke(this, args);
+
             if (IsBossWave)
             {
                 // Unlock next area
@@ -251,6 +254,7 @@ namespace TheBunniesOfVegetaria
                 }
 
                 // Area is clear
+                OnBattleEnd?.Invoke(this, args);
                 if (gameManager.cutsceneFileName.HasValue())
                     sceneTransition.SaveAndLoadScene("Cutscene");
                 else
@@ -265,14 +269,16 @@ namespace TheBunniesOfVegetaria
                 // Move to next wave
                 wave++;
                 if (IsBossWave && gameManager.cutsceneFileName.HasValue())
+                {
+                    OnBattleEnd?.Invoke(this, args);
                     sceneTransition.SaveAndLoadScene("Cutscene");
+                }
                 else
+                {
                     InitializeWave();
+                }
                 StartTravel();
             }
-
-            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null);
-            OnWaveWon?.Invoke(this, args);
         }
 
         /// <summary>
@@ -285,6 +291,7 @@ namespace TheBunniesOfVegetaria
 
             BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null);
             OnWaveLost?.Invoke(this, args);
+            OnBattleEnd?.Invoke(this, args);
         }
 
         /// <summary>
@@ -315,12 +322,12 @@ namespace TheBunniesOfVegetaria
         {
             if (GetAliveBunnies().Length == 0)
             {
-                // Battle is lost
+                // Wave is lost
                 LoseWave();
             }
             else if (GetAliveEnemies().Length == 0)
             {
-                // Battle is won
+                // Wave is won
                 WinWave();
             }
             else
