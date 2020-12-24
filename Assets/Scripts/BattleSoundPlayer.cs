@@ -22,8 +22,7 @@ namespace TheBunniesOfVegetaria
         {
             BattleHandler.OnBunniesInitialized += BattleHandler_OnBunniesInitialized;
             BattleHandler.OnEnemiesInitialized += BattleHandler_OnEnemiesInitialized;
-            BattleHandler.OnWaveWon += BattleHandler_OnWaveWon;
-            BattleHandler.OnWaveLost += BattleHandler_OnWaveLost;
+            BattleHandler.OnBattleEnd += BattleHandler_OnBattleEnd;
             BunnyActor.OnDefeat += BunnyActor_OnDefeat;
             EnemyActor.OnDefeat += EnemyActor_OnDefeat;
         }
@@ -32,6 +31,7 @@ namespace TheBunniesOfVegetaria
         {
             BattleHandler.OnBunniesInitialized -= BattleHandler_OnBunniesInitialized;
             BattleHandler.OnEnemiesInitialized -= BattleHandler_OnEnemiesInitialized;
+            BattleHandler.OnBattleEnd -= BattleHandler_OnBattleEnd;
             BunnyActor.OnDefeat -= BunnyActor_OnDefeat;
             EnemyActor.OnDefeat -= EnemyActor_OnDefeat;
         }
@@ -56,17 +56,7 @@ namespace TheBunniesOfVegetaria
             }
         }
 
-        private void BattleHandler_OnWaveWon(object sender, BattleEventArgs e)
-        {
-            foreach (Bunny bunny in e.Bunnies)
-            {
-                bunny.OnDoDamage -= Bunny_OnDoDamage;
-                bunny.OnHealthChange -= Bunny_OnHealthChange;
-                bunny.OnSkillPointsChange -= Bunny_OnSkillPointsChange;
-            }
-        }
-
-        private void BattleHandler_OnWaveLost(object sender, BattleEventArgs e)
+        private void BattleHandler_OnBattleEnd(object sender, BattleEventArgs e)
         {
             foreach (Bunny bunny in e.Bunnies)
             {
