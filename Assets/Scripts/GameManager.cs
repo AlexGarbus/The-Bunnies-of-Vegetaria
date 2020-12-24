@@ -9,21 +9,6 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private GameObject cursorPrefab;
         [SerializeField] private AudioMixer mainMixer;
 
-        public bool StartBattleAtBoss { get; set; } = false; // TODO: Encapsulate this property better?
-        public bool IsCutsceneReady { get; private set; } = false;
-        public string CutsceneFile
-        {
-            get
-            {
-                IsCutsceneReady = false;
-                return cutsceneFile;
-            }
-            set
-            {
-                IsCutsceneReady = true;
-                cutsceneFile = value;
-            }
-        }
         public Globals.Area BattleArea { get; set; } = Globals.Area.LettuceFields;
         public Bunny Bunnight { get; private set; }
         public Bunny Bunnecromancer { get; private set; }
@@ -31,8 +16,10 @@ namespace TheBunniesOfVegetaria
         public Bunny Bunneerdowell { get; private set; }
         public Bunny[] Party { get; private set; }
         
+        public PushPopValue<bool> startBattleAtBoss = new PushPopValue<bool>();
+        public PushPopValue<string> cutsceneFileName = new PushPopValue<string>();
+        
         private bool isPlaying = false;
-        private string cutsceneFile = "cutscene_introduction";
 
         protected override void Initialize()
         {

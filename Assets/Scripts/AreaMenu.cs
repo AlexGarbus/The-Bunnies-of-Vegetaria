@@ -69,7 +69,7 @@ namespace TheBunniesOfVegetaria
         /// <param name="cutsceneName">The cutscene to play.</param>
         public void SetCutscene(string cutsceneName)
         {
-            gameManager.CutsceneFile = cutsceneName;
+            gameManager.cutsceneFileName.Push(cutsceneName);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace TheBunniesOfVegetaria
         /// <param name="cutsceneName">The name of the cutscene to load.</param>
         public void LoadCutscene(string cutsceneName)
         {
-            gameManager.CutsceneFile = cutsceneName;
+            gameManager.cutsceneFileName.Push(cutsceneName);
             sceneTransition.SaveAndLoadScene("Cutscene");
         }
 
