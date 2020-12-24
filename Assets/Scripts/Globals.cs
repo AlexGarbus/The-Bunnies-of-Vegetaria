@@ -7,7 +7,8 @@
         /// </summary>
         public enum Area
         {
-            LettuceFields = 1,
+            None,
+            LettuceFields,
             CeleryWoods,
             BroccoliForest,
             BokChoyBluff,

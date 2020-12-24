@@ -22,9 +22,13 @@ namespace TheBunniesOfVegetaria
 
         private void Start()
         {
+            GameManager gameManager = GameManager.Instance;
+
             // Load cutscene from file
-            string cutsceneFile = GameManager.Instance.CutsceneFile;
-            cutscene = JsonUtility.FromJson<Cutscene>(Resources.Load<TextAsset>($"Text Assets/{cutsceneFile}").text);
+            string cutsceneFileName = "cutscene_introduction";
+            if (gameManager.cutsceneFileName.TryPop(out string fileName))
+                cutsceneFileName = fileName;
+            cutscene = JsonUtility.FromJson<Cutscene>(Resources.Load<TextAsset>($"Text Assets/{cutsceneFileName}").text);
 
             // Start music
             musicPlayer.clip = Resources.Load<AudioClip>($"Music/{cutscene.music}");
@@ -34,10 +38,10 @@ namespace TheBunniesOfVegetaria
             StartCoroutine(Play());
 
             // Set values for next scene
-            GameManager gameManager = GameManager.Instance;
-            gameManager.StartBattleAtBoss = cutscene.startAtBoss;
-            gameManager.BattleArea = cutscene.nextArea;
-            gameManager.CutsceneFile = cutscene.nextCutscene;
+            if (cutscene.nextArea != Globals.Area.None)
+                gameManager.BattleArea = cutscene.nextArea;
+            gameManager.startBattleAtBoss.Push(cutscene.startAtBoss);
+            gameManager.cutsceneFileName.Push(cutscene.nextCutscene);
         }
 
         /// <summary>

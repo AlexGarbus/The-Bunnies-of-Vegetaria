@@ -79,9 +79,8 @@ namespace TheBunniesOfVegetaria
             LoadEnemies(gameManager.BattleArea);
             InitializeBunnies(gameManager.Party);
 
-            if (gameManager.StartBattleAtBoss)
+            if (gameManager.startBattleAtBoss.Pop())
             {
-                gameManager.StartBattleAtBoss = false;
                 wave = maxWaves;
                 InitializeWave();
                 battleState = BattleState.SettingUpInput;
@@ -238,7 +237,7 @@ namespace TheBunniesOfVegetaria
                 }
 
                 // Area is clear
-                if (gameManager.IsCutsceneReady)
+                if (gameManager.cutsceneFileName.HasValue())
                     sceneTransition.SaveAndLoadScene("Cutscene");
                 else
                     sceneTransition.SaveAndLoadScene("AreaSelect");
@@ -246,13 +245,12 @@ namespace TheBunniesOfVegetaria
             else
             {
                 // Revive defeated bunnies
-                Bunny[] defeatedBunnies = GetDefeatedBunnies();
-                foreach (Bunny bunny in defeatedBunnies)
+                foreach (Bunny bunny in GetDefeatedBunnies())
                     bunny.Revive();
 
                 // Move to next wave
                 wave++;
-                if (IsBossWave && gameManager.IsCutsceneReady)
+                if (IsBossWave && gameManager.cutsceneFileName.HasValue())
                     sceneTransition.SaveAndLoadScene("Cutscene");
                 else
                     InitializeWave();
