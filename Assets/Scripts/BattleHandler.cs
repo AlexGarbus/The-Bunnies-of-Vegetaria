@@ -13,8 +13,6 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private BattleBackground battleBackground;
         [SerializeField] private SceneTransition sceneTransition;
 
-        // TODO: Make section for turn messages.
-
         [Header("Actors")]
         [Tooltip("The bunny objects in the scene. These should be ordered according to the BunnyType enum.")]
         [SerializeField] private BunnyActor[] bunnyActors;
@@ -31,6 +29,22 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private int maxWaves = 5;
         [SerializeField] private float turnTime = 1f;
         [SerializeField] private float travelSpeed = 1f;
+
+        [Header("Messages")]
+        [Tooltip("The message that will display when a bunny attacks. Use {0} in place of a bunny's name and {1} in place of a target's name.")]
+        [SerializeField] private string attackMessage = "{0} attacks {1}!";
+        [Tooltip("The message that will display when a bunny defends. Use {0} in place of a bunny's name.")]
+        [SerializeField] private string defendMessage = "{0} is defending!";
+        [Tooltip("The message that will display when a bunny uses a skill. Use {0} in place of a bunny's name and {1} in place of a skill's name.")]
+        [SerializeField] private string skillMessage = "{0} used {1}!";
+        [Tooltip("The message that will display when a fighter is defeated. Use {0} in place of a fighter's name.")]
+        [SerializeField] private string defeatMessage = "{0} was defeated!";
+        [Tooltip("The message that will display when a bunny levels up. Use {0} in place of a bunny's name.")]
+        [SerializeField] private string levelUpMessage = "{0} leveled up!";
+        [Tooltip("The message that will display when the bunnies win the battle.")]
+        [SerializeField] private string winMessage = "This area is clear!";
+        [Tooltip("The message that will display when the bunnies lose the battle.")]
+        [SerializeField] private string loseMessage = "The bunnies have lost! Retreat!";
 
         private void OnDrawGizmosSelected()
         {
@@ -165,7 +179,7 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Initialize the current wave of enemies.
+        /// Initialize the stats, sprites, and positions of the current wave of enemies.
         /// </summary>
         private void InitializeWave()
         {
@@ -174,7 +188,7 @@ namespace TheBunniesOfVegetaria
                 // Boss wave
                 InitializeEnemies(new Enemy[] { areaBoss });
                 GlobalAudioSource.Instance.PlayMusic(bossMusic);
-                enemyActors[0].transform.position = Vector2.Lerp(enemySpawnPointA, enemySpawnPointB, 0.5f); // TODO: Move transform functionality to StartTravel()
+                enemyActors[0].transform.position = Vector2.Lerp(enemySpawnPointA, enemySpawnPointB, 0.5f);
             }
             else
             {
@@ -194,14 +208,14 @@ namespace TheBunniesOfVegetaria
                         interpolant = (float)i / (wave - 1);
                     else
                         interpolant = (float)(i + 1) / (wave + 1);
-                    enemyActors[i].transform.position = Vector2.Lerp(enemySpawnPointA, enemySpawnPointB, interpolant); // TODO: Move transform functionality to StartTravel()
+                    enemyActors[i].transform.position = Vector2.Lerp(enemySpawnPointA, enemySpawnPointB, interpolant);
                 }
                 InitializeEnemies(randomEnemies);
             }
         }
 
         /// <summary>
-        /// Start scrolling the background and moving enemy actors so that the bunnies appear to be traveling.
+        /// Move the enemy actors offscreen, then start scrolling the background and actors so that the bunnies appear to be traveling.
         /// </summary>
         private void StartTravel()
         {
@@ -437,7 +451,7 @@ namespace TheBunniesOfVegetaria
             // Create and insert turn
             Bunny user = SelectedBunny;
             Enemy target = currentEnemies[enemyIndex];
-            Turn turn = new Turn(user, target, $"{user.name} attacks {target.name}!", () => user.DoDamage(target));
+            Turn turn = new Turn(user, target, string.Format(attackMessage, user.name, target.name), () => user.DoDamage(target));
             turnCollection.Insert(turn);
 
             // Move to next input
@@ -452,7 +466,7 @@ namespace TheBunniesOfVegetaria
             // Create and insert turn
             Bunny user = SelectedBunny;
             user.IsDefending = true;
-            Turn turn = new Turn(user, user, $"{user.name} is defending!", null);
+            Turn turn = new Turn(user, user, string.Format(defendMessage, user.name), null);
             turnCollection.Insert(turn);
 
             // Move to next input
@@ -479,7 +493,7 @@ namespace TheBunniesOfVegetaria
                 targets = GetAliveEnemies();
 
             // Create and insert turn
-            Turn turn = new Turn(user, targets, $"{user.name} used {user.Skills[skillIndex].Name}!", () => user.UseSkill(skillIndex, targets));
+            Turn turn = new Turn(user, targets, string.Format(skillMessage, user.name, user.Skills[skillIndex].Name), () => user.UseSkill(skillIndex, targets));
             turnCollection.Insert(turn);
 
             // Move to next input
@@ -526,14 +540,14 @@ namespace TheBunniesOfVegetaria
 
             // Create and push defeat turn
             BunnyActor bunnyActor = GetActor(bunny);
-            Turn turn = new Turn(bunny, $"{bunny.name} was defeated!", () => bunnyActor.Defeat());
+            Turn turn = new Turn(bunny, string.Format(defeatMessage, bunny.name), () => bunnyActor.Defeat());
             turnCollection.Push(turn);
 
             if (GetAliveBunnies().Length == 0)
             {
                 // Bunnies have lost
                 turnCollection.RemoveEnemyTurns();
-                turn = new Turn(bunny, "The bunnies have lost! Retreat!", null);
+                turn = new Turn(bunny, loseMessage, null);
                 turnCollection.Append(turn);
             }
         }
@@ -550,7 +564,7 @@ namespace TheBunniesOfVegetaria
 
             // Create and push defeat turn
             EnemyActor enemyActor = GetActor(enemy);
-            Turn turn = new Turn(enemy, $"{enemy.name} was defeated!", () =>
+            Turn turn = new Turn(enemy, string.Format(defeatMessage, enemy.name), () =>
             {
                 enemyActor.Defeat();
                 foreach (Bunny bunny in GetAliveBunnies())
@@ -570,7 +584,7 @@ namespace TheBunniesOfVegetaria
                 if (IsBossWave)
                 {
                     // Boss has been defeated
-                    turn = new Turn(enemy, "This area is clear!", null);
+                    turn = new Turn(enemy, winMessage, null);
                     turnCollection.Append(turn);
                 }
             }
@@ -582,7 +596,7 @@ namespace TheBunniesOfVegetaria
         /// <param name="bunny">The bunny that has leveled up.</param>
         private void PushLevelUpTurn(Bunny bunny)
         {
-            Turn turn = new Turn(bunny, $"{bunny.name} leveled up!", () =>
+            Turn turn = new Turn(bunny, string.Format(levelUpMessage, bunny.name), () =>
             {
                 bunny.Heal(100);
                 bunny.RestoreSkillPoints(100);
