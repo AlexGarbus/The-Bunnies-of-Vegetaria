@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 
 namespace TheBunniesOfVegetaria
@@ -12,6 +13,7 @@ namespace TheBunniesOfVegetaria
 
         private int animSlash, animHeal;
         private Animator animator;
+        private Coroutine showHealthCoroutine;
 
         private void Start()
         {
@@ -21,7 +23,7 @@ namespace TheBunniesOfVegetaria
             animHeal = Animator.StringToHash("Heal");
 
             // Hide health canvas on start
-            HideHealthCanvas();
+            healthCanvas.enabled = false;
         }
 
         /// <summary>
@@ -30,15 +32,18 @@ namespace TheBunniesOfVegetaria
         /// <param name="deltaHealth">The change in a fighter's health.</param>
         public void PlayHealthEffect(int deltaHealth)
         {
+            if (healthCanvas.enabled)
+                StopCoroutine(showHealthCoroutine);
+
             if (deltaHealth < 0)
             {
                 animator.SetTrigger(animSlash);
-                ShowHealthCanvas(deltaHealth.ToString());
+                showHealthCoroutine = StartCoroutine(ShowHealthCanvas(deltaHealth.ToString()));
             }
             else
             {
                 animator.SetTrigger(animHeal);
-                ShowHealthCanvas($"+{deltaHealth}");
+                showHealthCoroutine = StartCoroutine(ShowHealthCanvas($"+{deltaHealth}"));
             }
         }
 
@@ -46,16 +51,16 @@ namespace TheBunniesOfVegetaria
         /// Display the health canvas for a limited amount of time.
         /// </summary>
         /// <param name="text">The text to display.</param>
-        private void ShowHealthCanvas(string text)
+        private IEnumerator ShowHealthCanvas(string text)
         {
+            // Show canvas
             healthCanvas.enabled = true;
             healthText.text = text;
 
             // Hide canvas after time has passed
-            CancelInvoke("HideHealthCanvas");
-            Invoke("HideHealthCanvas", healthTime + 0.01f); // TODO: Use coroutine instead.
+            yield return new WaitForSeconds(healthTime);
+            yield return new WaitForEndOfFrame();
+            healthCanvas.enabled = false;
         }
-
-        private void HideHealthCanvas() => healthCanvas.enabled = false;
     }
 }
