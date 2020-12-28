@@ -8,8 +8,6 @@ namespace TheBunniesOfVegetaria
 {
     public class BattleHandler : MonoBehaviour
     {
-        // TODO: Move audio playing to separate class
-        [SerializeField] private AudioClip bossMusic;
         [SerializeField] private BattleBackground battleBackground;
         [SerializeField] private SceneTransition sceneTransition;
 
@@ -53,7 +51,7 @@ namespace TheBunniesOfVegetaria
             Gizmos.DrawLine(enemySpawnPointA, enemySpawnPointB);
         }
 
-        public static event EventHandler<BattleEventArgs> OnBunniesInitialized, OnEnemiesInitialized, OnSettingUpInput, OnSelectedBunnyChanged, OnTurnPerformed, OnWaveWon, OnWaveLost, OnBattleEnd;
+        public static event EventHandler<BattleEventArgs> OnBunniesInitialized, OnEnemiesInitialized, OnSettingUpInput, OnSelectedBunnyChanged, OnTurnPerformed, OnWaveWon, OnWaveLost;
 
         private bool IsBossWave => wave >= maxWaves;
         private Bunny SelectedBunny
@@ -77,7 +75,6 @@ namespace TheBunniesOfVegetaria
         private int inputCount = 0;
         private int wave = 1;
         private BattleState battleState;
-        private AudioClip healSound;
         private Bunny[] currentBunnies;
         private Enemy[] currentEnemies;
         private Enemy[] areaEnemies;
@@ -87,7 +84,6 @@ namespace TheBunniesOfVegetaria
 
         private void Start()
         {
-            healSound = Resources.Load<AudioClip>("Sounds/heal");
             gameManager = GameManager.Instance;
 
             LoadEnemies(gameManager.BattleArea);
@@ -133,7 +129,7 @@ namespace TheBunniesOfVegetaria
                     // Prepare to receive input
                     inputCount = 0;
                     NextInput();
-                    OnSettingUpInput?.Invoke(this, new BattleEventArgs(currentBunnies, currentEnemies, SelectedBunny, null));
+                    OnSettingUpInput?.Invoke(this, new BattleEventArgs(currentBunnies, currentEnemies, SelectedBunny, null, IsBossWave));
                     battleState = BattleState.HandlingInput;
                     break;
                 case BattleState.HandlingInput:
@@ -172,9 +168,9 @@ namespace TheBunniesOfVegetaria
             // Raise event
             BattleEventArgs args;
             if (inputCount <= bunnyActors.Length)
-                args = new BattleEventArgs(currentBunnies, currentEnemies, SelectedBunny, null);
+                args = new BattleEventArgs(currentBunnies, currentEnemies, SelectedBunny, null, IsBossWave);
             else
-                args = new BattleEventArgs(currentBunnies, currentEnemies, null, null);
+                args = new BattleEventArgs(currentBunnies, currentEnemies, null, null, IsBossWave);
             OnSelectedBunnyChanged?.Invoke(this, args);
         }
 
@@ -187,7 +183,6 @@ namespace TheBunniesOfVegetaria
             {
                 // Boss wave
                 InitializeEnemies(new Enemy[] { areaBoss });
-                GlobalAudioSource.Instance.PlayMusic(bossMusic);
                 enemyActors[0].transform.position = Vector2.Lerp(enemySpawnPointA, enemySpawnPointB, 0.5f);
             }
             else
@@ -240,7 +235,7 @@ namespace TheBunniesOfVegetaria
         {
             battleState = BattleState.Idle;
 
-            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null);
+            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null, IsBossWave);
             OnWaveWon?.Invoke(this, args);
 
             if (IsBossWave)
@@ -254,7 +249,6 @@ namespace TheBunniesOfVegetaria
                 }
 
                 // Area is clear
-                OnBattleEnd?.Invoke(this, args);
                 if (gameManager.cutsceneFileName.HasValue())
                     sceneTransition.SaveAndLoadScene("Cutscene");
                 else
@@ -270,7 +264,6 @@ namespace TheBunniesOfVegetaria
                 wave++;
                 if (IsBossWave && gameManager.cutsceneFileName.HasValue())
                 {
-                    OnBattleEnd?.Invoke(this, args);
                     sceneTransition.SaveAndLoadScene("Cutscene");
                 }
                 else
@@ -289,9 +282,8 @@ namespace TheBunniesOfVegetaria
             battleState = BattleState.Idle;
             sceneTransition.SaveAndLoadScene("AreaSelect");
 
-            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null);
+            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null, IsBossWave);
             OnWaveLost?.Invoke(this, args);
-            OnBattleEnd?.Invoke(this, args);
         }
 
         /// <summary>
@@ -306,7 +298,7 @@ namespace TheBunniesOfVegetaria
                 // Perform turn
                 Turn turn = turnCollection.Pop();
                 turn.TurnAction?.Invoke();
-                BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, turn);
+                BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, turn, IsBossWave);
                 OnTurnPerformed?.Invoke(this, args);
 
                 yield return turnDelay;
@@ -399,11 +391,11 @@ namespace TheBunniesOfVegetaria
 
         private void InitializeBunnies(Bunny[] bunnies)
         {
-            this.currentBunnies = bunnies;
+            currentBunnies = bunnies;
             for (int i = 0; i < bunnies.Length; i++)
                 bunnyActors[i].Fighter = bunnies[i];
 
-            BattleEventArgs args = new BattleEventArgs(bunnies, currentEnemies, null, null);
+            BattleEventArgs args = new BattleEventArgs(bunnies, currentEnemies, null, null, IsBossWave);
             OnBunniesInitialized?.Invoke(this, args);
 
             // Subscribe to events
@@ -424,7 +416,7 @@ namespace TheBunniesOfVegetaria
                 enemyActors[i].Fighter = currentEnemies[i];
             }
 
-            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null);
+            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null, IsBossWave);
             OnEnemiesInitialized?.Invoke(this, args);
 
             // Subscribe to events
@@ -607,7 +599,6 @@ namespace TheBunniesOfVegetaria
             {
                 bunny.Heal(100);
                 bunny.RestoreSkillPoints(100);
-                GlobalAudioSource.Instance.PlaySoundEffect(healSound);
             }
             );
             turnCollection.Push(turn);

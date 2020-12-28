@@ -79,26 +79,26 @@ namespace TheBunniesOfVegetaria
 
         private void BattleHandler_OnBunniesInitialized(object sender, BattleEventArgs e)
         {
-            SetPlayerStatText(e.Bunnies);
+            SetPlayerStatText(e.bunnies);
         }
 
         private void BattleHandler_OnSettingUpInput(object sender, BattleEventArgs e)
         {
             SetCanvasEnabled(true);
             ShowPlayerInputPanel();
-            SetEnemyButtons(e.Enemies);
+            SetEnemyButtons(e.enemies);
         }
 
         private void BattleHandler_OnTurnPerformed(object sender, BattleEventArgs e)
         {
-            SetTurnText(e.CurrentTurn.Message);
-            SetPlayerStatText(e.Bunnies);
+            SetTurnText(e.currentTurn.Message);
+            SetPlayerStatText(e.bunnies);
         }
 
         private void BattleHandler_OnWaveWon(object sender, BattleEventArgs e)
         {
             SetCanvasEnabled(false);
-            SetPlayerStatText(e.Bunnies);
+            SetPlayerStatText(e.bunnies);
         }
 
         private void BattleHandler_OnWaveLost(object sender, BattleEventArgs e)
@@ -108,10 +108,10 @@ namespace TheBunniesOfVegetaria
 
         private void BattleHandler_OnSelectedBunnyChanged(object sender, BattleEventArgs e)
         {
-            if (e.SelectedBunny == null)
+            if (e.selectedBunny == null)
                 ShowTurnPanel();
             else
-                SetOptions(e.SelectedBunny);
+                SetOptions(e.selectedBunny);
         }
 
         #endregion

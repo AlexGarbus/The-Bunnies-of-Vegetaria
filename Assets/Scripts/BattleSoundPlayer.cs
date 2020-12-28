@@ -22,7 +22,8 @@ namespace TheBunniesOfVegetaria
         {
             BattleHandler.OnBunniesInitialized += BattleHandler_OnBunniesInitialized;
             BattleHandler.OnEnemiesInitialized += BattleHandler_OnEnemiesInitialized;
-            BattleHandler.OnBattleEnd += BattleHandler_OnBattleEnd;
+            BattleHandler.OnWaveWon += BattleHandler_OnWaveWon;
+            BattleHandler.OnWaveLost += BattleHandler_OnWaveLost;
             BunnyActor.OnDefeat += BunnyActor_OnDefeat;
             EnemyActor.OnDefeat += EnemyActor_OnDefeat;
         }
@@ -31,14 +32,15 @@ namespace TheBunniesOfVegetaria
         {
             BattleHandler.OnBunniesInitialized -= BattleHandler_OnBunniesInitialized;
             BattleHandler.OnEnemiesInitialized -= BattleHandler_OnEnemiesInitialized;
-            BattleHandler.OnBattleEnd -= BattleHandler_OnBattleEnd;
+            BattleHandler.OnWaveWon -= BattleHandler_OnWaveWon;
+            BattleHandler.OnWaveLost -= BattleHandler_OnWaveLost;
             BunnyActor.OnDefeat -= BunnyActor_OnDefeat;
             EnemyActor.OnDefeat -= EnemyActor_OnDefeat;
         }
 
         private void BattleHandler_OnBunniesInitialized(object sender, BattleEventArgs e)
         {
-            foreach (Bunny bunny in e.Bunnies)
+            foreach (Bunny bunny in e.bunnies)
             {
                 bunny.OnDoDamage += Bunny_OnDoDamage;
                 bunny.OnHealthChange += Bunny_OnHealthChange;
@@ -48,7 +50,7 @@ namespace TheBunniesOfVegetaria
 
         private void BattleHandler_OnEnemiesInitialized(object sender, BattleEventArgs e)
         {
-            foreach (Enemy enemy in e.Enemies)
+            foreach (Enemy enemy in e.enemies)
             {
                 enemy.OnDefeat += Enemy_OnDefeat;
                 enemy.OnDoDamage += Enemy_OnDoDamage;
@@ -56,9 +58,22 @@ namespace TheBunniesOfVegetaria
             }
         }
 
-        private void BattleHandler_OnBattleEnd(object sender, BattleEventArgs e)
+        private void BattleHandler_OnWaveWon(object sender, BattleEventArgs e)
         {
-            foreach (Bunny bunny in e.Bunnies)
+            if (e.isBossWave)
+            {
+                foreach (Bunny bunny in e.bunnies)
+                {
+                    bunny.OnDoDamage -= Bunny_OnDoDamage;
+                    bunny.OnHealthChange -= Bunny_OnHealthChange;
+                    bunny.OnSkillPointsChange -= Bunny_OnSkillPointsChange;
+                }
+            }
+        }
+
+        private void BattleHandler_OnWaveLost(object sender, BattleEventArgs e)
+        {
+            foreach (Bunny bunny in e.bunnies)
             {
                 bunny.OnDoDamage -= Bunny_OnDoDamage;
                 bunny.OnHealthChange -= Bunny_OnHealthChange;
