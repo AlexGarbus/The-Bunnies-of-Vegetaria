@@ -3580,6 +3580,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1179172466}
   m_PrefabAsset: {fileID: 0}
+--- !u!225 &1344322805
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1344322804}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &1344322810
 MonoBehaviour:
   m_ObjectHideFlags: 0

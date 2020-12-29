@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace TheBunniesOfVegetaria
 {
-    [RequireComponent(typeof(Canvas))]
+    [RequireComponent(typeof(Canvas), typeof(CanvasGroup))]
     public class BattleMenu : MonoBehaviour
     {
         [Header("Player Stats")]
@@ -36,6 +36,7 @@ namespace TheBunniesOfVegetaria
         private Button[] skillButtons;
         private Button[] enemyButtons;
         private Canvas canvas;
+        private CanvasGroup canvasGroup;
 
         private void Awake()
         {
@@ -45,7 +46,11 @@ namespace TheBunniesOfVegetaria
 
             // Disable main canvas
             canvas = GetComponent<Canvas>();
-            canvas.enabled = false;
+            SetCanvasEnabled(false);
+
+            // Disable canvas interaction
+            canvasGroup = GetComponent<CanvasGroup>();
+            canvasGroup.interactable = false;
 
             // Prepare sub-canvases for player input
             backPanel.enabled = false;
@@ -120,15 +125,16 @@ namespace TheBunniesOfVegetaria
 
         public void ShowPlayerInputPanel()
         {
+            canvasGroup.interactable = true;
             playerInputPanel.enabled = true;
             turnPanel.enabled = false;
         }
 
         public void ShowTurnPanel()
         {
-            // FIXME: Player input panel still selectable for a single frame; causes issues
-            turnPanel.enabled = true;
+            canvasGroup.interactable = false;
             playerInputPanel.enabled = false;
+            turnPanel.enabled = true;
         }
 
         /// <summary>
