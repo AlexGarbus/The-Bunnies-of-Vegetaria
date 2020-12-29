@@ -6,7 +6,7 @@ namespace TheBunniesOfVegetaria
 {
     public class Bunny : Fighter
     {
-        public event EventHandler OnLevelUp;
+        public event EventHandler OnLevelUp, OnFullRestore;
         public event EventHandler<PointEventArgs> OnSkillPointsChange;
 
         public override Globals.FighterType FighterType => Globals.FighterType.Bunny;
@@ -94,6 +94,16 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
+        /// Fully restore all health and skill points.
+        /// </summary>
+        public void FullRestore()
+        {
+            OnFullRestore?.Invoke(this, EventArgs.Empty);
+            Heal(MaxHealth);
+            RestoreSkillPoints(MaxSkillPoints);
+        }
+
+        /// <summary>
         /// Add to the current experience and adjust the level.
         /// </summary>
         /// <param name="experience">The amount of experience to add.</param>
@@ -125,8 +135,12 @@ namespace TheBunniesOfVegetaria
                 return;
 
             Skill skill = Skills[skillIndex];
+            int previousSkillPoints = CurrentSkillPoints;
             CurrentSkillPoints -= skill.Cost;
             skill.Use(this, targets);
+
+            PointEventArgs args = new PointEventArgs(previousSkillPoints, CurrentSkillPoints);
+            OnSkillPointsChange?.Invoke(this, args);
         }
 
         /// <summary>

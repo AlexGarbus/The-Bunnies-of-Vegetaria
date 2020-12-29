@@ -81,13 +81,17 @@ namespace TheBunniesOfVegetaria
             }
         }
 
-        public void Heal(int healAmount)
+        /// <summary>
+        /// Add health to this fighter.
+        /// </summary>
+        /// <param name="healthAmount">The amount of health to add.</param>
+        public void Heal(int healthAmount)
         {
             if (!IsAlive)
                 return;
 
             int previousHealth = CurrentHealth;
-            CurrentHealth += healAmount;
+            CurrentHealth += healthAmount;
 
             // Clamp health
             if (CurrentHealth > MaxHealth)

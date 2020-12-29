@@ -38,7 +38,7 @@ namespace TheBunniesOfVegetaria
             {
                 for (int i = 0; i < turns.Count; i++)
                 {
-                    if (turn.User.Speed >= turns[i].User.Speed)
+                    if (turn.user.Speed >= turns[i].user.Speed)
                     {
                         turns.Insert(i, turn);
                         return;
@@ -87,7 +87,7 @@ namespace TheBunniesOfVegetaria
         /// <param name="user">The fighter whose turns should be removed.</param>
         public void RemoveUserTurns(Fighter user)
         {
-            turns.RemoveAll(turn => turn.User == user);
+            turns.RemoveAll(turn => turn.user == user);
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace TheBunniesOfVegetaria
         /// <param name="target">The fighter whose targeted turns should be removed.</param>
         public void RemoveTargetTurns(Fighter target)
         {
-            turns.RemoveAll(turn => turn.Targets.Length == 1 && turn.Targets[0] == target);
+            turns.RemoveAll(turn => turn.targets.Length == 1 && turn.targets[0] == target);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public void RemoveNonemptyTargetTurns()
         {
-            turns.RemoveAll(turn => turn.Targets.Length > 0);
+            turns.RemoveAll(turn => turn.targets.Length > 0);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public void RemoveBunnyTurns()
         {
-            turns.RemoveAll(turn => turn.User is Bunny);
+            turns.RemoveAll(turn => turn.user is Bunny);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public void RemoveEnemyTurns()
         {
-            turns.RemoveAll(turn => turn.User is Enemy);
+            turns.RemoveAll(turn => turn.user is Enemy);
         }
     }
 }

@@ -53,14 +53,18 @@ namespace TheBunniesOfVegetaria
 
         private void Fighter_OnHealthChange(object sender, PointEventArgs e)
         {
-            if (e.PreviousPoints == 0)
+            if (e.previousPoints == 0)
             {
                 // Reset defeat rotation
                 transform.Rotate(new Vector3(0, 0, -90));
             }
         }
 
-        private void Fighter_OnSkillPointsChange(object sender, PointEventArgs e) => battleEffect.PlayHealthEffect(e.DeltaPoints);
+        private void Fighter_OnSkillPointsChange(object sender, PointEventArgs e)
+        {
+            if (e.DeltaPoints >= 0)
+                battleEffect.PlayHealthEffect(e.DeltaPoints);
+        }
         
         public override void Defeat()
         {

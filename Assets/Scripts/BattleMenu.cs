@@ -91,7 +91,7 @@ namespace TheBunniesOfVegetaria
 
         private void BattleHandler_OnTurnPerformed(object sender, BattleEventArgs e)
         {
-            SetTurnText(e.currentTurn.Message);
+            SetTurnText(e.currentTurn.message);
             SetPlayerStatText(e.bunnies);
         }
 
