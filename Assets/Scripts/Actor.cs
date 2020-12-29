@@ -73,6 +73,7 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public virtual void Defeat()
         {
+            battleEffect.StopHealthEffect();
             OnDefeat?.Invoke(this, EventArgs.Empty);
         }
 
