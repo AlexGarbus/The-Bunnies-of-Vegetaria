@@ -10,6 +10,7 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private AudioClip healSound;
         [SerializeField] private AudioClip bunnyDefeatSound;
         [SerializeField] private AudioClip enemyDefeatSound;
+        [SerializeField] private AudioClip levelUpSound;
 
         private AudioSource audioSource;
 
@@ -38,24 +39,31 @@ namespace TheBunniesOfVegetaria
             EnemyActor.OnDefeat -= EnemyActor_OnDefeat;
         }
 
+        /// <summary>
+        /// Play the given sound only if the audio source is not playing.
+        /// </summary>
+        /// <param name="clip">The sound to attempt to play.</param>
+        private void PlayBattleSound(AudioClip clip)
+        {
+            if (!audioSource.isPlaying || audioSource.time > 0)
+            {
+                audioSource.clip = clip;
+                audioSource.Play();
+            }
+        }
+
+        #region Event Handlers
+
         private void BattleHandler_OnBunniesInitialized(object sender, BattleEventArgs e)
         {
             foreach (Bunny bunny in e.bunnies)
-            {
-                bunny.OnDoDamage += Bunny_OnDoDamage;
-                bunny.OnHealthChange += Bunny_OnHealthChange;
-                bunny.OnSkillPointsChange += Bunny_OnSkillPointsChange;
-            }
+                SubscribeToBunnyEvents(bunny);
         }
 
         private void BattleHandler_OnEnemiesInitialized(object sender, BattleEventArgs e)
         {
             foreach (Enemy enemy in e.enemies)
-            {
-                enemy.OnDefeat += Enemy_OnDefeat;
-                enemy.OnDoDamage += Enemy_OnDoDamage;
-                enemy.OnHealthChange += Enemy_OnHealthChange;
-            }
+                SubscribeToEnemyEvents(enemy);
         }
 
         private void BattleHandler_OnWaveWon(object sender, BattleEventArgs e)
@@ -63,41 +71,34 @@ namespace TheBunniesOfVegetaria
             if (e.isBossWave)
             {
                 foreach (Bunny bunny in e.bunnies)
-                {
-                    bunny.OnDoDamage -= Bunny_OnDoDamage;
-                    bunny.OnHealthChange -= Bunny_OnHealthChange;
-                    bunny.OnSkillPointsChange -= Bunny_OnSkillPointsChange;
-                }
+                    UnsubscribeFromBunnyEvents(bunny);
             }
         }
 
         private void BattleHandler_OnWaveLost(object sender, BattleEventArgs e)
         {
             foreach (Bunny bunny in e.bunnies)
-            {
-                bunny.OnDoDamage -= Bunny_OnDoDamage;
-                bunny.OnHealthChange -= Bunny_OnHealthChange;
-                bunny.OnSkillPointsChange -= Bunny_OnSkillPointsChange;
-            }
+                UnsubscribeFromBunnyEvents(bunny);
         }
 
-        private void BunnyActor_OnDefeat(object sender, EventArgs e) => audioSource.PlayOneShot(bunnyDefeatSound);
+        private void BunnyActor_OnDefeat(object sender, EventArgs e) => PlayBattleSound(bunnyDefeatSound);
 
-        private void EnemyActor_OnDefeat(object sender, EventArgs e) => audioSource.PlayOneShot(enemyDefeatSound);
+        private void EnemyActor_OnDefeat(object sender, EventArgs e) => PlayBattleSound(enemyDefeatSound);
 
-        private void Bunny_OnDoDamage(object sender, EventArgs e) => audioSource.PlayOneShot(attackSound);
+        private void Bunny_OnDoDamage(object sender, EventArgs e) => PlayBattleSound(attackSound);
+
+        private void Bunny_OnFullRestore(object sender, EventArgs e) => PlayBattleSound(levelUpSound);
 
         private void Bunny_OnHealthChange(object sender, PointEventArgs e)
         {
-            // FIXME: Called for each Bunny
             if (e.DeltaPoints >= 0)
-                audioSource.PlayOneShot(healSound);
+                PlayBattleSound(healSound);
         }
 
         private void Bunny_OnSkillPointsChange(object sender, PointEventArgs e)
         {
             if (e.DeltaPoints >= 0)
-                audioSource.PlayOneShot(healSound);
+                PlayBattleSound(healSound);
         }
 
         private void Enemy_OnDefeat(object sender, EventArgs e)
@@ -105,19 +106,64 @@ namespace TheBunniesOfVegetaria
             if (sender is Enemy)
             {
                 Enemy enemy = sender as Enemy;
-                enemy.OnDefeat -= Enemy_OnDefeat;
-                enemy.OnDoDamage -= Enemy_OnDoDamage;
-                enemy.OnHealthChange -= Enemy_OnHealthChange;
+                UnsubscribeFromEnemyEvents(enemy);
             }
         }
 
-        private void Enemy_OnDoDamage(object sender, EventArgs e) => audioSource.PlayOneShot(attackSound);
+        private void Enemy_OnDoDamage(object sender, EventArgs e) => PlayBattleSound(attackSound);
 
         private void Enemy_OnHealthChange(object sender, PointEventArgs e)
         {
-            // FIXME: Called for each Enemy
             if (e.DeltaPoints >= 0)
-                audioSource.PlayOneShot(healSound);
+                PlayBattleSound(healSound);
         }
+
+        #endregion
+
+        #region Event Subscribing
+
+        /// <summary>
+        /// Subscribe to a bunny's events.
+        /// </summary>
+        private void SubscribeToBunnyEvents(Bunny bunny)
+        {
+            bunny.OnDoDamage += Bunny_OnDoDamage;
+            bunny.OnFullRestore += Bunny_OnFullRestore;
+            bunny.OnHealthChange += Bunny_OnHealthChange;
+            bunny.OnSkillPointsChange += Bunny_OnSkillPointsChange;
+        }
+
+        /// <summary>
+        /// Unsubscribe from a bunny's events.
+        /// </summary>
+        private void UnsubscribeFromBunnyEvents(Bunny bunny)
+        {
+            bunny.OnDoDamage -= Bunny_OnDoDamage;
+            bunny.OnFullRestore -= Bunny_OnFullRestore;
+            bunny.OnHealthChange -= Bunny_OnHealthChange;
+            bunny.OnSkillPointsChange -= Bunny_OnSkillPointsChange;
+        }
+
+        /// <summary>
+        /// Subscribe to an enemy's events.
+        /// </summary>
+        private void SubscribeToEnemyEvents(Enemy enemy)
+        {
+            enemy.OnDefeat += Enemy_OnDefeat;
+            enemy.OnDoDamage += Enemy_OnDoDamage;
+            enemy.OnHealthChange += Enemy_OnHealthChange;
+        }
+
+        /// <summary>
+        /// Unsubscribe from an enemy's events.
+        /// </summary>
+        private void UnsubscribeFromEnemyEvents(Enemy enemy)
+        {
+            enemy.OnDefeat -= Enemy_OnDefeat;
+            enemy.OnDoDamage -= Enemy_OnDoDamage;
+            enemy.OnHealthChange -= Enemy_OnHealthChange;
+        }
+
+        #endregion
     }
 }

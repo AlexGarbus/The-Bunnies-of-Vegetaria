@@ -235,9 +235,6 @@ namespace TheBunniesOfVegetaria
         {
             battleState = BattleState.Idle;
 
-            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null, IsBossWave);
-            OnWaveWon?.Invoke(this, args);
-
             if (IsBossWave)
             {
                 // Unlock next area
@@ -272,6 +269,9 @@ namespace TheBunniesOfVegetaria
                 }
                 StartTravel();
             }
+
+            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null, IsBossWave);
+            OnWaveWon?.Invoke(this, args);
         }
 
         /// <summary>
@@ -297,7 +297,7 @@ namespace TheBunniesOfVegetaria
             {
                 // Perform turn
                 Turn turn = turnCollection.Pop();
-                turn.TurnAction?.Invoke();
+                turn.turnAction?.Invoke();
                 BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, turn, IsBossWave);
                 OnTurnPerformed?.Invoke(this, args);
 
@@ -595,12 +595,7 @@ namespace TheBunniesOfVegetaria
         /// <param name="bunny">The bunny that has leveled up.</param>
         private void PushLevelUpTurn(Bunny bunny)
         {
-            Turn turn = new Turn(bunny, string.Format(levelUpMessage, bunny.name), () =>
-            {
-                bunny.Heal(100);
-                bunny.RestoreSkillPoints(100);
-            }
-            );
+            Turn turn = new Turn(bunny, string.Format(levelUpMessage, bunny.name), () => bunny.FullRestore());
             turnCollection.Push(turn);
         }
 

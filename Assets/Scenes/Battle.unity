@@ -3294,6 +3294,7 @@ MonoBehaviour:
   healSound: {fileID: 8300000, guid: 6e31201729432bc4ba00a75c38f53965, type: 3}
   bunnyDefeatSound: {fileID: 8300000, guid: 225ef757e50ca014cb9f40396f5b22d4, type: 3}
   enemyDefeatSound: {fileID: 8300000, guid: a0ff75930bca1534e896857c97165213, type: 3}
+  levelUpSound: {fileID: 8300000, guid: 14b51ee79d93ba048820bdba6477c972, type: 3}
 --- !u!82 &1233259345
 AudioSource:
   m_ObjectHideFlags: 0
