@@ -11,6 +11,8 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private Canvas healthCanvas;
         [SerializeField] private TMP_Text healthText;
 
+        public bool IsPlaying => healthCanvas.enabled;
+
         private int animSlash, animHeal;
         private Animator animator;
         private Coroutine showHealthCoroutine;
@@ -32,7 +34,7 @@ namespace TheBunniesOfVegetaria
         /// <param name="deltaHealth">The change in a fighter's health.</param>
         public void PlayHealthEffect(int deltaHealth)
         {
-            if (healthCanvas.enabled)
+            if (IsPlaying)
                 StopCoroutine(showHealthCoroutine);
 
             if (deltaHealth < 0)
@@ -44,6 +46,18 @@ namespace TheBunniesOfVegetaria
             {
                 animator.SetTrigger(animHeal);
                 showHealthCoroutine = StartCoroutine(ShowHealthCanvas($"+{deltaHealth}"));
+            }
+        }
+
+        /// <summary>
+        /// Stop and hide the health effect while it is playing.
+        /// </summary>
+        public void StopHealthEffect()
+        {
+            if (IsPlaying)
+            {
+                StopCoroutine(showHealthCoroutine);
+                healthCanvas.enabled = false;
             }
         }
 
