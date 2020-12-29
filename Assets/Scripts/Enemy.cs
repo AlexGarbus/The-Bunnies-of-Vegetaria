@@ -59,7 +59,7 @@ namespace TheBunniesOfVegetaria
                     return new Turn(this, enemies, $"{name} healed all enemies!", () =>
                         {
                             foreach (Enemy enemy in enemies)
-                                Heal(HEAL_AMOUNT / 2);
+                                enemy.Heal(HEAL_AMOUNT / 2);
                         }
                     );
                 default:
