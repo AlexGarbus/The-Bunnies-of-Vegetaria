@@ -209,6 +209,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Battle Effect
       objectReference: {fileID: 0}
+    - target: {fileID: 3277219863454063144, guid: 23fb7ead49a025f44a29bdb720652378,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3277219863454063144, guid: 23fb7ead49a025f44a29bdb720652378,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -12
+      objectReference: {fileID: 0}
     - target: {fileID: 5415393596556540047, guid: 23fb7ead49a025f44a29bdb720652378,
         type: 3}
       propertyPath: m_LocalPosition.x
