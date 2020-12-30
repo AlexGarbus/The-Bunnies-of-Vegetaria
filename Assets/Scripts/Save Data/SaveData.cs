@@ -11,15 +11,10 @@
 
         // Progression
         public int areasUnlocked;
+        public bool isGameComplete; // TODO: Implement isGameComplete
 
         // Play time
         public float hours, minutes, seconds;
-
-        // Unused progression variables
-        // Will be implemented in future versions
-        public bool[] enemiesSeen;
-        public bool[] achievements;
-        public bool[] tutorials;
 
         public SaveData()
         {
@@ -28,6 +23,7 @@
             bunnurseName = "Bunnurse";
             bunneerdowellName = "Bunne'er-do-well";
             areasUnlocked = 1;
+            isGameComplete = false;
         }
     }
 }

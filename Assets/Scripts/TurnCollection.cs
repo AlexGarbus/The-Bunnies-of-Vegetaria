@@ -1,25 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace TheBunniesOfVegetaria
 {
-    public class TurnList
+    public class TurnCollection : ICollection, IEnumerable, IEnumerable<Turn>, IReadOnlyCollection<Turn>
     {
         private List<Turn> turns;
 
         public bool IsEmpty => turns.Count == 0;
+        public bool IsSynchronized => ((ICollection)turns).IsSynchronized;
+        public int Count => turns.Count;
+        public object SyncRoot => ((ICollection)turns).SyncRoot;
 
-        public TurnList()
+        public void Clear() => turns.Clear();
+        public void CopyTo(Array array, int index) => ((ICollection)turns).CopyTo(array, index);
+        public IEnumerator GetEnumerator() => ((ICollection)turns).GetEnumerator();
+        IEnumerator<Turn> IEnumerable<Turn>.GetEnumerator() => ((ICollection<Turn>)turns).GetEnumerator();
+
+        public TurnCollection()
         {
             turns = new List<Turn>();
         }
 
-        public TurnList(int capacity)
+        public TurnCollection(int capacity)
         {
             turns = new List<Turn>(capacity);
         }
 
         /// <summary>
-        /// Insert a new turn into the list. The turn's order will be determined based on its user speed.
+        /// Insert a new turn into the list. The turn's index will be determined based on its user speed.
         /// </summary>
         /// <param name="turn">The turn to insert into the list.</param>
         public void Insert(Turn turn)
@@ -28,7 +38,7 @@ namespace TheBunniesOfVegetaria
             {
                 for (int i = 0; i < turns.Count; i++)
                 {
-                    if (turn.User.Speed >= turns[i].User.Speed)
+                    if (turn.user.Speed >= turns[i].user.Speed)
                     {
                         turns.Insert(i, turn);
                         return;
@@ -58,9 +68,9 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
-        /// Remove and return the first turn in the list. This turn will have the fastest user in the list.
+        /// Remove and return the first turn in the list.
         /// </summary>
-        /// <returns>The turn with the fastest user in the list.</returns>
+        /// <returns>The first turn in the list.</returns>
         public Turn Pop()
         {
             if (IsEmpty)
@@ -74,19 +84,19 @@ namespace TheBunniesOfVegetaria
         /// <summary>
         /// Remove all turns in the list that belong to a specific user.
         /// </summary>
-        /// <param name="user">The actor whose turns should be removed.</param>
-        public void RemoveUserTurns(IActor user)
+        /// <param name="user">The fighter whose turns should be removed.</param>
+        public void RemoveUserTurns(Fighter user)
         {
-            turns.RemoveAll(turn => turn.User == user);
+            turns.RemoveAll(turn => turn.user == user);
         }
 
         /// <summary>
-        /// Remove all turns in the list that only target one specific actor.
+        /// Remove all single-target turns in the list that target a specific fighter.
         /// </summary>
-        /// <param name="user">The actor whose targeted turns should be removed.</param>
-        public void RemoveTargetTurns(IActor user)
+        /// <param name="target">The fighter whose targeted turns should be removed.</param>
+        public void RemoveTargetTurns(Fighter target)
         {
-            turns.RemoveAll(turn => turn.Targets.Length == 1 && turn.Targets[0] == user);
+            turns.RemoveAll(turn => turn.targets.Length == 1 && turn.targets[0] == target);
         }
 
         /// <summary>
@@ -94,7 +104,7 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public void RemoveNonemptyTargetTurns()
         {
-            turns.RemoveAll(turn => turn.Targets.Length > 0);
+            turns.RemoveAll(turn => turn.targets.Length > 0);
         }
 
         /// <summary>
@@ -102,7 +112,7 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public void RemoveBunnyTurns()
         {
-            turns.RemoveAll(turn => turn.User is BunnyActor);
+            turns.RemoveAll(turn => turn.user is Bunny);
         }
 
         /// <summary>
@@ -110,15 +120,7 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         public void RemoveEnemyTurns()
         {
-            turns.RemoveAll(turn => turn.User is EnemyActor);
-        }
-
-        /// <summary>
-        /// Clear the turn list.
-        /// </summary>
-        public void Clear()
-        {
-            turns.Clear();
+            turns.RemoveAll(turn => turn.user is Enemy);
         }
     }
 }

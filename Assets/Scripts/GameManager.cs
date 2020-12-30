@@ -4,35 +4,27 @@ using UnityEngine.SceneManagement;
 
 namespace TheBunniesOfVegetaria
 {
-    public class GameManager : MonoBehaviour
+    public class GameManager : MonoSingleton<GameManager>
     {
-        public static GameManager Instance;
-
         [SerializeField] private GameObject cursorPrefab;
+        [SerializeField] private AudioMixer mainMixer;
 
         public Globals.Area BattleArea { get; set; } = Globals.Area.LettuceFields;
-        public AudioManager AudioManager { get; private set; }
         public Bunny Bunnight { get; private set; }
         public Bunny Bunnecromancer { get; private set; }
         public Bunny Bunnurse { get; private set; }
         public Bunny Bunneerdowell { get; private set; }
+        public Bunny[] Party { get; private set; }
+        
+        public PushPopValue<bool> startBattleAtBoss = new PushPopValue<bool>();
+        public PushPopValue<string> cutsceneFileName = new PushPopValue<string>();
+        
+        private bool isPlaying = false;
 
-        private void Awake()
+        protected override void Initialize()
         {
-            // Set singleton
-            if (Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-
-                // Continue Awake functionality
-                SaveLoad.Load();
-                AudioManager = GetComponentInChildren<AudioManager>();
-            }
-            else if (Instance != this)
-            {
-                Destroy(gameObject);
-            }
+            DontDestroyOnLoad(gameObject);
+            SaveLoad.Load();
         }
 
         private void OnEnable()
@@ -40,36 +32,40 @@ namespace TheBunniesOfVegetaria
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-#if UNITY_STANDALONE
-            // Instantiate custom cursor object
-            GameObject cursorObject = Instantiate(cursorPrefab);
-            cursorObject.name = "Cursor";
-#endif
-        }
-
         private void Start()
         {
             LoadSettings();
             CreateBunnies();
-        }
-    
-        private void Update()
-        {
-            if(SceneManager.GetActiveScene().buildIndex > 1)
-                AddPlaytime();
         }
 
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
+    
+        private void Update()
+        {
+            if (isPlaying)
+                AddPlaytime();
+        }
 
         private void OnApplicationQuit()
         {
-            if (SceneManager.GetActiveScene().buildIndex > 1)
+            // Auto-save when the game is quit while playing
+            if (isPlaying)
                 SaveLoad.Save();
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+#if (UNITY_STANDALONE || UNITY_EDITOR)
+            // Instantiate custom cursor object
+            GameObject cursorObject = Instantiate(cursorPrefab);
+            cursorObject.name = "Cursor";
+#endif
+
+            // Set whether the game is being played
+            isPlaying = scene.name == "AreaSelect" || scene.name == "Battle";
         }
 
         /// <summary>
@@ -77,24 +73,38 @@ namespace TheBunniesOfVegetaria
         /// </summary>
         private void LoadSettings()
         {
-            AudioManager.Mixer.SetFloat("musicVolume", PlayerPrefs.GetFloat("MusicVolume", 0));
-            AudioManager.Mixer.SetFloat("fxVolume", PlayerPrefs.GetFloat("FxVolume", 0));
+            // Load volume
+            mainMixer.SetFloat("musicVolume", PlayerPrefs.GetFloat("MusicVolume", 0));
+            mainMixer.SetFloat("fxVolume", PlayerPrefs.GetFloat("FxVolume", 0));
+
+            // Load fullscreen mode
             if(PlayerPrefs.HasKey("Fullscreen"))
                 Screen.fullScreen = PlayerPrefs.GetInt("Fullscreen") == 1;
+
+            // Load screen resolution
             if (PlayerPrefs.HasKey("ScreenWidth") && PlayerPrefs.HasKey("ScreenHeight"))
                 Screen.SetResolution(PlayerPrefs.GetInt("ScreenWidth"), PlayerPrefs.GetInt("ScreenHeight"), Screen.fullScreen);
         }
 
         /// <summary>
-        /// Create bunny objects using save data.
+        /// Create bunny objects from save data.
         /// </summary>
         private void CreateBunnies()
         {
             SaveData save = SaveData.current;
+            Party = new Bunny[4];
+
+            // Create bunny objects
             Bunnight = new Bunny(Globals.BunnyType.Bunnight, save.bunnightName, save.bunnightExp);
             Bunnecromancer = new Bunny(Globals.BunnyType.Bunnecromancer, save.bunnecromancerName, save.bunnecromancerExp);
             Bunnurse = new Bunny(Globals.BunnyType.Bunnurse, save.bunnurseName, save.bunnurseExp);
             Bunneerdowell = new Bunny(Globals.BunnyType.Bunneerdowell, save.bunneerdowellName, save.bunneerdowellExp);
+
+            // Store bunnies in array
+            Party[(int)Globals.BunnyType.Bunnight] = Bunnight;
+            Party[(int)Globals.BunnyType.Bunnecromancer] = Bunnecromancer;
+            Party[(int)Globals.BunnyType.Bunnurse] = Bunnurse;
+            Party[(int)Globals.BunnyType.Bunneerdowell] = Bunneerdowell;
         }
 
         /// <summary>

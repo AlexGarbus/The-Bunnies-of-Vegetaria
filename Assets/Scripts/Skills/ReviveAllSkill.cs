@@ -7,18 +7,19 @@
         public ReviveAllSkill(int cost, int minimumLevel, string name, int healthAmount) : base(cost, minimumLevel, name)
         {
             this.healthAmount = healthAmount;
-            Target = TargetType.Bunny;
+            Target = Globals.FighterType.Bunny;
             Description = $"Revive fallen allies with {healthAmount} HP";
         }
 
-        public override void Use(BunnyActor user, IActor[] targets)
+        public override void Use(Bunny user, Fighter[] targets)
         {
-            foreach (IActor target in targets)
+            // Revive all defeated targets
+            foreach (Fighter target in targets)
             {
-                if (!target.IsAlive && target is BunnyActor)
+                if (target is Bunny && !target.IsAlive)
                 {
-                    BunnyActor targetBunny = (BunnyActor)target;
-                    targetBunny.Revive(healthAmount);
+                    Bunny bunny = (Bunny)target;
+                    bunny.Revive(healthAmount);
                 }
             }
         }
