@@ -234,6 +234,7 @@ namespace TheBunniesOfVegetaria
         private void WinWave()
         {
             battleState = BattleState.Idle;
+            bool wasBossWave = IsBossWave;
 
             if (IsBossWave)
             {
@@ -270,7 +271,7 @@ namespace TheBunniesOfVegetaria
                 StartTravel();
             }
 
-            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null, IsBossWave);
+            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null, wasBossWave);
             OnWaveWon?.Invoke(this, args);
         }
 
