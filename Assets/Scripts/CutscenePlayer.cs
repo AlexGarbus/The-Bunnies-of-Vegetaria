@@ -5,33 +5,43 @@ using UnityEngine.UI;
 
 namespace TheBunniesOfVegetaria
 {
-    [RequireComponent(typeof(AudioSource))]
-    public class CutsceneManager : MonoBehaviour
+    public class CutscenePlayer : MonoBehaviour
     {
         [Tooltip("The time delay after each character of a text string is typed.")]
         [SerializeField] private float charDelayTime;
         [Tooltip("The time to display a still after text has finished typing.")]
         [SerializeField] private float stillTime;
+        [SerializeField] private AudioSource musicPlayer;
 
         [Header("UI Components")]
         [SerializeField] private Image cutsceneImage;
         [SerializeField] private TMP_Text cutsceneText;
         [SerializeField] private SceneTransition sceneTransition;
 
-        private AudioSource musicPlayer;
         private Cutscene cutscene;
 
         private void Start()
         {
-            // TODO: Load from game manager
-            cutscene = JsonUtility.FromJson<Cutscene>(Resources.Load<TextAsset>("Text Assets/cutscene_introduction").text);
+            GameManager gameManager = GameManager.Instance;
+
+            // Load cutscene from file
+            string cutsceneFileName = "cutscene_introduction";
+            if (gameManager.cutsceneFileName.TryPop(out string fileName))
+                cutsceneFileName = fileName;
+            cutscene = JsonUtility.FromJson<Cutscene>(Resources.Load<TextAsset>($"Text Assets/{cutsceneFileName}").text);
 
             // Start music
-            musicPlayer = GetComponent<AudioSource>();
             musicPlayer.clip = Resources.Load<AudioClip>($"Music/{cutscene.music}");
             musicPlayer.Play();
 
+            // Start cutscene
             StartCoroutine(Play());
+
+            // Set values for next scene
+            if (cutscene.nextArea != Globals.Area.None)
+                gameManager.BattleArea = cutscene.nextArea;
+            gameManager.startBattleAtBoss.Push(cutscene.startAtBoss);
+            gameManager.cutsceneFileName.Push(cutscene.nextCutscene);
         }
 
         /// <summary>

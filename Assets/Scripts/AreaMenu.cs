@@ -31,18 +31,55 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
+        /// Set the selected area without loading it if unlocked.
+        /// </summary>
+        /// <param name="areaName">The name of the area to load.</param>
+        public void SetArea(string areaName)
+        {
+            // Remove spaces from the area name
+            areaName = areaName.Replace(" ", string.Empty);
+
+            // Set area if unlocked
+            if (Enum.TryParse(areaName, false, out Globals.Area area) && (int)area <= SaveData.current.areasUnlocked)
+            {
+                gameManager.BattleArea = area;
+            }
+        }
+
+        /// <summary>
         /// Load the selected area if it is unlocked.
         /// </summary>
         /// <param name="areaName">The name of the area to load.</param>
         public void LoadArea(string areaName)
         {
+            // Remove spaces from the area name
             areaName = areaName.Replace(" ", string.Empty);
 
+            // Load area if unlocked
             if (Enum.TryParse(areaName, false, out Globals.Area area) && (int)area <= SaveData.current.areasUnlocked)
             {
                 gameManager.BattleArea = area;
                 sceneTransition.SaveAndLoadScene("Battle");
             }
+        }
+
+        /// <summary>
+        /// Set the next cutscene to play without loading it.
+        /// </summary>
+        /// <param name="cutsceneName">The cutscene to play.</param>
+        public void SetCutscene(string cutsceneName)
+        {
+            gameManager.cutsceneFileName.Push(cutsceneName);
+        }
+
+        /// <summary>
+        /// Load the given cutscene.
+        /// </summary>
+        /// <param name="cutsceneName">The name of the cutscene to load.</param>
+        public void LoadCutscene(string cutsceneName)
+        {
+            gameManager.cutsceneFileName.Push(cutsceneName);
+            sceneTransition.SaveAndLoadScene("Cutscene");
         }
 
         /// <summary>
@@ -55,6 +92,7 @@ namespace TheBunniesOfVegetaria
             Bunny bunny = null;
             string typeString = "";
 
+            // Set bunny and type string
             switch (type)
             {
                 case Globals.BunnyType.Bunnight:
@@ -75,12 +113,13 @@ namespace TheBunniesOfVegetaria
                     break;
             }
 
+            // Set stat text
             string stats = $"{bunny.name} the {typeString}" + "\n\n"
                 + $"LEVEL: {bunny.Level}" + spacer + $"EXPERIENCE: {bunny.Experience}" + "\n\n"
                 + $"HEALTH: {bunny.MaxHealth}" + spacer + $"SKILL: {bunny.MaxSkillPoints}" + "\n\n"
-                + $"ATTACK: {new string('*', bunny.attack)}" + spacer 
-                + $"DEFENSE: {new string('*', bunny.defense)}" + spacer
-                + $"SPEED: {new string('*', bunny.speed)}";
+                + $"ATTACK: {new string('*', bunny.Attack)}" + spacer 
+                + $"DEFENSE: {new string('*', bunny.Defense)}" + spacer
+                + $"SPEED: {new string('*', bunny.Speed)}";
             statText.text = stats;
         }
     }

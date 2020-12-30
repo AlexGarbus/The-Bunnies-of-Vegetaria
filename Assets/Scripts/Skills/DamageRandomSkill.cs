@@ -9,12 +9,13 @@ namespace TheBunniesOfVegetaria
         public DamageRandomSkill(int cost, int minimumLevel, string name, float multiplier) : base(cost, minimumLevel, name) 
         {
             this.multiplier = multiplier;
-            Target = TargetType.Enemy;
+            Target = Globals.FighterType.Enemy;
             Description = $"{multiplier}x damage to random enemy";
         }
 
-        public override void Use(BunnyActor user, IActor[] targets)
+        public override void Use(Bunny user, Fighter[] targets)
         {
+            // Select a random enemy to damage
             int targetIndex = Random.Range(0, targets.Length);
             user.DoDamage(targets[targetIndex], multiplier);
         }

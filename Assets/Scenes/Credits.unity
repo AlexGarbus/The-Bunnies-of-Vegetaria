@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d247f803e48eec4cacaaa7a848fae6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  creditDelay: 2
+  creditDisplayTime: 2
   sceneTransition: {fileID: 2075910142}
   creditsText: {fileID: 912538271}
 --- !u!114 &514597135
@@ -605,7 +605,7 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 1824206306}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1951081777
+--- !u!1 &1878533142
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -613,22 +613,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1951081779}
-  - component: {fileID: 1951081778}
+  - component: {fileID: 1878533144}
+  - component: {fileID: 1878533143}
   m_Layer: 0
-  m_Name: Music Source
+  m_Name: Music Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!82 &1951081778
+--- !u!82 &1878533143
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1951081777}
+  m_GameObject: {fileID: 1878533142}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 7440623307105735177, guid: 401e716db0a5fa9488c872d85fd43ce0,
@@ -719,13 +719,13 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!4 &1951081779
+--- !u!4 &1878533144
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1951081777}
+  m_GameObject: {fileID: 1878533142}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
