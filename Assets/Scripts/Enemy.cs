@@ -18,14 +18,10 @@ namespace TheBunniesOfVegetaria
 
         public Enemy ShallowCopy() => (Enemy)MemberwiseClone();
 
-        public Enemy()
+        public override void Initialize()
         {
-            Level = 100;
-        }
-
-        public override int CalculateDamage(Fighter target)
-        {
-            return Mathf.CeilToInt(10 * attack * (1 - (target.Defense - 1) * 0.2f));
+            base.Initialize();
+            Experience = attack + defense + speed;
         }
 
         /// <summary>

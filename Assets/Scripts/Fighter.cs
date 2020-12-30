@@ -10,6 +10,7 @@ namespace TheBunniesOfVegetaria
         [SerializeField] protected int attack;
         [SerializeField] protected int defense;
         [SerializeField] protected int speed;
+        [SerializeField] protected int level;
 
         public event EventHandler OnDoDamage, OnDefeat;
         public event EventHandler<PointEventArgs> OnHealthChange;
@@ -17,7 +18,7 @@ namespace TheBunniesOfVegetaria
         public abstract Globals.FighterType FighterType { get; }
         public bool IsAlive => CurrentHealth > 0;
         public int Experience { get; protected set; }
-        public int Level { get; protected set; }
+        public int Level => level;
         public int CurrentHealth { get; protected set; }
         public int MaxHealth => Mathf.FloorToInt(10 + 0.9f * Level);
         public int Attack => attack;
@@ -30,9 +31,14 @@ namespace TheBunniesOfVegetaria
         {
             CurrentHealth = MaxHealth;
         }
-
-        // TODO: Define damage methods in base rather than marking as abstract.
-        public abstract int CalculateDamage(Fighter target);
+        
+        public int CalculateDamage(Fighter target)
+        {
+            int baseDamage = attack * 5;
+            float bonusDamage = Level * (baseDamage / 100f);
+            float defenseMultiplier = 1 - (target.Defense - 1) * 0.2f;  // TODO: Defense multiplier should be affected by target level.
+            return Mathf.CeilToInt((baseDamage + bonusDamage) * defenseMultiplier);
+        }
 
         /// <summary>
         /// Do damage to a single target fighter.

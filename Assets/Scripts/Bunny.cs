@@ -21,7 +21,7 @@ namespace TheBunniesOfVegetaria
             base.name = name;
             Type = bunnyType;
             Experience = experience;
-            Level = CalculateLevel();
+            level = CalculateLevel();
 
             // Set stats and skills based on type
             switch(Type)
@@ -65,11 +65,6 @@ namespace TheBunniesOfVegetaria
         {
             base.Initialize();
             CurrentSkillPoints = MaxSkillPoints;
-        }
-
-        public override int CalculateDamage(Fighter target)
-        {
-            return Mathf.CeilToInt((attack * 5 + Level * (1 - attack * 5f / 100f)) * (1 - (target.Defense - 1) * 0.2f));
         }
 
         public override void TakeDamage(int damage)
@@ -117,7 +112,7 @@ namespace TheBunniesOfVegetaria
 
             // Set level
             int previousLevel = Level;
-            Level = CalculateLevel();
+            level = CalculateLevel();
 
             // Check for level up
             if (Level != previousLevel)
