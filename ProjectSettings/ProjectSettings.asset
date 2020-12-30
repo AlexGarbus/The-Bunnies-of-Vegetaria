@@ -120,6 +120,7 @@ PlayerSettings:
     16:9: 1
     Others: 0
   bundleVersion: 0.4
+  bundleVersion: 0.3
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -600,7 +601,7 @@ PlayerSettings:
   ps4PlayTogetherPlayerCount: 0
   ps4EnterButtonAssignment: 1
   ps4ApplicationParam1: 0
-  ps4ApplicationParam2: 0
+  ps4ApplicartionParam2: 0
   ps4ApplicationParam3: 0
   ps4ApplicationParam4: 0
   ps4DownloadDataSize: 0
