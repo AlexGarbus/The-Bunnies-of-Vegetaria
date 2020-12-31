@@ -568,7 +568,10 @@ namespace TheBunniesOfVegetaria
             {
                 enemyActor.Defeat();
                 foreach (Bunny bunny in GetAliveBunnies())
-                    bunny.AddExperience(enemy.Experience);
+                {
+                    if (!bunny.HasMaxExperience)
+                        bunny.AddExperience(enemy.ExperienceWorth);
+                }
             });
             turnCollection.Push(turn);
 

@@ -11,10 +11,14 @@ namespace TheBunniesOfVegetaria
 
         public override Globals.FighterType FighterType => Globals.FighterType.Bunny;
         public bool IsDefending { protected get; set; } = false;
+        public bool HasMaxExperience => Experience == MAX_EXPERIENCE;
+        public int Experience { get; protected set; }
         public int CurrentSkillPoints { get; private set; }
         public int MaxSkillPoints => Level / 5 * 10;
         public Globals.BunnyType Type { get; private set; }
         public Skill[] Skills { get; private set; } = new Skill[3];
+
+        private const int MAX_EXPERIENCE = 4950;
 
         public Bunny(Globals.BunnyType bunnyType, string name, int experience)
         {
@@ -104,6 +108,9 @@ namespace TheBunniesOfVegetaria
         /// <param name="experience">The amount of experience to add.</param>
         public void AddExperience(int experience)
         {
+            if (HasMaxExperience)
+                return;
+
             Experience += experience;
 
             // Clamp experience
@@ -111,8 +118,9 @@ namespace TheBunniesOfVegetaria
                 Experience = MAX_EXPERIENCE;
 
             // Set level
-            int previousLevel = Level;
+            int previousLevel = level;
             level = CalculateLevel();
+            MaxHealth = CalculateMaxHealth();
 
             // Check for level up
             if (Level != previousLevel)
@@ -194,6 +202,12 @@ namespace TheBunniesOfVegetaria
 
             PointEventArgs args = new PointEventArgs(previousSkillPoints, CurrentSkillPoints);
             OnSkillPointsChange?.Invoke(this, args);
+        }
+
+        private int CalculateLevel()
+        {
+            float preciseLevel = Mathf.Sqrt(2 * Experience + .25f) + .5f;
+            return Mathf.FloorToInt(preciseLevel);
         }
     }
 }

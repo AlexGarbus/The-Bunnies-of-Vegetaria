@@ -17,18 +17,16 @@ namespace TheBunniesOfVegetaria
 
         public abstract Globals.FighterType FighterType { get; }
         public bool IsAlive => CurrentHealth > 0;
-        public int Experience { get; protected set; }
         public int Level => level;
         public int CurrentHealth { get; protected set; }
-        public int MaxHealth => Mathf.FloorToInt(10 + 0.9f * Level);
+        public int MaxHealth { get; protected set; }
         public int Attack => attack;
         public int Defense => defense;
         public int Speed => speed;
 
-        protected const int MAX_EXPERIENCE = 5050;
-
         public virtual void Initialize()
         {
+            MaxHealth = CalculateMaxHealth();
             CurrentHealth = MaxHealth;
         }
         
@@ -107,13 +105,7 @@ namespace TheBunniesOfVegetaria
             OnHealthChange?.Invoke(this, args);
         }
 
-        protected int CalculateLevel()
-        {
-            int n = 0;
-            while ((n * (n + 1) / 2f) <= Experience)
-                n++;
-            return n;
-        }
+        protected int CalculateMaxHealth() => Mathf.FloorToInt(10 + 0.9f * Level);
 
         protected void InvokeOnDoDamage() => OnDoDamage?.Invoke(this, EventArgs.Empty);
 
