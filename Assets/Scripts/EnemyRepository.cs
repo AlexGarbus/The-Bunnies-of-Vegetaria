@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace TheBunniesOfVegetaria
 {
-    [System.Serializable]
+    [Serializable]
     public class EnemyRepository
     {
         public Enemy[] enemies;
@@ -19,12 +19,15 @@ namespace TheBunniesOfVegetaria
         /// <summary>
         /// Get every regular enemy from an area.
         /// </summary>
-        /// <param name="areaFilter">The area to get enemies from.</param>
+        /// <param name="area">The area to get enemies from.</param>
         /// <returns>An IEnumerable containing all enemies from an area.</returns>
-        public IEnumerable<Enemy> GetEnemiesFromArea(Globals.Area areaFilter)
+        public IEnumerable<Enemy> GetEnemiesFromArea(Globals.Area area)
         {
-            IEnumerable<Enemy> enemiesFromArea = enemies.Where(enemy => 
-                areaFilter == (Globals.Area)Enum.Parse(typeof(Globals.Area), enemy.area.Replace(" ", string.Empty), false)
+            IEnumerable<Enemy> enemiesFromArea = enemies.Where(enemy =>
+                {
+                    string enemyArea = enemy.area.Replace(" ", string.Empty);
+                    return area == (Globals.Area)Enum.Parse(typeof(Globals.Area), enemyArea, false);
+                }
             );
 
             return enemiesFromArea;
@@ -33,12 +36,15 @@ namespace TheBunniesOfVegetaria
         /// <summary>
         /// Get the boss enemy from an area.
         /// </summary>
-        /// <param name="areaFilter">The area to get the boss from.</param>
+        /// <param name="area">The area to get the boss from.</param>
         /// <returns>The boss from an area.</returns>
-        public Enemy GetBossFromArea(Globals.Area areaFilter)
+        public Enemy GetBossFromArea(Globals.Area area)
         {
             Enemy boss = bosses.First(enemy =>
-                areaFilter == (Globals.Area)Enum.Parse(typeof(Globals.Area), enemy.area.Replace(" ", string.Empty), false)
+                {
+                    string enemyArea = enemy.area.Replace(" ", string.Empty);
+                    return area == (Globals.Area)Enum.Parse(typeof(Globals.Area), enemyArea, false);
+                }
             );
 
             return boss;

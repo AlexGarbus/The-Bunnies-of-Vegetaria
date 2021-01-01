@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.U2D;
 
 namespace TheBunniesOfVegetaria
 {
@@ -9,17 +11,26 @@ namespace TheBunniesOfVegetaria
         [Tooltip("The background sprites for each area. These should be in ascending order by area.")]
         [SerializeField] private Sprite[] backgrounds;
 
+        public static event EventHandler OnScrollStart, OnScrollComplete;
+
         public bool IsScrolling { get; private set; } = false;
-        public float ScreenWidth => spriteWidth / 2f;
+        
+        private float ScreenWidth => spriteWidth / 2f;
 
         private float spriteWidth;
         private Vector2 startPosition;
+        private PixelPerfectCamera pixelPerfectCamera;
         private SpriteRenderer spriteRenderer;
 
         private void Awake()
         {
+            pixelPerfectCamera = Camera.main.GetComponent<PixelPerfectCamera>();
+
+            // Get sprite renderer values
             spriteRenderer = GetComponent<SpriteRenderer>();
             spriteWidth = spriteRenderer.bounds.size.x;
+
+            // Set start position so that the background extends to the right
             startPosition = Vector2.right * spriteWidth / 4f;
             transform.position = startPosition;
         }
@@ -30,23 +41,63 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
+        /// Move transforms by a certain number of screens.
+        /// </summary>
+        /// <param name="screens">The number of screens to move the transforms by. Positive is right, negative is left.</param>
+        /// <param name="movingTransforms">An array of transforms to move.</param>
+        public void TranslateOffscreen(int screens, Transform[] movingTransforms)
+        {
+            foreach (Transform movingTransform in movingTransforms)
+                movingTransform.Translate(Vector2.right * ScreenWidth * screens);
+        }
+
+        /// <summary>
+        /// Start scrolling the background horizontally to the left.
+        /// </summary>
+        /// <param name="screens">The number of screens to scroll left.</param>
+        /// <param name="speed">The speed at which to scroll the background.</param>
+        /// <param name="movingTransforms">An array of transforms that should move with the background.</param>
+        public void StartScrollBackground(int screens, float speed, Transform[] movingTransforms)
+        {
+            if (!IsScrolling)
+                StartCoroutine(ScrollBackground(screens, speed, movingTransforms, null));
+        }
+
+        /// <summary>
+        /// Start scrolling the background horizontally to the left.
+        /// </summary>
+        /// <param name="screens">The number of screens to scroll left.</param>
+        /// <param name="speed">The speed at which to scroll the background.</param>
+        /// <param name="movingTransforms">An array of transforms that should move with the background.</param>
+        /// <param name="OnScrollComplete">An action to perform once the scroll has completed.</param>
+        public void StartScrollBackground(int screens, float speed, Transform[] movingTransforms, Action OnScrollComplete)
+        {
+            if (!IsScrolling)
+                StartCoroutine(ScrollBackground(screens, speed, movingTransforms, OnScrollComplete));
+        }
+
+        /// <summary>
         /// Scroll the background horizontally to the left by a certain number of screens.
         /// </summary>
         /// <param name="screens">The number of screens to scroll left.</param>
         /// <param name="speed">The speed at which to scroll the background.</param>
-        /// <param name="movingTransforms">An array of the transform components for objects that should move with the background.</param>
-        public IEnumerator ScrollBackground(int screens, float speed, Transform[] movingTransforms)
+        /// <param name="movingTransforms">An array of transforms that should move with the background.</param>
+        /// <param name="ScrollCompleteAction">An action to perform once the scroll has completed.</param>
+        private IEnumerator ScrollBackground(int screens, float speed, Transform[] movingTransforms, Action ScrollCompleteAction)
         {
             if (screens <= 0)
                 yield break;
 
             IsScrolling = true;
+            OnScrollStart?.Invoke(this, EventArgs.Empty);
             int screensScrolled = 0;
 
             do
             {
                 // Move background
                 transform.Translate(Vector2.left * speed * Time.deltaTime);
+
+                // Loop background when it passes the start position
                 if (transform.position.x < -startPosition.x)
                 {
                     Vector2 newPosition = startPosition;
@@ -64,14 +115,12 @@ namespace TheBunniesOfVegetaria
                 yield return null;
             } while (screensScrolled < screens);
 
-            transform.position = RoundX(spriteRenderer.transform.position);
-
-            foreach (Transform movingTransform in movingTransforms)
-            {
-                movingTransform.position = RoundX(movingTransform.position);
-            }
+            // Make sure background is pixel perfect
+            transform.position = pixelPerfectCamera.RoundToPixel(transform.position);
 
             IsScrolling = false;
+            OnScrollComplete?.Invoke(this, EventArgs.Empty);
+            ScrollCompleteAction?.Invoke();
         }
 
         /// <summary>
@@ -81,17 +130,6 @@ namespace TheBunniesOfVegetaria
         private void SetBackground(Globals.Area area)
         {
             spriteRenderer.sprite = backgrounds[(int)area - 1];
-        }
-
-        /// <summary>
-        /// Round a 2D vector's X component to the nearest integer.
-        /// </summary>
-        /// <param name="vector">The 2D vector to round.</param>
-        /// <returns>A 2D vector with the X component rounded to an integer.</returns>
-        private Vector2 RoundX(Vector2 vector)
-        {
-            vector.x = Mathf.Round(vector.x);
-            return vector;
         }
     }
 }

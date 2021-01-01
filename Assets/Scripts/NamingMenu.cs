@@ -37,6 +37,8 @@ namespace TheBunniesOfVegetaria
         {
             descriptionHolder = JsonUtility.FromJson<DescriptionHolder>(Resources.Load<TextAsset>("Text Assets/naming").text);
             gameManager = GameManager.Instance;
+
+            // Start prompting for names
             PromptNextName();
         }
 
@@ -56,24 +58,34 @@ namespace TheBunniesOfVegetaria
             if (nameInput.text.Length == 0)
                 yield break;
 
+            // Fade out from previous screen
             StartCoroutine(sceneTransition.FadeOut());
             while (sceneTransition.isFading)
                 yield return null;
 
+            // Reset name input if at confirmation screen
             if (confirmationPanel.activeSelf)
+            {
                 confirmationPanel.SetActive(false);
-            PromptNextName();
+                namesInput = 0;
+            }
 
+            // Set up the next input prompt
+            if (namesInput <= 4)
+                PromptNextName();
+
+            // Fade in to next screen
             StartCoroutine(sceneTransition.FadeIn());
             while (sceneTransition.isFading)
                 yield return null;
         }
 
         /// <summary>
-        /// Prompt the user to input the next bunny's name based on the number of names already input.
+        /// Prompt the user for the next name input based on the number of names already input.
         /// </summary>
         private void PromptNextName()
         {
+            // Save previous name and set next name text
             switch (namesInput)
             {
                 case 0:
@@ -94,12 +106,15 @@ namespace TheBunniesOfVegetaria
                 case 4:
                     gameManager.Bunneerdowell.name = nameInput.text;
                     ConfirmNames();
-                    namesInput = 0;
+                    return;
+                default:
                     return;
             }
 
+            // Set next description and image
             descriptionText.text = descriptionHolder.descriptions[namesInput];
             bunnyImage.sprite = bunnySprites[namesInput];
+
             namesInput++;
         }
 

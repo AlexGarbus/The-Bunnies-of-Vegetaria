@@ -11,12 +11,13 @@ namespace TheBunniesOfVegetaria
         {
             minMultiplier = min;
             maxMultiplier = max;
-            Target = TargetType.Enemy;
+            Target = Globals.FighterType.Enemy;
             Description = $"Random damage to all enemies.";
         }
 
-        public override void Use(BunnyActor user, IActor[] targets)
+        public override void Use(Bunny user, Fighter[] targets)
         {
+            // Select a random damage multiplier and damage all targets
             float multiplier = Random.Range(minMultiplier, maxMultiplier);
             user.DoDamage(targets, multiplier);
         }

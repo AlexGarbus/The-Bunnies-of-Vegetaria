@@ -7,12 +7,14 @@
         /// </summary>
         public enum Area
         {
-            LettuceFields = 1,
+            None,
+            LettuceFields,
             CeleryWoods,
             BroccoliForest,
             BokChoyBluff,
             CarrotTop,
-            Final
+            Final1,
+            Final2
         }
 
         /// <summary>
@@ -24,6 +26,15 @@
             Bunnecromancer, 
             Bunnurse, 
             Bunneerdowell 
+        }
+
+        /// <summary>
+        /// The type of a fighter.
+        /// </summary>
+        public enum FighterType
+        {
+            Bunny,
+            Enemy
         }
     }
 }
