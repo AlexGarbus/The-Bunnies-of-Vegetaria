@@ -10,7 +10,7 @@ namespace TheBunniesOfVegetaria
         public string spriteFileName, area;
         [SerializeField] protected bool singleAttack, multiAttack, singleHeal, multiHeal;
 
-        public int ExperienceWorth => attack + defense + speed;
+        public int ExperienceWorth => level;
         public override Globals.FighterType FighterType => Globals.FighterType.Bunny;
 
         private enum EnemyTurnType { SingleAttack, MultiAttack, SingleHeal, MultiHeal }

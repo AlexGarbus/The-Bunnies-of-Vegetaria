@@ -32,10 +32,10 @@ namespace TheBunniesOfVegetaria
         
         public int CalculateDamage(Fighter target)
         {
-            int baseDamage = attack * 5;
-            float bonusDamage = Level * (baseDamage / 100f);
-            float defenseMultiplier = 1 - (target.Defense - 1) * 0.2f;  // TODO: Defense multiplier should be affected by target level.
-            return Mathf.CeilToInt((baseDamage + bonusDamage) * defenseMultiplier);
+            int scaledAttack = attack * level;
+            int scaledDefense = target.defense * target.level;
+            int damage = scaledAttack / scaledDefense;
+            return Mathf.Max(1, damage);
         }
 
         /// <summary>
