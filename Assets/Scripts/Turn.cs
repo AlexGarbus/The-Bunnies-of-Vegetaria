@@ -4,10 +4,10 @@ namespace TheBunniesOfVegetaria
 {
     public class Turn
     {
-        public IActor User { get; private set; }
-        public IActor[] Targets { get; private set; }
-        public string Message { get; private set; }
-        public Action TurnAction { get; private set; }
+        public readonly Fighter user;
+        public readonly Fighter[] targets;
+        public readonly string message;
+        public readonly Action turnAction;
 
         /// <summary>
         /// Construct a new turn with no target.
@@ -15,12 +15,12 @@ namespace TheBunniesOfVegetaria
         /// <param name="user"></param>
         /// <param name="message"></param>
         /// <param name="turnAction"></param>
-        public Turn(IActor user, string message, Action turnAction)
+        public Turn(Fighter user, string message, Action turnAction)
         {
-            User = user;
-            Targets = new IActor[0];
-            Message = message;
-            TurnAction = turnAction;
+            this.user = user;
+            targets = new Fighter[0];
+            this.message = message;
+            this.turnAction = turnAction;
         }
 
         /// <summary>
@@ -30,12 +30,12 @@ namespace TheBunniesOfVegetaria
         /// <param name="target"></param>
         /// <param name="message"></param>
         /// <param name="turnAction"></param>
-        public Turn(IActor user, IActor target, string message, Action turnAction)
+        public Turn(Fighter user, Fighter target, string message, Action turnAction)
         {
-            User = user;
-            Targets = new IActor[] { target };
-            Message = message;
-            TurnAction = turnAction;
+            this.user = user;
+            targets = new Fighter[] { target };
+            this.message = message;
+            this.turnAction = turnAction;
         }
 
         /// <summary>
@@ -45,12 +45,12 @@ namespace TheBunniesOfVegetaria
         /// <param name="targets"></param>
         /// <param name="message"></param>
         /// <param name="turnAction"></param>
-        public Turn(IActor user, IActor[] targets, string message, Action turnAction)
+        public Turn(Fighter user, Fighter[] targets, string message, Action turnAction)
         {
-            User = user;
-            Targets = targets;
-            Message = message;
-            TurnAction = turnAction;
+            this.user = user;
+            this.targets = targets;
+            this.message = message;
+            this.turnAction = turnAction;
         }
     }
 }
