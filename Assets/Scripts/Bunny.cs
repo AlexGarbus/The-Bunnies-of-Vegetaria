@@ -24,8 +24,9 @@ namespace TheBunniesOfVegetaria
         {
             base.name = name;
             Type = bunnyType;
-            Experience = experience;
+            Experience = Mathf.Min(experience, MAX_EXPERIENCE);
             level = CalculateLevel();
+            MaxHealth = CalculateMaxHealth();
 
             // Set stats and skills based on type
             switch(Type)
