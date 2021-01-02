@@ -24,7 +24,7 @@
 		{"name":"ARMORED CHOY", "spriteFileName":"armored choy", "area":"BokChoyBluff", "attack":3, "defense":5, "speed":1, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},
 		{"name":"STALK FIGURE", "spriteFileName":"stalk figure", "area":"BokChoyBluff", "attack":4, "defense":2, "speed":4, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},
 		{"name":"BOK TOY", "spriteFileName":"bok toy", "area":"BokChoyBluff", "attack":2, "defense":3, "speed":2, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},
-		{"name":"SWEET CARROT", "spriteFileName":"sweet carrot", "area":"CarrotTop", "attack":1, "defense":5, "speed":3, "singleAttack":false, "multiAttack":false, "singleHeal":false, "multiHeal":true},
+		{"name":"SWEET CARROT", "spriteFileName":"sweet carrot", "area":"CarrotTop", "attack":1, "defense":5, "speed":3, "singleAttack":true, "multiAttack":false, "singleHeal":false, "multiHeal":true},
 		{"name":"BABY CARROT", "spriteFileName":"baby carrot", "area":"CarrotTop", "attack":4, "defense":2, "speed":3, "singleAttack":true, "multiAttack":true, "singleHeal":false, "multiHeal":false},
 		{"name":"CARROT DRAGON", "spriteFileName":"carrot dragon", "area":"CarrotTop", "attack":5, "defense":3, "speed":3, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":false},
 		{"name":"CARROT CAKE", "spriteFileName":"carrot cake", "area":"CarrotTop", "attack":3, "defense":5, "speed":1, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":true},
@@ -35,6 +35,9 @@
 		{"name":"SALAD BOWL", "spriteFileName":"salad bowl", "area":"LettuceFields", "attack":2, "defense":4, "speed":2, "singleAttack":true, "multiAttack":false, "singleHeal":true, "multiHeal":false},
 		{"name":"CELEREYE", "spriteFileName":"celereye", "area":"CeleryWoods", "attack":3, "defense":4, "speed":3, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":false},
 		{"name":"BROCCOLTREE", "spriteFileName":"broccoltree", "area":"BroccoliForest", "attack":3, "defense":5, "speed":1, "singleAttack":true, "multiAttack":false, "singleHeal":true, "multiHeal":false},
-		{"name":"SOUL CHOY", "spriteFileName":"soul choy", "area":"BokChoyBluff", "attack":4, "defense":4, "speed":4, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":false}
+		{"name":"SOUL CHOY", "spriteFileName":"soul choy", "area":"BokChoyBluff", "attack":4, "defense":4, "speed":4, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":false},
+		{"name":"???", "spriteFileName":"soul choy", "area":"CarrotTop", "attack":4, "defense":4, "speed":5, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":false},
+		{"name":"???", "spriteFileName":"soul choy", "area":"Final1", "attack":4, "defense":4, "speed":5, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":false},
+		{"name":"???", "spriteFileName":"soul choy", "area":"Final2", "attack":5, "defense":5, "speed":5, "singleAttack":true, "multiAttack":true, "singleHeal":true, "multiHeal":false}
 	]
 }

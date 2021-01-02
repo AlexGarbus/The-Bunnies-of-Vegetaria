@@ -1,0 +1,23 @@
+{
+	"sceneToLoad":"Battle",
+	"music":"woods",
+	"text":[
+		"Text1",
+		"Text2",
+		"Text3",
+		"Text4",
+		"Text5",
+		"Text6"
+	],
+	"spriteFileNames":[
+		"introduction_bunnies",
+		"introduction_bunnies",
+		"introduction_bunnies",
+		"introduction_bunnies",
+		"introduction_bunnies",
+		"introduction_bunnies"
+	],
+	"startAtBoss":true,
+	"nextArea":6,
+	"nextCutscene":"cutscene_final2"
+}
