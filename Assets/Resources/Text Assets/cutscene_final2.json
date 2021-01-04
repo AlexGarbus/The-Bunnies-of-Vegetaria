@@ -15,5 +15,5 @@
 	],
 	"startAtBoss":true,
 	"nextArea":7,
-	"cutscene":"cutscene_ending"
+	"nextCutscene":"cutscene_ending"
 }

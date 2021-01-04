@@ -70,6 +70,7 @@ namespace TheBunniesOfVegetaria
         {
             if (e.isBossWave)
             {
+                // FIXME: Need to unsuscribe when exiting to cutscene. Possibly implement OnBattleEnd event in BattleHandler.
                 foreach (Bunny bunny in e.bunnies)
                     UnsubscribeFromBunnyEvents(bunny);
             }

@@ -3437,7 +3437,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   regularBattleMusic: {fileID: 8300000, guid: 1795fa025eaa58742b26de238cbb156e, type: 3}
+  finalAreaBattleMusic: {fileID: 8300000, guid: 466337dd32556fd43a62ffd1f4d68d98,
+    type: 3}
   bossBattleMusic: {fileID: 8300000, guid: ae337fd22a8d695419e1548c1198eb25, type: 3}
+  finalBossBattleMusic: {fileID: 8300000, guid: fd80a28622f437a41b7609f56e1bec4b,
+    type: 3}
   victoryMusic: {fileID: 8300000, guid: 44da5a99be7807847bbd870b688dae93, type: 3}
 --- !u!82 &1240085174
 AudioSource:
@@ -4555,6 +4559,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 806af44648c126d46aadb1a9a9e0c999, type: 3}
   - {fileID: 21300000, guid: db47033c1593328458a591ba84bf9c76, type: 3}
   - {fileID: 21300000, guid: 561e9617ac45710418bbf1f206abedd3, type: 3}
+  - {fileID: 21300000, guid: f4f842339cb7b9641a993df3aff44f94, type: 3}
   - {fileID: 21300000, guid: f4f842339cb7b9641a993df3aff44f94, type: 3}
 --- !u!212 &1604408060
 SpriteRenderer:
