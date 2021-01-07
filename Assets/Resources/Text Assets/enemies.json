@@ -11,150 +11,150 @@
             "multiAttack": false,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 5
+            "level": 10
         },
         {
             "name": "ICEBERG LETTUCE",
             "spriteFileName": "iceberg lettuce",
             "area": "LettuceFields",
-            "attack": 1,
-            "defense": 2,
+            "attack": 2,
+            "defense": 3,
             "speed": 1,
             "singleAttack": true,
             "multiAttack": false,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 5
+            "level": 10
         },
         {
             "name": "ROMAINE SOLDIER",
             "spriteFileName": "romaine soldier",
             "area": "LettuceFields",
-            "attack": 2,
+            "attack": 3,
             "defense": 2,
             "speed": 1,
             "singleAttack": true,
             "multiAttack": true,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 5
+            "level": 10
         },
         {
             "name": "REDLEAF LETTUCE",
             "spriteFileName": "redleaf lettuce",
             "area": "LettuceFields",
-            "attack": 1,
+            "attack": 2,
             "defense": 2,
             "speed": 2,
             "singleAttack": true,
             "multiAttack": true,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 5
+            "level": 10
         },
         {
             "name": "BURGER",
             "spriteFileName": "burger",
             "area": "LettuceFields",
-            "attack": 1,
-            "defense": 2,
+            "attack": 2,
+            "defense": 3,
             "speed": 1,
             "singleAttack": true,
             "multiAttack": true,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 5
+            "level": 10
         },
         {
             "name": "LETTWEED",
             "spriteFileName": "lettweed",
             "area": "LettuceFields",
-            "attack": 1,
+            "attack": 2,
             "defense": 2,
-            "speed": 1,
+            "speed": 2,
             "singleAttack": true,
             "multiAttack": false,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 5
+            "level": 10
         },
         {
             "name": "CEL WALL",
             "spriteFileName": "cel wall",
             "area": "CeleryWoods",
             "attack": 1,
-            "defense": 3,
+            "defense": 5,
             "speed": 1,
             "singleAttack": true,
             "multiAttack": false,
             "singleHeal": true,
             "multiHeal": false,
-            "level": 10
+            "level": 15
         },
         {
             "name": "CELERYHEAD SHARK",
             "spriteFileName": "celeryhead shark",
             "area": "CeleryWoods",
-            "attack": 2,
+            "attack": 3,
             "defense": 2,
             "speed": 2,
             "singleAttack": true,
             "multiAttack": true,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 10
+            "level": 15
         },
         {
             "name": "CLAWERY",
             "spriteFileName": "clawery",
             "area": "CeleryWoods",
             "attack": 3,
-            "defense": 1,
+            "defense": 2,
             "speed": 2,
             "singleAttack": true,
             "multiAttack": true,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 10
+            "level": 15
         },
         {
             "name": "STALKER",
             "spriteFileName": "stalker",
             "area": "CeleryWoods",
-            "attack": 1,
+            "attack": 2,
             "defense": 2,
             "speed": 3,
             "singleAttack": true,
             "multiAttack": false,
             "singleHeal": false,
             "multiHeal": true,
-            "level": 10
+            "level": 15
         },
         {
             "name": "ANTS IN A LOG",
             "spriteFileName": "ants in a log",
             "area": "CeleryWoods",
-            "attack": 2,
-            "defense": 2,
+            "attack": 3,
+            "defense": 3,
             "speed": 1,
             "singleAttack": true,
             "multiAttack": false,
             "singleHeal": true,
             "multiHeal": false,
-            "level": 10
+            "level": 15
         },
         {
             "name": "APPETIZER",
             "spriteFileName": "appetizer",
             "area": "CeleryWoods",
-            "attack": 2,
+            "attack": 3,
             "defense": 2,
             "speed": 2,
             "singleAttack": true,
             "multiAttack": false,
             "singleHeal": true,
             "multiHeal": false,
-            "level": 10
+            "level": 15
         },
         {
             "name": "BROCCARMY",
@@ -167,7 +167,7 @@
             "multiAttack": true,
             "singleHeal": true,
             "multiHeal": false,
-            "level": 15
+            "level": 20
         },
         {
             "name": "BROCKEY",
@@ -180,7 +180,7 @@
             "multiAttack": true,
             "singleHeal": true,
             "multiHeal": false,
-            "level": 15
+            "level": 20
         },
         {
             "name": "CAULIFAKER",
@@ -193,7 +193,7 @@
             "multiAttack": false,
             "singleHeal": true,
             "multiHeal": true,
-            "level": 15
+            "level": 20
         },
         {
             "name": "BROCCOFLOWER",
@@ -206,7 +206,7 @@
             "multiAttack": false,
             "singleHeal": true,
             "multiHeal": true,
-            "level": 15
+            "level": 20
         },
         {
             "name": "STEAMED BROCCOLI",
@@ -214,38 +214,38 @@
             "area": "BroccoliForest",
             "attack": 3,
             "defense": 1,
-            "speed": 2,
+            "speed": 4,
             "singleAttack": true,
             "multiAttack": true,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 15
+            "level": 20
         },
         {
             "name": "SLEEPOLI",
             "spriteFileName": "sleepoli",
             "area": "BroccoliForest",
             "attack": 2,
-            "defense": 3,
+            "defense": 4,
             "speed": 1,
             "singleAttack": true,
             "multiAttack": false,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 15
+            "level": 20
         },
         {
             "name": "BIG CHOKUS",
             "spriteFileName": "big chokus",
             "area": "BokChoyBluff",
             "attack": 3,
-            "defense": 4,
+            "defense": 5,
             "speed": 1,
             "singleAttack": true,
             "multiAttack": true,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 20
+            "level": 25
         },
         {
             "name": "BOK CHEW",
@@ -258,20 +258,20 @@
             "multiAttack": false,
             "singleHeal": true,
             "multiHeal": false,
-            "level": 20
+            "level": 25
         },
         {
             "name": "BOK O' CLOCK",
             "spriteFileName": "bok o clock",
             "area": "BokChoyBluff",
-            "attack": 3,
-            "defense": 3,
+            "attack": 2,
+            "defense": 2,
             "speed": 5,
             "singleAttack": false,
             "multiAttack": true,
             "singleHeal": false,
             "multiHeal": true,
-            "level": 20
+            "level": 25
         },
         {
             "name": "ARMORED CHOY",
@@ -284,33 +284,33 @@
             "multiAttack": true,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 20
+            "level": 25
         },
         {
             "name": "STALK FIGURE",
             "spriteFileName": "stalk figure",
             "area": "BokChoyBluff",
-            "attack": 4,
+            "attack": 3,
             "defense": 2,
             "speed": 4,
             "singleAttack": true,
             "multiAttack": true,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 20
+            "level": 25
         },
         {
             "name": "BOK TOY",
             "spriteFileName": "bok toy",
             "area": "BokChoyBluff",
-            "attack": 2,
-            "defense": 3,
+            "attack": 3,
+            "defense": 4,
             "speed": 2,
             "singleAttack": true,
             "multiAttack": true,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 20
+            "level": 25
         },
         {
             "name": "SWEET CARROT",
@@ -318,25 +318,25 @@
             "area": "CarrotTop",
             "attack": 1,
             "defense": 5,
-            "speed": 3,
+            "speed": 4,
             "singleAttack": false,
             "multiAttack": false,
             "singleHeal": false,
             "multiHeal": true,
-            "level": 25
+            "level": 30
         },
         {
             "name": "BABY CARROT",
             "spriteFileName": "baby carrot",
             "area": "CarrotTop",
-            "attack": 4,
+            "attack": 3,
             "defense": 2,
             "speed": 3,
             "singleAttack": true,
             "multiAttack": true,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 25
+            "level": 30
         },
         {
             "name": "CARROT DRAGON",
@@ -344,25 +344,25 @@
             "area": "CarrotTop",
             "attack": 5,
             "defense": 3,
-            "speed": 3,
+            "speed": 2,
             "singleAttack": true,
             "multiAttack": true,
             "singleHeal": true,
             "multiHeal": false,
-            "level": 25
+            "level": 30
         },
         {
             "name": "CARROT CAKE",
             "spriteFileName": "carrot cake",
             "area": "CarrotTop",
-            "attack": 3,
+            "attack": 4,
             "defense": 5,
             "speed": 1,
             "singleAttack": true,
             "multiAttack": true,
             "singleHeal": true,
             "multiHeal": true,
-            "level": 25
+            "level": 30
         },
         {
             "name": "ROASTED CARROT",
@@ -375,7 +375,7 @@
             "multiAttack": true,
             "singleHeal": true,
             "multiHeal": true,
-            "level": 25
+            "level": 30
         },
         {
             "name": "ASTRO-CARROT",
@@ -383,12 +383,12 @@
             "area": "CarrotTop",
             "attack": 4,
             "defense": 4,
-            "speed": 5,
+            "speed": 4,
             "singleAttack": true,
             "multiAttack": true,
             "singleHeal": false,
             "multiHeal": false,
-            "level": 25
+            "level": 30
         }
 	],
 	"bosses":[
@@ -397,13 +397,13 @@
             "spriteFileName": "salad bowl",
             "area": "LettuceFields",
             "attack": 2,
-            "defense": 4,
+            "defense": 3,
             "speed": 2,
             "singleAttack": true,
             "multiAttack": false,
             "singleHeal": true,
             "multiHeal": false,
-            "level": 10
+            "level": 20
         },
         {
             "name": "CELEREYE",
@@ -416,20 +416,20 @@
             "multiAttack": true,
             "singleHeal": true,
             "multiHeal": false,
-            "level": 15
+            "level": 20
         },
         {
             "name": "BROCCOLTREE",
             "spriteFileName": "broccoltree",
             "area": "BroccoliForest",
-            "attack": 3,
+            "attack": 4,
             "defense": 5,
             "speed": 1,
             "singleAttack": true,
             "multiAttack": false,
             "singleHeal": true,
             "multiHeal": false,
-            "level": 20
+            "level": 25
         },
         {
             "name": "SOUL CHOY",
@@ -442,7 +442,7 @@
             "multiAttack": true,
             "singleHeal": true,
             "multiHeal": false,
-            "level": 25
+            "level": 30
         }
 	]
 }
