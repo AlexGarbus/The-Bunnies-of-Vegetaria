@@ -73,8 +73,6 @@ namespace TheBunniesOfVegetaria
 
             int previousHealth = CurrentHealth;
             CurrentHealth -= damage;
-            PointEventArgs args = new PointEventArgs(previousHealth, CurrentHealth);
-            OnHealthChange?.Invoke(this, args);
 
             // Check for defeat
             if (CurrentHealth <= 0)
@@ -82,6 +80,9 @@ namespace TheBunniesOfVegetaria
                 CurrentHealth = 0;
                 OnDefeat?.Invoke(this, EventArgs.Empty);
             }
+
+            PointEventArgs args = new PointEventArgs(previousHealth, CurrentHealth);
+            OnHealthChange?.Invoke(this, args);
         }
 
         /// <summary>
