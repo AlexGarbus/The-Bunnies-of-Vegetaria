@@ -32,9 +32,8 @@ namespace TheBunniesOfVegetaria
         
         public int CalculateDamage(Fighter target)
         {
-            int scaledAttack = attack * level;
-            int scaledDefense = target.defense * target.level;
-            int damage = scaledAttack / scaledDefense;
+            float scaledAttack = attack * 3.5f * (level + 10) / 11f;
+            int damage = Mathf.RoundToInt(scaledAttack / target.defense);
             return Mathf.Max(1, damage);
         }
 
