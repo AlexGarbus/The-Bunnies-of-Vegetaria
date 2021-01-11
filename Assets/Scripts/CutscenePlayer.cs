@@ -74,13 +74,22 @@ namespace TheBunniesOfVegetaria
                 for(int j = 0; j <= cutscene.text[i].Length; j++)
                 {
                     cutsceneText.text = cutscene.text[i].Insert(j, "<color=#00000000>") + "</color>";
-                    yield return charDelay;
+                    yield return GetSkipInput() ? null : charDelay;
                 }
 
-                yield return stillDelay;
+                yield return GetSkipInput() ? null : stillDelay;
             }
 
             sceneTransition.LoadScene(cutscene.sceneToLoad);
+        }
+
+        /// <summary>
+        /// Check whether any buttons that should skip cutscene playback are held down.
+        /// </summary>
+        /// <returns>Whether any buttons that should skip cutscene playback are held down.</returns>
+        private bool GetSkipInput()
+        {
+            return Input.GetButton("Submit") || Input.GetButton("Fire1");
         }
     }
 }
