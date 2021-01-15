@@ -403,7 +403,7 @@
             "multiAttack": false,
             "singleHeal": true,
             "multiHeal": false,
-            "level": 20
+            "level": 25
         },
         {
             "name": "CELEREYE",
@@ -416,7 +416,7 @@
             "multiAttack": true,
             "singleHeal": true,
             "multiHeal": false,
-            "level": 20
+            "level": 30
         },
         {
             "name": "BROCCOLTREE",
@@ -429,7 +429,7 @@
             "multiAttack": false,
             "singleHeal": true,
             "multiHeal": false,
-            "level": 25
+            "level": 35
         },
         {
             "name": "SOUL CHOY",
@@ -442,7 +442,7 @@
             "multiAttack": true,
             "singleHeal": true,
             "multiHeal": false,
-            "level": 30
+            "level": 40
         }
 	]
 }
