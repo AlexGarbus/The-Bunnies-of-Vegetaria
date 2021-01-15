@@ -514,8 +514,10 @@ namespace TheBunniesOfVegetaria
 
             if (IsBossWave)
             {
-                // Insert 2 turns for the single boss enemy
-                for (int i = 0; i < 2; i++)
+                int turnCount = gameManager.BattleArea == Globals.Area.Final2 ? 3 : 2;
+
+                // Insert multiple turns for single boss enemy
+                for (int i = 0; i < turnCount; i++)
                 {
                     Turn turn = aliveEnemies[0].GetTurn(aliveBunnies, aliveEnemies);
                     turnCollection.Insert(turn);
