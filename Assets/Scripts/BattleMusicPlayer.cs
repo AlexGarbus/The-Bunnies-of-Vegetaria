@@ -34,7 +34,7 @@ namespace TheBunniesOfVegetaria
 
         private void BattleHandler_OnEnemiesInitialized(object sender, BattleEventArgs e)
         {
-            if (e.isBossWave)
+            if (e.isFinalWave)
             {
                 // Start boss battle music
                 bossReached = true;

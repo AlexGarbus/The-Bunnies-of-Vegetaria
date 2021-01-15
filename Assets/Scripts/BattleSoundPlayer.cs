@@ -68,9 +68,8 @@ namespace TheBunniesOfVegetaria
 
         private void BattleHandler_OnWaveWon(object sender, BattleEventArgs e)
         {
-            if (e.isBossWave)
+            if (e.isFinalWave)
             {
-                // FIXME: Need to unsuscribe when exiting to cutscene. Possibly implement OnBattleEnd event in BattleHandler.
                 foreach (Bunny bunny in e.bunnies)
                     UnsubscribeFromBunnyEvents(bunny);
             }
