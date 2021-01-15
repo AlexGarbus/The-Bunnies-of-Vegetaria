@@ -8,15 +8,15 @@ namespace TheBunniesOfVegetaria
         public readonly Enemy[] enemies;
         public readonly Bunny selectedBunny;
         public readonly Turn currentTurn;
-        public readonly bool isBossWave;
+        public readonly bool isFinalWave;
 
-        public BattleEventArgs(Bunny[] bunnies, Enemy[] enemies, Bunny selectedBunny, Turn currentTurn, bool isBossWave)
+        public BattleEventArgs(Bunny[] bunnies, Enemy[] enemies, Bunny selectedBunny, Turn currentTurn, bool isFinalWave)
         {
             this.bunnies = bunnies;
             this.enemies = enemies;
             this.selectedBunny = selectedBunny;
             this.currentTurn = currentTurn;
-            this.isBossWave = isBossWave;
+            this.isFinalWave = isFinalWave;
         }
     }
 }

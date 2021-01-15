@@ -234,7 +234,7 @@ namespace TheBunniesOfVegetaria
         private void WinWave()
         {
             battleState = BattleState.Idle;
-            bool wasBossWave = IsBossWave;
+            bool isFinalWave = IsBossWave;
 
             if (IsBossWave)
             {
@@ -263,6 +263,7 @@ namespace TheBunniesOfVegetaria
                 if (IsBossWave && gameManager.cutsceneFileName.HasValue())
                 {
                     sceneTransition.SaveAndLoadScene("Cutscene");
+                    isFinalWave = true;
                 }
                 else
                 {
@@ -271,7 +272,7 @@ namespace TheBunniesOfVegetaria
                 StartTravel();
             }
 
-            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null, wasBossWave);
+            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null, isFinalWave);
             OnWaveWon?.Invoke(this, args);
         }
 
