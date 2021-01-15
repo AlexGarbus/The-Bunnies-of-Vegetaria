@@ -485,15 +485,18 @@ namespace TheBunniesOfVegetaria
             if (!user.CanUseSkill(skillIndex))
                 return;
 
-            // Get turn targets
-            Fighter[] targets;
+            // Create turn
+            Turn turn;
             if (user.Skills[skillIndex].Target == Globals.FighterType.Bunny)
-                targets = currentBunnies;
+            {
+                turn = new Turn(user, currentBunnies, string.Format(skillMessage, user.name, user.Skills[skillIndex].Name), () => user.UseSkill(skillIndex, currentBunnies));
+            }
             else
-                targets = GetAliveEnemies();
+            {
+                turn = new Turn(user, GetAliveEnemies(), string.Format(skillMessage, user.name, user.Skills[skillIndex].Name), () => user.UseSkill(skillIndex, GetAliveEnemies()));
+            }
 
-            // Create and insert turn
-            Turn turn = new Turn(user, targets, string.Format(skillMessage, user.name, user.Skills[skillIndex].Name), () => user.UseSkill(skillIndex, targets));
+            // Insert turn
             turnCollection.Insert(turn);
 
             // Move to next input
@@ -568,8 +571,10 @@ namespace TheBunniesOfVegetaria
             {
                 enemyActor.Defeat();
                 foreach (Bunny bunny in GetAliveBunnies())
-                    bunny.AddExperience(enemy.Attack + enemy.Defense + enemy.Speed);
-                // TODO: bunny.AddExperience(enemy.Experience);
+                {
+                    if (!bunny.HasMaxExperience)
+                        bunny.AddExperience(enemy.ExperienceWorth);
+                }
             });
             turnCollection.Push(turn);
 

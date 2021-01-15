@@ -11,17 +11,22 @@ namespace TheBunniesOfVegetaria
 
         public override Globals.FighterType FighterType => Globals.FighterType.Bunny;
         public bool IsDefending { protected get; set; } = false;
+        public bool HasMaxExperience => Experience == MAX_EXPERIENCE;
+        public int Experience { get; protected set; }
         public int CurrentSkillPoints { get; private set; }
-        public int MaxSkillPoints => Level / 5 * 10;
+        public int MaxSkillPoints => Level / 5 * 5;
         public Globals.BunnyType Type { get; private set; }
         public Skill[] Skills { get; private set; } = new Skill[3];
+
+        private const int MAX_EXPERIENCE = 4950;
 
         public Bunny(Globals.BunnyType bunnyType, string name, int experience)
         {
             base.name = name;
             Type = bunnyType;
-            Experience = experience;
-            Level = CalculateLevel();
+            Experience = Mathf.Min(experience, MAX_EXPERIENCE);
+            level = CalculateLevel();
+            MaxHealth = CalculateMaxHealth();
 
             // Set stats and skills based on type
             switch(Type)
@@ -67,11 +72,6 @@ namespace TheBunniesOfVegetaria
             CurrentSkillPoints = MaxSkillPoints;
         }
 
-        public override int CalculateDamage(Fighter target)
-        {
-            return Mathf.CeilToInt((attack * 5 + Level * (1 - attack * 5f / 100f)) * (1 - (target.Defense - 1) * 0.2f));
-        }
-
         public override void TakeDamage(int damage)
         {
             if (IsDefending)
@@ -109,6 +109,9 @@ namespace TheBunniesOfVegetaria
         /// <param name="experience">The amount of experience to add.</param>
         public void AddExperience(int experience)
         {
+            if (HasMaxExperience)
+                return;
+
             Experience += experience;
 
             // Clamp experience
@@ -116,8 +119,9 @@ namespace TheBunniesOfVegetaria
                 Experience = MAX_EXPERIENCE;
 
             // Set level
-            int previousLevel = Level;
-            Level = CalculateLevel();
+            int previousLevel = level;
+            level = CalculateLevel();
+            MaxHealth = CalculateMaxHealth();
 
             // Check for level up
             if (Level != previousLevel)
@@ -199,6 +203,12 @@ namespace TheBunniesOfVegetaria
 
             PointEventArgs args = new PointEventArgs(previousSkillPoints, CurrentSkillPoints);
             OnSkillPointsChange?.Invoke(this, args);
+        }
+
+        private int CalculateLevel()
+        {
+            float preciseLevel = Mathf.Sqrt(2 * Experience + .25f) + .5f;
+            return Mathf.FloorToInt(preciseLevel);
         }
     }
 }

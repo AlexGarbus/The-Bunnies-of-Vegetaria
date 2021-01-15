@@ -10,6 +10,7 @@ namespace TheBunniesOfVegetaria
         public string spriteFileName, area;
         [SerializeField] protected bool singleAttack, multiAttack, singleHeal, multiHeal;
 
+        public int ExperienceWorth => Mathf.RoundToInt(.4f * level - 2f);
         public override Globals.FighterType FighterType => Globals.FighterType.Bunny;
 
         private enum EnemyTurnType { SingleAttack, MultiAttack, SingleHeal, MultiHeal }
@@ -18,16 +19,6 @@ namespace TheBunniesOfVegetaria
 
         public Enemy ShallowCopy() => (Enemy)MemberwiseClone();
 
-        public Enemy()
-        {
-            Level = 100;
-        }
-
-        public override int CalculateDamage(Fighter target)
-        {
-            return Mathf.CeilToInt(10 * attack * (1 - (target.Defense - 1) * 0.2f));
-        }
-
         /// <summary>
         /// Generate a randomly-selected turn for this enemy actor.
         /// </summary>
@@ -35,7 +26,7 @@ namespace TheBunniesOfVegetaria
         /// <param name="enemies">All enemies that this enemy can heal, including itself.</param>
         public Turn GetTurn(Bunny[] bunnies, Enemy[] enemies)
         {
-            EnemyTurnType[] availableTurnTypes = GetAvailableTurnTypes();
+            EnemyTurnType[] availableTurnTypes = GetAvailableTurnTypes(bunnies, enemies);
 
             if (availableTurnTypes.Length == 0)
             {
@@ -70,18 +61,20 @@ namespace TheBunniesOfVegetaria
         /// <summary>
         /// Get an array of turn types that this enemy can use.
         /// </summary>
-        /// <returns>An array of all turn types available to this actor.</returns>
-        private EnemyTurnType[] GetAvailableTurnTypes()
+        /// <param name="bunnies">All bunnies that this enemy can attack.</param>
+        /// <param name="enemies">All enemies that this enemy can heal, including itself.</param>
+        /// <returns>An array of all turn types available to this enemy.</returns>
+        private EnemyTurnType[] GetAvailableTurnTypes(Bunny[] bunnies, Enemy[] enemies)
         {
             List<EnemyTurnType> availableTurns = new List<EnemyTurnType>(4);
 
             if (singleAttack)
                 availableTurns.Add(EnemyTurnType.SingleAttack);
-            if (multiAttack)
+            if (multiAttack && bunnies.Length > 1)
                 availableTurns.Add(EnemyTurnType.MultiAttack);
             if (singleHeal && CurrentHealth < MaxHealth)
                 availableTurns.Add(EnemyTurnType.SingleHeal);
-            if (multiHeal && CurrentHealth < MaxHealth)
+            if (multiHeal && CurrentHealth < MaxHealth && enemies.Length > 1)
                 availableTurns.Add(EnemyTurnType.MultiHeal);
 
             return availableTurns.ToArray();
