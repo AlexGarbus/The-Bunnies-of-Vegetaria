@@ -14,7 +14,7 @@ namespace TheBunniesOfVegetaria
         public bool HasMaxExperience => Experience == MAX_EXPERIENCE;
         public int Experience { get; protected set; }
         public int CurrentSkillPoints { get; private set; }
-        public int MaxSkillPoints => Level / 5 * 10;
+        public int MaxSkillPoints => Level / 5 * 5;
         public Globals.BunnyType Type { get; private set; }
         public Skill[] Skills { get; private set; } = new Skill[3];
 
