@@ -10,29 +10,32 @@ namespace TheBunniesOfVegetaria
         [SerializeField] protected int attack;
         [SerializeField] protected int defense;
         [SerializeField] protected int speed;
+        [SerializeField] protected int level;
 
         public event EventHandler OnDoDamage, OnDefeat;
         public event EventHandler<PointEventArgs> OnHealthChange;
 
         public abstract Globals.FighterType FighterType { get; }
         public bool IsAlive => CurrentHealth > 0;
-        public int Experience { get; protected set; }
-        public int Level { get; protected set; }
+        public int Level => level;
         public int CurrentHealth { get; protected set; }
-        public int MaxHealth => Mathf.FloorToInt(10 + 0.9f * Level);
+        public int MaxHealth { get; protected set; }
         public int Attack => attack;
         public int Defense => defense;
         public int Speed => speed;
 
-        protected const int MAX_EXPERIENCE = 5050;
-
         public virtual void Initialize()
         {
+            MaxHealth = CalculateMaxHealth();
             CurrentHealth = MaxHealth;
         }
-
-        // TODO: Define damage methods in base rather than marking as abstract.
-        public abstract int CalculateDamage(Fighter target);
+        
+        public int CalculateDamage(Fighter target)
+        {
+            float scaledAttack = attack * 3.5f * (level + 10) / 11f;
+            int damage = Mathf.RoundToInt(scaledAttack / target.defense);
+            return Mathf.Max(1, damage);
+        }
 
         /// <summary>
         /// Do damage to a single target fighter.
@@ -70,8 +73,6 @@ namespace TheBunniesOfVegetaria
 
             int previousHealth = CurrentHealth;
             CurrentHealth -= damage;
-            PointEventArgs args = new PointEventArgs(previousHealth, CurrentHealth);
-            OnHealthChange?.Invoke(this, args);
 
             // Check for defeat
             if (CurrentHealth <= 0)
@@ -79,6 +80,9 @@ namespace TheBunniesOfVegetaria
                 CurrentHealth = 0;
                 OnDefeat?.Invoke(this, EventArgs.Empty);
             }
+
+            PointEventArgs args = new PointEventArgs(previousHealth, CurrentHealth);
+            OnHealthChange?.Invoke(this, args);
         }
 
         /// <summary>
@@ -101,13 +105,7 @@ namespace TheBunniesOfVegetaria
             OnHealthChange?.Invoke(this, args);
         }
 
-        protected int CalculateLevel()
-        {
-            int n = 0;
-            while ((n * (n + 1) / 2f) <= Experience)
-                n++;
-            return n;
-        }
+        protected int CalculateMaxHealth() => Mathf.FloorToInt(10 + 0.9f * Level);
 
         protected void InvokeOnDoDamage() => OnDoDamage?.Invoke(this, EventArgs.Empty);
 
