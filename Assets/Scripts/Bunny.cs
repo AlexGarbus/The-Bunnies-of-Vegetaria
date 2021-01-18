@@ -99,8 +99,8 @@ namespace TheBunniesOfVegetaria
         public void FullRestore()
         {
             OnFullRestore?.Invoke(this, EventArgs.Empty);
-            Heal(MaxHealth);
             RestoreSkillPoints(MaxSkillPoints);
+            Heal(MaxHealth);
         }
 
         /// <summary>
