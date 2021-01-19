@@ -53,7 +53,7 @@ namespace TheBunniesOfVegetaria
                     speed = 2;
                     Skills[0] = new HealAllSkill(5, 5, "HEAL", 10);
                     Skills[1] = new ReviveAllSkill(10, 10, "REVIVE", 10);
-                    Skills[2] = new ReviveAllSkill(20, 20, "RESURRECT", 25);
+                    Skills[2] = new ReviveAllSkill(20, 20, "RESURRECT", 20);
                     break;
                 case Globals.BunnyType.Bunneerdowell:
                     attack = 4;
@@ -99,8 +99,8 @@ namespace TheBunniesOfVegetaria
         public void FullRestore()
         {
             OnFullRestore?.Invoke(this, EventArgs.Empty);
-            Heal(MaxHealth);
             RestoreSkillPoints(MaxSkillPoints);
+            Heal(MaxHealth);
         }
 
         /// <summary>
