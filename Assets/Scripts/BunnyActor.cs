@@ -62,7 +62,7 @@ namespace TheBunniesOfVegetaria
 
         private void Fighter_OnSkillPointsChange(object sender, PointEventArgs e)
         {
-            if (!battleEffect.IsPlaying && e.DeltaPoints >= 0)
+            if (e.DeltaPoints >= 0)
                 battleEffect.PlayHealthEffect(e.DeltaPoints);
         }
         
