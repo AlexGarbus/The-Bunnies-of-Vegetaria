@@ -238,12 +238,17 @@ namespace TheBunniesOfVegetaria
 
             if (IsBossWave)
             {
-                // Unlock next area
                 int areasUnlocked = SaveData.current.areasUnlocked;
                 if (areasUnlocked == (int)gameManager.BattleArea
                     && areasUnlocked < (int)Globals.Area.CarrotTop)
                 {
+                    // Unlock next area
                     SaveData.current.areasUnlocked++;
+                }
+                else if (gameManager.BattleArea == Globals.Area.Final2)
+                {
+                    // Complete game
+                    SaveData.current.isGameComplete = true;
                 }
 
                 // Area is clear
