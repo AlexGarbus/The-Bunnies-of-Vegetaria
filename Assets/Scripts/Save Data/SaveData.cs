@@ -11,7 +11,7 @@
 
         // Progression
         public int areasUnlocked;
-        public bool isGameComplete; // TODO: Implement isGameComplete
+        public bool isGameComplete;
 
         // Play time
         public float hours, minutes, seconds;
