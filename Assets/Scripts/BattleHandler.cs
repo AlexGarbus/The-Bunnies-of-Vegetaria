@@ -234,16 +234,21 @@ namespace TheBunniesOfVegetaria
         private void WinWave()
         {
             battleState = BattleState.Idle;
-            bool wasBossWave = IsBossWave;
+            bool isFinalWave = IsBossWave;
 
             if (IsBossWave)
             {
-                // Unlock next area
                 int areasUnlocked = SaveData.current.areasUnlocked;
                 if (areasUnlocked == (int)gameManager.BattleArea
                     && areasUnlocked < (int)Globals.Area.CarrotTop)
                 {
+                    // Unlock next area
                     SaveData.current.areasUnlocked++;
+                }
+                else if (gameManager.BattleArea == Globals.Area.Final2)
+                {
+                    // Complete game
+                    SaveData.current.isGameComplete = true;
                 }
 
                 // Area is clear
@@ -263,6 +268,7 @@ namespace TheBunniesOfVegetaria
                 if (IsBossWave && gameManager.cutsceneFileName.HasValue())
                 {
                     sceneTransition.SaveAndLoadScene("Cutscene");
+                    isFinalWave = true;
                 }
                 else
                 {
@@ -271,7 +277,7 @@ namespace TheBunniesOfVegetaria
                 StartTravel();
             }
 
-            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null, wasBossWave);
+            BattleEventArgs args = new BattleEventArgs(currentBunnies, currentEnemies, null, null, isFinalWave);
             OnWaveWon?.Invoke(this, args);
         }
 
@@ -513,8 +519,10 @@ namespace TheBunniesOfVegetaria
 
             if (IsBossWave)
             {
-                // Insert 2 turns for the single boss enemy
-                for (int i = 0; i < 2; i++)
+                int turnCount = gameManager.BattleArea == Globals.Area.Final2 ? 3 : 2;
+
+                // Insert multiple turns for single boss enemy
+                for (int i = 0; i < turnCount; i++)
                 {
                     Turn turn = aliveEnemies[0].GetTurn(aliveBunnies, aliveEnemies);
                     turnCollection.Insert(turn);

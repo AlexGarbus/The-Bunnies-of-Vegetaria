@@ -1,7 +1,7 @@
 THE BUNNIES OF,VEGETARIA
 Created By,ALEX GARBUS
 Music By,QWAKKEN
-Sound Effects By,W.O.W SOUND
-Font By,CODY "CodeMan38" BOISCLAIR
-Special Thanks,STEVE ENGLAND
+Sound Effects By,W.O.W SOUND,Licensed under Sound Effect License
+Font By,CODY "CodeMan38" BOISCLAIR,Licensed under Open Font License
+Special Thanks,STEVE ENGLAND,jakebfb,Wolfesbrain,SprinxxVR
 Thank you,for playing!

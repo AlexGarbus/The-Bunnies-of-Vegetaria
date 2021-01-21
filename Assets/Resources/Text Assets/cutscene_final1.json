@@ -1,0 +1,23 @@
+{
+	"sceneToLoad":"Battle",
+	"music":"woods",
+  "text": [
+    "At last, the bunnies have arrived at the top of CARROT TOP!\nWhat awaits for them there?",
+    "Oh no! It's BUNNEFARIOUS!\nThis bad bunny was exiled from VEGETARIA long ago for practicing forbidden magic.",
+    "BUNNEFARIOUS now channels that forbidden magic into the carrots grown at CARROT TOP. But why?",
+    "Wait! Carrots strengthen vision. Carrots with forbidden magic would give BUNNEFARIOUS vision of everything! He aims to become an all-knowing deity!",
+    "But, it takes time to imbue powerful vegetables like carrots with magic energy. To buy time, BUNNEFARIOUS transformed the weaker vegetables into monsters!",
+    "The carrots are almost fully-charged with magic, but there's still time!\nGo, bunnies! Defeat BUNNEFARIOUS! For all the bunnies of VEGETARIA!"
+  ],
+	"spriteFileNames":[
+		"introduction_carrot top",
+		"final1_bunnefarious",
+		"final1_carrot",
+		"final1_allknowing",
+		"final1_carrot",
+		"final1_gobunnies"
+	],
+	"startAtBoss":true,
+	"nextArea":6,
+	"nextCutscene":"cutscene_final2"
+}

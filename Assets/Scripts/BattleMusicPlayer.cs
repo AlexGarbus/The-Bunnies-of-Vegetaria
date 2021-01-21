@@ -7,11 +7,13 @@ namespace TheBunniesOfVegetaria
     public class BattleMusicPlayer : MonoBehaviour
     {
         [SerializeField] private AudioClip regularBattleMusic;
+        [SerializeField] private AudioClip finalAreaBattleMusic;
         [SerializeField] private AudioClip bossBattleMusic;
+        [SerializeField] private AudioClip finalBossBattleMusic;
         [SerializeField] private AudioClip victoryMusic;
 
-        private AudioSource audioSource;
         private bool bossReached = false;
+        private AudioSource audioSource;
 
         private void Awake()
         {
@@ -24,12 +26,6 @@ namespace TheBunniesOfVegetaria
             EnemyActor.OnDefeat += EnemyActor_OnDefeat;
         }
 
-        private void Start()
-        {
-            // TODO: Check for final area.
-            PlayMusic(regularBattleMusic);
-        }
-
         private void OnDisable()
         {
             BattleHandler.OnEnemiesInitialized -= BattleHandler_OnEnemiesInitialized;
@@ -38,11 +34,18 @@ namespace TheBunniesOfVegetaria
 
         private void BattleHandler_OnEnemiesInitialized(object sender, BattleEventArgs e)
         {
-            if (e.isBossWave)
+            if (e.isFinalWave)
             {
+                // Start boss battle music
                 bossReached = true;
-                // TODO: Check for final area.
-                PlayMusic(bossBattleMusic);
+                bool isFinalBattle = GameManager.Instance.BattleArea == Globals.Area.Final2;
+                PlayMusic(isFinalBattle ? finalBossBattleMusic : bossBattleMusic);
+            }
+            else if (!audioSource.isPlaying)
+            {
+                // Start regular enemy battle music
+                bool isFinalArea = GameManager.Instance.BattleArea == Globals.Area.CarrotTop;
+                PlayMusic(isFinalArea ? finalAreaBattleMusic : regularBattleMusic);
             }
         }
 

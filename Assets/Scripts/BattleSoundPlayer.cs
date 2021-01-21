@@ -68,7 +68,7 @@ namespace TheBunniesOfVegetaria
 
         private void BattleHandler_OnWaveWon(object sender, BattleEventArgs e)
         {
-            if (e.isBossWave)
+            if (e.isFinalWave)
             {
                 foreach (Bunny bunny in e.bunnies)
                     UnsubscribeFromBunnyEvents(bunny);

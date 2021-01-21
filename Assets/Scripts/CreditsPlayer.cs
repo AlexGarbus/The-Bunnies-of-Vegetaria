@@ -11,7 +11,8 @@ namespace TheBunniesOfVegetaria
         [SerializeField] private SceneTransition sceneTransition;
         [SerializeField] private TMP_Text creditsText;
 
-        private const char seperator = ',';
+        private const string SEPARATOR = ",";
+        private const string SPACER = "\n\n";
         private string[] lines;
 
         private void Start()
@@ -36,8 +37,7 @@ namespace TheBunniesOfVegetaria
                     yield return null;
 
                 // Set next credit
-                string[] currentLine = lines[i].Split(seperator);
-                creditsText.text = string.Format("{0}\n\n{1}", currentLine[0], currentLine[1]);
+                creditsText.text = lines[i].Replace(SEPARATOR, SPACER);
 
                 // Fade in to next credit
                 StartCoroutine(sceneTransition.FadeIn());

@@ -319,7 +319,7 @@
             "attack": 1,
             "defense": 5,
             "speed": 4,
-            "singleAttack": false,
+            "singleAttack": true,
             "multiAttack": false,
             "singleHeal": false,
             "multiHeal": true,
@@ -329,8 +329,8 @@
             "name": "BABY CARROT",
             "spriteFileName": "baby carrot",
             "area": "CarrotTop",
-            "attack": 3,
-            "defense": 2,
+            "attack": 4,
+            "defense": 3,
             "speed": 3,
             "singleAttack": true,
             "multiAttack": true,
@@ -379,7 +379,7 @@
         },
         {
             "name": "ASTRO-CARROT",
-            "spriteFileName": "astro carrot",
+            "spriteFileName": "astrocarrot",
             "area": "CarrotTop",
             "attack": 4,
             "defense": 4,
@@ -443,6 +443,45 @@
             "singleHeal": true,
             "multiHeal": false,
             "level": 40
+        },
+        {
+            "name":"DUMMY AREA BOSS",
+            "spriteFileName":"bunnefarious",
+            "area": "CarrotTop",
+            "attack":4, 
+            "defense":4, 
+            "speed":5, 
+            "singleAttack":true, 
+            "multiAttack":true, 
+            "singleHeal":true, 
+            "multiHeal":false,
+            "level": 45
+        },
+		{
+            "name":"BUNNEFARIOUS", 
+            "spriteFileName":"bunnefarious", 
+            "area":"Final1", 
+            "attack":4, 
+            "defense":4, 
+            "speed":5, 
+            "singleAttack":true, 
+            "multiAttack":true, 
+            "singleHeal":true, 
+            "multiHeal":false,
+            "level": 45
+        },
+		{
+            "name":"???", 
+            "spriteFileName":"final", 
+            "area":"Final2", 
+            "attack":5, 
+            "defense":5, 
+            "speed":5, 
+            "singleAttack":true, 
+            "multiAttack":true, 
+            "singleHeal":true, 
+            "multiHeal":false,
+            "level": 50
         }
 	]
 }

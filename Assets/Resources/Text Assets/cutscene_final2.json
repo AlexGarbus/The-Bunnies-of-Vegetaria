@@ -1,0 +1,19 @@
+{
+  "sceneToLoad": "Battle",
+  "music": "woods",
+  "text": [
+    "Congratulations, bunnies! You did it! You defeated BUNNEFARIOUS and saved... wait.",
+    "Wait! BUNNEFARIOUS still has strength left! No, don't try to absorb the carrots' power! They're not fully-charged! You don't know what will happen! STOP!!!",
+    "Oh dear, it seems ol' BUNNEFARIOUS was quite serious about becoming a deity. But, BUNNEFARIOUS is no more. The poor fool.",
+    "Now, there is only this terrible being made of pure megalomania... and carrots.\nBunnies! Defeat this creature! Rid VEGETARIA of BUNNEFARIOUS' evil once and for all!"
+  ],
+  "spriteFileNames": [
+    "blank",
+    "final2_stop",
+    "final2_ohdear",
+    "final2_beast"
+  ],
+  "startAtBoss": true,
+  "nextArea": 7,
+  "nextCutscene": "cutscene_ending"
+}

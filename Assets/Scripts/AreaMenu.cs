@@ -14,8 +14,9 @@ namespace TheBunniesOfVegetaria
 
         [Header("Party")]
         [SerializeField] private TMP_Text statText;
+        [SerializeField] private GameObject[] gameCompleteStars;
 
-        private const string spacer = "  ";
+        private const string SPACER = "  ";
         private GameManager gameManager;
 
         private void Start()
@@ -28,6 +29,10 @@ namespace TheBunniesOfVegetaria
                 if (i + 1 > SaveData.current.areasUnlocked)
                     areaButtons[i].SetLocked();
             }
+
+            // Set up game complete stars
+            foreach (GameObject gameCompleteStar in gameCompleteStars)
+                gameCompleteStar.SetActive(SaveData.current.isGameComplete);
         }
 
         /// <summary>
@@ -115,10 +120,10 @@ namespace TheBunniesOfVegetaria
 
             // Set stat text
             string stats = $"{bunny.name} the {typeString}" + "\n\n"
-                + $"LEVEL: {bunny.Level}" + spacer + $"EXPERIENCE: {bunny.Experience}" + "\n\n"
-                + $"HEALTH: {bunny.MaxHealth}" + spacer + $"SKILL: {bunny.MaxSkillPoints}" + "\n\n"
-                + $"ATTACK: {new string('*', bunny.Attack)}" + spacer 
-                + $"DEFENSE: {new string('*', bunny.Defense)}" + spacer
+                + $"LEVEL: {bunny.Level}" + SPACER + $"EXPERIENCE: {bunny.Experience}" + "\n\n"
+                + $"HEALTH: {bunny.MaxHealth}" + SPACER + $"SKILL: {bunny.MaxSkillPoints}" + "\n\n"
+                + $"ATTACK: {new string('*', bunny.Attack)}" + SPACER 
+                + $"DEFENSE: {new string('*', bunny.Defense)}" + SPACER
                 + $"SPEED: {new string('*', bunny.Speed)}";
             statText.text = stats;
         }
