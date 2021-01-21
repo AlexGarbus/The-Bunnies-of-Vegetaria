@@ -445,9 +445,10 @@
             "level": 40
         },
         {
-            "name":"DUMMY",
-            "spriteFileName":"soul choy", 
-            "area":"CarrotTop", "attack":4, 
+            "name":"DUMMY AREA BOSS",
+            "spriteFileName":"bunnefarious",
+            "area": "CarrotTop",
+            "attack":4, 
             "defense":4, 
             "speed":5, 
             "singleAttack":true, 
@@ -457,8 +458,8 @@
             "level": 45
         },
 		{
-            "name":"FINAL 1", 
-            "spriteFileName":"soul choy", 
+            "name":"BUNNEFARIOUS", 
+            "spriteFileName":"bunnefarious", 
             "area":"Final1", 
             "attack":4, 
             "defense":4, 
@@ -470,8 +471,8 @@
             "level": 45
         },
 		{
-            "name":"FINAL 2", 
-            "spriteFileName":"soul choy", 
+            "name":"???", 
+            "spriteFileName":"final", 
             "area":"Final2", 
             "attack":5, 
             "defense":5, 
