@@ -1,14 +1,14 @@
 {
 	"sceneToLoad":"Credits",
 	"music":"mainTheme",
-	"text":[
-		"Text1",
-		"Text2",
-		"Text3"
-	],
+  "text": [
+    "Is... is it finally over?",
+    "It is! All of the crazy crops went back to being nonvolatile vegetables! The bunnies of VEGETARIA can return to their homes! Peace is at hand!",
+    "Oh thank you, brave bunnies! You've saved VEGETARIA!"
+  ],
 	"spriteFileNames":[
-		"introduction_bunnies",
-		"introduction_bunnies",
+		"blank",
+		"ending_monsters",
 		"introduction_bunnies"
 	]
 }
