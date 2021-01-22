@@ -25,6 +25,7 @@ namespace TheBunniesOfVegetaria
         {
             DontDestroyOnLoad(gameObject);
             SaveLoad.Load();
+            CreateBunnies();
         }
 
         private void OnEnable()
@@ -35,7 +36,6 @@ namespace TheBunniesOfVegetaria
         private void Start()
         {
             LoadSettings();
-            CreateBunnies();
         }
 
         private void OnDisable()
