@@ -6,6 +6,8 @@ namespace TheBunniesOfVegetaria
 {
     public static class SaveLoad
     {
+        private static string SaveDataPath => Application.persistentDataPath + "/save.dat";
+
         /// <summary>
         /// Save the current save data to save.dat.
         /// </summary>
@@ -14,7 +16,7 @@ namespace TheBunniesOfVegetaria
             BunniesToSaveData();
 
             BinaryFormatter bf = new BinaryFormatter();
-            using (FileStream file = File.Create(Application.persistentDataPath + "/save.dat"))
+            using (FileStream file = File.Create(SaveDataPath))
             {
                 bf.Serialize(file, SaveData.current);
             }
@@ -30,7 +32,7 @@ namespace TheBunniesOfVegetaria
             if (SaveExists())
             {
                 BinaryFormatter bf = new BinaryFormatter();
-                using (FileStream file = File.Open(Application.persistentDataPath + "/save.dat", FileMode.Open))
+                using (FileStream file = File.Open(SaveDataPath, FileMode.Open))
                 {
                     SaveData.current = (SaveData)bf.Deserialize(file);
                 }
@@ -45,12 +47,24 @@ namespace TheBunniesOfVegetaria
         }
 
         /// <summary>
+        /// Delete save.dat if it exists.
+        /// </summary>
+        public static void Delete()
+        {
+            if (!SaveExists())
+                return;
+
+            File.Delete(SaveDataPath);
+            Debug.Log("SAVE DATA DELETED!");
+        }
+
+        /// <summary>
         /// Check whether save.dat exists.
         /// </summary>
         /// <returns>True if save.dat exists. False otherwise.</returns>
         public static bool SaveExists()
         {
-            return File.Exists(Application.persistentDataPath + "/save.dat");
+            return File.Exists(SaveDataPath);
         }
 
         /// <summary>

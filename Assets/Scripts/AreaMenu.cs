@@ -14,6 +14,7 @@ namespace TheBunniesOfVegetaria
 
         [Header("Party")]
         [SerializeField] private TMP_Text statText;
+        [SerializeField] private TMP_Text playtimeText;
         [SerializeField] private GameObject[] gameCompleteStars;
 
         private const string SPACER = "  ";
@@ -22,17 +23,21 @@ namespace TheBunniesOfVegetaria
         private void Start()
         {
             gameManager = GameManager.Instance;
+            SaveData saveData = SaveData.current;
 
             // Set up map buttons
             for (int i = 0; i < areaButtons.Length; i++)
             {
-                if (i + 1 > SaveData.current.areasUnlocked)
+                if (i + 1 > saveData.areasUnlocked)
                     areaButtons[i].SetLocked();
             }
 
+            // Set up playtime text
+            playtimeText.text = string.Format("Playtime: {0:00}:{1:00}:{2:00}", saveData.hours, saveData.minutes, saveData.seconds);
+
             // Set up game complete stars
             foreach (GameObject gameCompleteStar in gameCompleteStars)
-                gameCompleteStar.SetActive(SaveData.current.isGameComplete);
+                gameCompleteStar.SetActive(saveData.isGameComplete);
         }
 
         /// <summary>

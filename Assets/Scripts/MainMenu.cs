@@ -111,6 +111,16 @@ namespace TheBunniesOfVegetaria
             RefreshFXVolume();
         }
 
+        /// <summary>
+        /// Delete the current save data and reload the game.
+        /// </summary>
+        public void DeleteSaveData()
+        {
+            SaveLoad.Delete();
+            Destroy(GameManager.Instance.gameObject);
+            sceneTransition.LoadScene("MainMenu");
+        }
+
 #if UNITY_STANDALONE
         /// <summary>
         /// Toggle whether the game is in fullscreen or windowed mode.
