@@ -9,3 +9,10 @@ This project was developed in Unity 2019.3.10f1, which can be installed on [Wind
 
 # Instructions for Building Project
 To build the project, navigate to **File > Build Settings** in the Unity Editor. Once the Build Settings window is open, simply select your target platform and click **Build**. For more information on publishing builds with Unity, please check the [official documentation](https://docs.unity3d.com/Manual/PublishingBuilds.html).
+
+# License
+This project's source code is made available under the [MIT License](https://www.mit.edu/~amini/LICENSE.md). This license does not apply to non-code assets created for the project, such as sprites and music. Please [contact me](https://alexgarbus.com/contact/) for permission to use these non-code assets outside of GitHub.
+
+The sound effects included in this project are licensed under [CC0](https://creativecommons.org/share-your-work/public-domain/cc0/).
+
+The font included in this project is licensed under the [Open Font License](https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL).
